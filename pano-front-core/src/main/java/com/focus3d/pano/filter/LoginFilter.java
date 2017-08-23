@@ -64,7 +64,6 @@ public class LoginFilter extends AbstractFilter {
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain fc) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest)req;
 		HttpServletResponse response = (HttpServletResponse)resp;
-		
 		int resourceType = TCUtil.iv(req.getAttribute("resourceType"));
 		if(resourceType == 1){	
 			fc.doFilter(req, resp);
