@@ -15,11 +15,11 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import com.focus3d.pano.model.PanoLoginModel;
 import com.focus3d.pano.model.PanoMemLoginModel;
 import com.focustech.cief.cop.ws.auth.Auth;
 import com.focustech.cief.cop.ws.auth.AuthHolder;
 import com.focustech.common.utils.EncryptUtil;
+import com.focustech.common.utils.StringUtils;
 import com.focustech.common.utils.TCUtil;
 /**
  *
@@ -29,6 +29,7 @@ import com.focustech.common.utils.TCUtil;
  */
 public class LoginFilter extends AbstractFilter {
 	public static final String SESSION_KEY = "login";
+	public static final String SESSION_GOTO = "goto";
 	public static final String LOGIN_PAGE_NAME = "userside/tologin";
 	//动态链接
 	protected static final String[] DYNAMIC_RESOURCES = {
@@ -63,38 +64,57 @@ public class LoginFilter extends AbstractFilter {
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain fc) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest)req;
 		HttpServletResponse response = (HttpServletResponse)resp;
+		
+		int resourceType = TCUtil.iv(req.getAttribute("resourceType"));
+		if(resourceType == 1){	
+			fc.doFilter(req, resp);
+			return;
+		}
+		
 		HttpSession session = request.getSession();
-		Object sessinObj = session.getAttribute(SESSION_KEY);
+		Object sessionObj = session.getAttribute(SESSION_KEY);
 		String servletPath = request.getServletPath();
-		boolean isPass = false;
+		
+		boolean isLogin = sessionObj != null;
+		boolean isAuthed = true;
+		
 		if(isNotNeedAuthCheckUrl(servletPath, request)){
 			if("/home/index".equals(servletPath)){
 				//首页会话设置用户信息
-				LoginThreadLocal.setLoginInfo(sessinObj);
+				LoginThreadLocal.setLoginInfo(sessionObj);
 				PanoMemLoginModel loginInfo = LoginThreadLocal.getLoginInfo();
 				if(loginInfo != null){
 					req.setAttribute(SESSION_KEY, loginInfo);
 				}
 			}
-			isPass = true;
 		} else {
-			if(sessinObj == null) {
+			if(!isLogin) {
 				response.sendRedirect("/" + LOGIN_PAGE_NAME);
+				session.setAttribute(SESSION_GOTO, servletPath);
 			} else {
-				LoginThreadLocal.setLoginInfo(sessinObj);
-				req.setAttribute("usn", EncryptUtil.encode(((PanoMemLoginModel)sessinObj).getUserSn()));
+				LoginThreadLocal.setLoginInfo(sessionObj);
+				req.setAttribute("usn", EncryptUtil.encode(((PanoMemLoginModel)sessionObj).getUserSn()));
 				req.setAttribute("fserver", fileServerDomain);
-				isPass = isAuthedUrl(servletPath, sessinObj);
+				isAuthed = isAuthedUrl(servletPath, sessionObj);
 			}
 		}
-		if(isPass){
+		
+		if(isLogin){
+			String gotoPage = TCUtil.sv(session.getAttribute(SESSION_GOTO));
+			if(StringUtils.isNotEmpty(gotoPage)){
+				session.removeAttribute(SESSION_GOTO);
+				response.sendRedirect(gotoPage);
+			}
+		}
+		
+		if(isAuthed){
 			AuthHolder.setAuth(auth);
 			fc.doFilter(req, resp);
 		} else {
 			response.setStatus(403);
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("text/html;charset=utf-8");
-			response.getOutputStream().print("无权限访问");
+			response.getOutputStream().print("禁止访问");
 		}
 	}
 	
