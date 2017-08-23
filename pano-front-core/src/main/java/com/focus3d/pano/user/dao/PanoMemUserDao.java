@@ -1,4 +1,4 @@
-package com.focus3d.pano.member.dao;
+package com.focus3d.pano.user.dao;
 
 import org.springframework.stereotype.Repository;
 

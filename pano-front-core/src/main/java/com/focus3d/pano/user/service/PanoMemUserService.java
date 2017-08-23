@@ -1,4 +1,4 @@
-package com.focus3d.pano.member.service;
+package com.focus3d.pano.user.service;
 
 import com.focus3d.pano.common.service.CommonService;
 /**
@@ -8,6 +8,6 @@ import com.focus3d.pano.common.service.CommonService;
  *
  * @param <T>
  */
-public interface PanoMemLoginService<T> extends CommonService<T> {
-
+public interface PanoMemUserService<T> extends CommonService<T> {
+	
 }
