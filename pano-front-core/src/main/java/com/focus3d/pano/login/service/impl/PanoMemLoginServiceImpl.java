@@ -2,6 +2,8 @@ package com.focus3d.pano.login.service.impl;
 
 import java.util.Date;
 
+import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import com.focus3d.pano.login.service.PanoMemLoginService;
 import com.focus3d.pano.model.PanoMemLoginModel;
 import com.focus3d.pano.model.PanoMemUserModel;
 import com.focus3d.pano.user.dao.PanoMemUserDao;
+import com.focustech.common.utils.MD5Util;
 /**
  * 
  * *
@@ -62,6 +65,35 @@ public class PanoMemLoginServiceImpl extends CommonServiceImpl<PanoMemLoginModel
 				memLoginModel.setUserSn(userModel.getSn());
 			}
 		}
+	}
+	@Override
+	public void insertOrUpdate(JSONObject jo, LoginTypeEnum type) {
+		String openId = jo.getString("openid");
+		String nickName = jo.getString("nickname");
+		int sex = jo.getInt("sex");
+		String city = jo.getString("city");
+		String province = jo.getString("province");
+		String country = jo.getString("country");
+		String headImgUrl = jo.getString("headimgurl");
+		
+		PanoMemUserModel userModel = new PanoMemUserModel();
+		userModel.setNickName(nickName);
+		userModel.setSex(sex);
+		userModel.setCountry(country);
+		userModel.setProvince(province);
+		userModel.setCity(city);
+		userModel.setHeadImgUrl(headImgUrl);
+		memUserDao.insert(userModel);
+		//创建账户
+		PanoMemLoginModel loginModel = new PanoMemLoginModel();
+		loginModel.setType(type.getType());
+		loginModel.setUserSn(userModel.getSn());
+		loginModel.setLoginName(openId);
+		loginModel.setPassword(MD5Util.MD5Encode("foucs3d", ""));
+		loginModel.setStatus(1);
+		loginModel.setType(LoginTypeEnum.WX.getType());
+		memLoginDao.insert(loginModel);
+		loginModel.setUser(userModel);
 	}
 
 }

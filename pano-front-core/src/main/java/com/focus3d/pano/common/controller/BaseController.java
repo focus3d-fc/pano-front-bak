@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -17,6 +18,8 @@ import com.focustech.common.utils.TCUtil;
  *
  */
 public class BaseController {
+	@Value("${pano.domain}")
+	private String siteDomain;
 	
 	@ModelAttribute
 	public void initCommon(ModelMap modelMap, HttpServletRequest req){
@@ -111,4 +114,8 @@ public class BaseController {
         stringBuilder.append(URI);
         return stringBuilder.toString();
     }
+	public String getSiteDomain() {
+		return siteDomain;
+	}
+    
 }

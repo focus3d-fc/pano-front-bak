@@ -19,6 +19,8 @@ public class PanoMemLoginModel extends PanoMemLogin<PanoMemLoginModel, PanoMemLo
 	private String smsCode;
 	
 	private PanoMemUserModel user;
+	
+	private String gotoPage;
 
 	public String getSmsCode() {
 		return smsCode;
@@ -34,6 +36,14 @@ public class PanoMemLoginModel extends PanoMemLogin<PanoMemLoginModel, PanoMemLo
 
 	public void setUser(PanoMemUserModel user) {
 		this.user = user;
+	}
+
+	public String getGotoPage() {
+		return gotoPage;
+	}
+
+	public void setGotoPage(String gotoPage) {
+		this.gotoPage = gotoPage;
 	}
 
 }

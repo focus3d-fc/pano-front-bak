@@ -69,7 +69,7 @@ public class MemberLoginController extends BaseController {
 	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/wx/addsession", method = RequestMethod.POST)
-	public void addSession(String sessionId, String userInfo, HttpServletResponse response) throws IOException{
+	public void addSession(String sessionId, String userInfo, String gotoPage, HttpServletResponse response) throws IOException{
 		log.debug(sessionId);
 		log.debug(userInfo);
 		if(StringUtils.isNotEmpty(sessionId) && StringUtils.isNotEmpty(userInfo)){
@@ -77,8 +77,9 @@ public class MemberLoginController extends BaseController {
 			String openId = jo.getString("openid");
 			PanoMemLoginModel loginInfo = memLoginService.getByName(openId, LoginTypeEnum.WX);
 			if(loginInfo == null){
-				memLoginService.insertOrUpdate(loginInfo, LoginTypeEnum.WX);
+				memLoginService.insertOrUpdate(jo, LoginTypeEnum.WX);
 			} 
+			loginInfo.setGotoPage(gotoPage);
 			SessionDB.addSession(sessionId, loginInfo);
 			ajaxOutput(response, "ok");
 		}
@@ -109,7 +110,8 @@ public class MemberLoginController extends BaseController {
 		String view = "";
 		if(loginInfo != null){
 			msg = "登录成功";
-			//view = redirect(getPanoDomain() + "/f/" + panoId);
+			addLoginToSession(loginInfo, request);
+			view = redirect(getSiteDomain() + loginInfo.getGotoPage());
 		} else {
 			msg = "登录失败";
 		}

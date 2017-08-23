@@ -79,10 +79,10 @@ public class LoginFilter extends AbstractFilter {
 		}
 		HttpSession session = request.getSession();
 		String sessionId = session.getId();
-		Object sessionObj = session.getAttribute(SESSION_KEY);
 		String servletPath = request.getServletPath();
-		
+		Object sessionObj = session.getAttribute(SESSION_KEY);
 		boolean isLogin = sessionObj != null;
+		
 		boolean isAuthed = true;
 		
 		if(isWeixinBrowser(request) && SessionDB.get(sessionId) == null){
@@ -90,7 +90,6 @@ public class LoginFilter extends AbstractFilter {
 			response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxed31115f33aab720&redirect_uri=" + WECHAT_SERVER_AUTH + "&response_type=code&scope=snsapi_userinfo&state=proj720ANDloginAND" + sessionId + "AND" + HttpUtil.encodeUrl(siteDomain) + "AND" + HttpUtil.encodeUrl(servletPath) + "#wechat_redirect");
 			return;
 		} 
-		
 		if(isNotNeedAuthCheckUrl(servletPath, request)){
 			if("/home/index".equals(servletPath)){
 				//首页会话设置用户信息
