@@ -297,7 +297,7 @@ public class UsersSideController extends BaseController{
 		//List<AddToCar> addToCarList=usersSideService.get_selectAddToCar2(userSn);
 		//System.out.println("addToCarList:"+addToCarList);
 		//request.setAttribute("addToCarList",addToCarList);
-		return "/usersSide/car";
+		return "/usersside/car";
 	}
 	@RequestMapping("/addToCar")
 	public void addToCar(String packageSn,HttpServletRequest request,HttpServletResponse response,HttpSession session) throws Exception{
