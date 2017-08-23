@@ -12,22 +12,19 @@
 </head>
 <body>
 	<div class="container">
-	<a href="/usersSide/toIndex" class="back">
-            <i class="iconfont">&#xe6bc;</i>
-            返回
-        </a>
-
 		<!--头像-->
 		<section class="my-bg">
 			<div class="blur">
-				<img src="$!fs.url($!memuser.HEAD_IMG_SN)" alt="">
 			</div>
 			<div class="my-content">
-				<img src="$!fs.url($!memuser.HEAD_IMG_SN)" alt="">
-				<p class="name">$!{memuser.NICK_NAME}</p>
-				<p class="other">$!{memuser.CITY}</p>
+				#if(!$!memuser.headImgUrl)
+				<img src="/images/member/head_img_default.png" alt="">
+				#else
+				<img src="$!memuser.headImgUrl" alt="">
+				#end
+				<p class="name">$!{memuser.nickName}</p>
+				<p class="other">$!{memuser.city}</p>
 			</div>
-
 		</section>
 		<!--订单-->
 		<section class="order">

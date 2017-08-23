@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.focus3d.pano.common.controller.BaseController;
 import com.focus3d.pano.filter.LoginFilter;
-import com.focus3d.pano.filter.RequestThreadLocal;
+import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.login.service.PanoLoginService;
 import com.focus3d.pano.model.PanoLoginModel;
 import com.focus3d.pano.model.PanoUserModel;
@@ -58,7 +58,7 @@ public class PasswordController extends BaseController{
 					}
 					modelMap.put("user", user);
 				}
-				String message = RequestThreadLocal.getMessageCookie().getMessage();
+				String message = LoginThreadLocal.getMessageCookie().getMessage();
 				modelMap.put("message", message);
 			}
 		} catch (Exception e) {
@@ -169,7 +169,7 @@ public class PasswordController extends BaseController{
 			msg = "密码不能为空";
 		}
 		if(StringUtils.isNotEmpty(msg)){
-			RequestThreadLocal.getMessageCookie().addMessage(msg);
+			LoginThreadLocal.getMessageCookie().addMessage(msg);
 		}
 		return view;
 	}

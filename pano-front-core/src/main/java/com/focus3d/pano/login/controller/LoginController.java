@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.focus3d.pano.common.controller.BaseController;
 import com.focus3d.pano.common.spring.RedirectAttributes;
 import com.focus3d.pano.filter.LoginFilter;
-import com.focus3d.pano.filter.RequestThreadLocal;
+import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.login.service.PanoLoginService;
 import com.focus3d.pano.model.PanoLoginModel;
 import com.focustech.common.utils.StringUtils;
@@ -89,7 +89,7 @@ public class LoginController extends BaseController{
 						int loginStatus = loginDO.getStatus();
 						if(loginStatus == 1){
 							req.getSession().setAttribute(LoginFilter.SESSION_KEY, loginDO);
-							RequestThreadLocal.setLoginInfo(loginDO);
+							LoginThreadLocal.setLoginInfo(loginDO);
 							view = VIEW_CENTER;
 						}
 						Integer loginTimes = TCUtil.iv(loginDO.getLoginTimes());

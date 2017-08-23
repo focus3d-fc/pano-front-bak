@@ -10,7 +10,7 @@ import com.focus3d.pano.model.PanoMemLoginModel;
  * @author lihaijun
  *
  */
-public class RequestThreadLocal {
+public class LoginThreadLocal {
 
 	public static final ThreadLocal<RequestMessageCookie> msgThreadLocal = new ThreadLocal<RequestMessageCookie>();
 	public static final ThreadLocal<PanoMemLoginModel> loginInfoThreadLocal = new ThreadLocal<PanoMemLoginModel>();

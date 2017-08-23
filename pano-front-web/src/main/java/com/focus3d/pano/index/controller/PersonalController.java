@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.focus3d.pano.common.controller.BaseController;
+import com.focus3d.pano.filter.LoginThreadLocal;
+import com.focus3d.pano.member.service.PanoMemUserService;
 import com.focus3d.pano.model.OrderRelevance;
+import com.focus3d.pano.model.PanoMemUserModel;
 import com.focus3d.pano.model.pano_mem_user;
 import com.focus3d.pano.model.pano_order;
 import com.focus3d.pano.model.pano_user_receive_address;
 import com.focus3d.pano.usersside.service.PersonalService;
+import com.focustech.common.utils.TCUtil;
 
 /**
  * 
@@ -31,6 +35,8 @@ public class PersonalController extends BaseController {
 
 	@Autowired
 	private PersonalService personalService;
+	@Autowired
+	private PanoMemUserService<PanoMemUserModel> memUserService;
 
 	// --------------------------------------------个人中心--------------------------------------------
 
@@ -64,9 +70,8 @@ public class PersonalController extends BaseController {
 	 */
 	@RequestMapping("/toaddress")
 	public String toaddress(HttpServletRequest request) {
-		USER_SN = Long.parseLong(request.getParameter("USER_SN"));
-		List<pano_user_receive_address> address = personalService
-				.selAddressbyUserSN(USER_SN);
+		long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
+		List<pano_user_receive_address> address = personalService.selAddressbyUserSN(userSn);
 		request.setAttribute("address", address);
 		return "/userside/address";
 	}
@@ -76,8 +81,7 @@ public class PersonalController extends BaseController {
 	 */
 	@RequestMapping("/toaddress2")
 	public String toaddress2(HttpServletRequest request) {
-		List<pano_user_receive_address> address = personalService
-				.selAddressbyUserSN(USER_SN);
+		List<pano_user_receive_address> address = personalService.selAddressbyUserSN(USER_SN);
 		if (request.getParameter("he").equals("he")) {
 			personalService.upAddres();
 		}
@@ -110,6 +114,7 @@ public class PersonalController extends BaseController {
 	public String addSite(HttpServletRequest request,
 			@RequestParam String USER_NAME, @RequestParam String MOBILE,
 			@RequestParam String cityResult3, @RequestParam String STREET) {
+		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		pano_user_receive_address site = new pano_user_receive_address();
 		site.setUSER_NAME(USER_NAME);
 		site.setMOBILE(MOBILE);
@@ -118,9 +123,9 @@ public class PersonalController extends BaseController {
 		site.setCITY(arr[1]);
 		site.setAREA(arr[2]);
 		site.setSTREET(STREET);
-		site.setUSER_SN(USER_SN);
-		pano_mem_user memuser = personalService.selUserbySN(USER_SN);
-		site.setSEX(memuser.getSEX());
+		site.setUSER_SN(userSn);
+		PanoMemUserModel memuser = memUserService.getBySn(userSn);
+		site.setSEX(TCUtil.iv(memuser.getSex()));
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String add_time = sdf.format(date);

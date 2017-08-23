@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.focus3d.pano.common.controller.BaseController;
-import com.focus3d.pano.filter.RequestThreadLocal;
+import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.member.service.PanoMemUserService;
 import com.focus3d.pano.model.PanoMemLoginModel;
 import com.focus3d.pano.model.PanoMemUserModel;
@@ -34,7 +34,7 @@ public class MemberCenterController extends BaseController{
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String tomy(HttpServletRequest request,HttpSession session) {
-		PanoMemLoginModel loginInfo = RequestThreadLocal.getLoginInfo();
+		PanoMemLoginModel loginInfo = LoginThreadLocal.getLoginInfo();
 		PanoMemUserModel user = memUserService.getBySn(loginInfo.getUserSn());
 		request.setAttribute("memuser", user);
 		return "/userside/my";

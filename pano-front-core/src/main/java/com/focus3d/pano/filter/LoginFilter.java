@@ -70,8 +70,8 @@ public class LoginFilter extends AbstractFilter {
 		if(isNotNeedAuthCheckUrl(servletPath, request)){
 			if("/home/index".equals(servletPath)){
 				//首页会话设置用户信息
-				RequestThreadLocal.setLoginInfo(sessinObj);
-				PanoMemLoginModel loginInfo = RequestThreadLocal.getLoginInfo();
+				LoginThreadLocal.setLoginInfo(sessinObj);
+				PanoMemLoginModel loginInfo = LoginThreadLocal.getLoginInfo();
 				if(loginInfo != null){
 					req.setAttribute(SESSION_KEY, loginInfo);
 				}
@@ -81,7 +81,7 @@ public class LoginFilter extends AbstractFilter {
 			if(sessinObj == null) {
 				response.sendRedirect("/" + LOGIN_PAGE_NAME);
 			} else {
-				RequestThreadLocal.setLoginInfo(sessinObj);
+				LoginThreadLocal.setLoginInfo(sessinObj);
 				req.setAttribute("usn", EncryptUtil.encode(((PanoMemLoginModel)sessinObj).getUserSn()));
 				req.setAttribute("fserver", fileServerDomain);
 				isPass = isAuthedUrl(servletPath, sessinObj);

@@ -40,7 +40,7 @@ public class RequestMessageCookieFilter extends OncePerRequestFilter {
                 }
             }
         }
-        RequestMessageCookie requestMessageCookie = RequestThreadLocal.getMessageCookie();
+        RequestMessageCookie requestMessageCookie = LoginThreadLocal.getMessageCookie();
         requestMessageCookie.build(cookieValue);
         RequestMessageResponseWrapper requestMessageResponseWrapper = new RequestMessageResponseWrapper(response);
         
@@ -81,12 +81,12 @@ public class RequestMessageCookieFilter extends OncePerRequestFilter {
 		}
 
 		private void addCookie() {
-			RequestMessageCookie requestMessageCookie = RequestThreadLocal.getMessageCookie();
+			RequestMessageCookie requestMessageCookie = LoginThreadLocal.getMessageCookie();
 			Cookie cookie = new Cookie(RequestMessageCookie.COOKIE_KEY, requestMessageCookie.getCookieValue());
 			cookie.setPath("/");
 			cookie.setMaxAge(-1);
 			this.addCookie(cookie);
-			RequestThreadLocal.cleanAll();
+			LoginThreadLocal.cleanAll();
 		}
 	}
 }
