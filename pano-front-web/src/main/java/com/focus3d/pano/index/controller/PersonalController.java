@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.focus3d.pano.common.controller.BaseController;
 import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.member.service.PanoMemUserService;
+import com.focus3d.pano.member.service.PanoUserReceiveAddressService;
 import com.focus3d.pano.model.OrderRelevance;
 import com.focus3d.pano.model.PanoMemUserModel;
+import com.focus3d.pano.model.PanoUserReceiveAddressModel;
 import com.focus3d.pano.model.pano_mem_user;
 import com.focus3d.pano.model.pano_order;
 import com.focus3d.pano.model.pano_user_receive_address;
@@ -37,6 +39,8 @@ public class PersonalController extends BaseController {
 	private PersonalService personalService;
 	@Autowired
 	private PanoMemUserService<PanoMemUserModel> memUserService;
+	@Autowired
+	private PanoUserReceiveAddressService<PanoUserReceiveAddressModel> receiveAddressService;
 
 	// --------------------------------------------个人中心--------------------------------------------
 
@@ -71,8 +75,8 @@ public class PersonalController extends BaseController {
 	@RequestMapping("/toaddress")
 	public String toaddress(HttpServletRequest request) {
 		long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		List<pano_user_receive_address> address = personalService.selAddressbyUserSN(userSn);
-		request.setAttribute("address", address);
+		List<PanoUserReceiveAddressModel> address = receiveAddressService.listByUser(userSn);
+		request.setAttribute("addressList", address);
 		return "/userside/address";
 	}
 
@@ -81,11 +85,9 @@ public class PersonalController extends BaseController {
 	 */
 	@RequestMapping("/toaddress2")
 	public String toaddress2(HttpServletRequest request) {
-		List<pano_user_receive_address> address = personalService.selAddressbyUserSN(USER_SN);
-		if (request.getParameter("he").equals("he")) {
-			personalService.upAddres();
-		}
-		request.setAttribute("address", address);
+		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
+		List<PanoUserReceiveAddressModel> address = receiveAddressService.listByUser(userSn);
+		request.setAttribute("addressList", address);
 		return "/userside/address";
 	}
 
