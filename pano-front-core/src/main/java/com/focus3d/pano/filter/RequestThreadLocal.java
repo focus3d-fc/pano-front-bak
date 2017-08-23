@@ -1,6 +1,6 @@
 package com.focus3d.pano.filter;
 
-import com.focus3d.pano.model.PanoLoginModel;
+import com.focus3d.pano.model.PanoMemLoginModel;
 
 
 
@@ -13,7 +13,7 @@ import com.focus3d.pano.model.PanoLoginModel;
 public class RequestThreadLocal {
 
 	public static final ThreadLocal<RequestMessageCookie> msgThreadLocal = new ThreadLocal<RequestMessageCookie>();
-	public static final ThreadLocal<PanoLoginModel> loginInfoThreadLocal = new ThreadLocal<PanoLoginModel>();
+	public static final ThreadLocal<PanoMemLoginModel> loginInfoThreadLocal = new ThreadLocal<PanoMemLoginModel>();
 
 	public static RequestMessageCookie getMessageCookie(){
 		RequestMessageCookie requestMessageCookie = msgThreadLocal.get();
@@ -24,18 +24,18 @@ public class RequestThreadLocal {
 		return requestMessageCookie;
 	}
 
-	public static PanoLoginModel getLoginInfo(){
+	public static PanoMemLoginModel getLoginInfo(){
 		return loginInfoThreadLocal.get();
 	}
 
-	public static void setLoginInfo(PanoLoginModel loginInfo){
+	public static void setLoginInfo(PanoMemLoginModel loginInfo){
 		if(loginInfo != null){
 			loginInfoThreadLocal.set(loginInfo);
 		}
 	}
 	public static void setLoginInfo(Object loginInfo){
-		if(loginInfo != null && loginInfo instanceof PanoLoginModel){
-			loginInfoThreadLocal.set((PanoLoginModel)loginInfo);
+		if(loginInfo != null && loginInfo instanceof PanoMemLoginModel){
+			loginInfoThreadLocal.set((PanoMemLoginModel)loginInfo);
 		} else {
 			loginInfoThreadLocal.remove();
 		}

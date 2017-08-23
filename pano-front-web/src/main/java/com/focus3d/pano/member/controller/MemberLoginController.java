@@ -25,13 +25,13 @@ import com.focustech.common.utils.StringUtils;
  */
 @Controller
 @RequestMapping(value = "/member/login")
-public class MobileLoginController extends BaseController {
+public class MemberLoginController extends BaseController {
 	@Autowired
 	private PanoMemUserService<PanoMemUserModel> memUserService;
 	@Autowired
 	private SmsValidateService smsValidateService;
 	/**
-	 * 
+	 * 常规登录
 	 * *
 	 * @param memLoginModel
 	 * @param modelMap
@@ -49,7 +49,7 @@ public class MobileLoginController extends BaseController {
 				addLoginToSession(memLoginModel, request);;
 			}
 		}
-		return redirect("/usersSide/tomy");
+		return redirect("/member/center");
 	}
 	/**
 	 * 

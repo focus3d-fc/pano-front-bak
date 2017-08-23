@@ -20,7 +20,6 @@ public class PersonalServiceImpl implements PersonalService {
 
 	@Override
 	public pano_mem_user selUserbySN(Long SN) {
-		// TODO Auto-generated method stub
 		return personalDAO.selUserbySN(SN);
 	}
 

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.focus3d.pano.model.PanoLoginModel;
+import com.focus3d.pano.model.PanoMemLoginModel;
 import com.focustech.cief.cop.ws.auth.Auth;
 import com.focustech.cief.cop.ws.auth.AuthHolder;
 import com.focustech.common.utils.EncryptUtil;
@@ -28,7 +29,7 @@ import com.focustech.common.utils.TCUtil;
  */
 public class LoginFilter extends AbstractFilter {
 	public static final String SESSION_KEY = "login";
-	public static final String LOGIN_PAGE_NAME = "user/login";
+	public static final String LOGIN_PAGE_NAME = "userside/tologin";
 	//动态链接
 	protected static final String[] DYNAMIC_RESOURCES = {
 		"/index.html"
@@ -51,7 +52,8 @@ public class LoginFilter extends AbstractFilter {
 		, "/fp/*"
 		, "/out/*"
 		,"/usersSide/*"
-		,"/"
+		,"/userside/*"
+		,"/member/login/*"
 	};
 	public static Auth auth = new Auth();
 	
@@ -69,7 +71,7 @@ public class LoginFilter extends AbstractFilter {
 			if("/home/index".equals(servletPath)){
 				//首页会话设置用户信息
 				RequestThreadLocal.setLoginInfo(sessinObj);
-				PanoLoginModel loginInfo = RequestThreadLocal.getLoginInfo();
+				PanoMemLoginModel loginInfo = RequestThreadLocal.getLoginInfo();
 				if(loginInfo != null){
 					req.setAttribute(SESSION_KEY, loginInfo);
 				}
@@ -80,7 +82,7 @@ public class LoginFilter extends AbstractFilter {
 				response.sendRedirect("/" + LOGIN_PAGE_NAME);
 			} else {
 				RequestThreadLocal.setLoginInfo(sessinObj);
-				req.setAttribute("usn", EncryptUtil.encode(((PanoLoginModel)sessinObj).getUserSn()));
+				req.setAttribute("usn", EncryptUtil.encode(((PanoMemLoginModel)sessinObj).getUserSn()));
 				req.setAttribute("fserver", fileServerDomain);
 				isPass = isAuthedUrl(servletPath, sessinObj);
 			}

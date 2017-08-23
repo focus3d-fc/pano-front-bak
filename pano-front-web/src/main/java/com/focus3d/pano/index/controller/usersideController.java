@@ -24,7 +24,6 @@ import com.focus3d.pano.usersside.service.PersonalService;
 import com.focus3d.pano.usersside.service.ProductRelevanceService;
 import com.focustech.common.utils.JsonUtils;
 
-//           /userside/toindex
 @Controller
 @RequestMapping("/userside")
 public class usersideController extends BaseController {

@@ -45,6 +45,7 @@ public class UsersSideController extends BaseController{
 	private UsersSideService usersSideService;
 	@Resource
     private PersonalService personalService;
+	
 	@RequestMapping("/toIndex")
 	public String toIndex(Model model,HttpServletRequest request,HttpSession session) throws Exception{
 		//微信用户对象信息

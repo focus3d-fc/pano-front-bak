@@ -38,6 +38,7 @@ public class PanoMemUserServiceImpl extends CommonServiceImpl<PanoMemUserModel> 
 			Long userSn = loginModel.getUserSn();
 			PanoMemUserModel userModel = memUserDao.getBySn(userSn);
 			memLoginModel.setUser(userModel);
+			memLoginModel.setUserSn(userModel.getSn());
 		} else {
 			PanoMemUserModel userModel = new PanoMemUserModel();
 			memUserDao.insertBySystem(userModel);
@@ -51,6 +52,7 @@ public class PanoMemUserServiceImpl extends CommonServiceImpl<PanoMemUserModel> 
 				memLoginModel.setLastLoginTime(new Date());
 				memLoginDao.insertBySystem(memLoginModel);
 				memLoginModel.setUser(userModel);
+				memLoginModel.setUserSn(userModel.getSn());
 			}
 		}
 	}
