@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <title>确认订单</title>
+    <link rel="stylesheet" href="/style/admstatic/css/bass.css">
+    <link rel="stylesheet" href="/style/admstatic/css/index.css">
+    <script type="text/javascript" src="/style/h5static/lib/jQuery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/style/h5static/js/getVerifyCode.js"></script>
+    <script type="text/javascript" src="/style/h5static/js/main.js"></script>
+</head>
+<body>
+<div class="container confirm">
+
+    <!--列表头-->
+    <section class="address">
+        <img src="/style/h5static/image/img/8.png" alt="">
+            <div>
+				<p class="clearfix">
+					<span class="fl">收货人：$!{address.USER_NAME}</span> <span class="fr">$!{address.MOBILE}</span>
+				</p>
+				<p>
+					收货地址：$!{address.PROVINCE}$!{address.CITY}$!{address.AREA}$!{address.STREET}
+				</p>
+			</div>
+        <a href="address.html" class="right"><i class="iconfont">&#xe6c7;</i></a>
+    </section>
+    <!--订单-->
+    <section class="order-items">
+      <div class="order-item">
+      <!--  -->
+      #foreach ($!{addToCar} in $!{addToCarList_toConfirm})
+          <div class="title">
+              <div>
+                  <img src="/style/h5static/image/img/30.png" alt="">
+                  $!{addToCar.house_name}-基础套餐
+              </div>
+              <span class="red">
+                  等待买家付款
+              </span>
+          </div>
+          <div class="cont">
+              <a href="#"><img src="$!fs.url($!{addToCar.package_img_sn})" ></a>
+              <div class="detail">
+                  <a href="#"><p class="detail-tlt">$!{addToCar.style_name}$!{addToCar.house_name}$!{addToCar.package_name}</p></a>
+                  <p class="col detail-con">$!{addToCar.package_name}</p>
+              </div>
+              <div class="price get">
+                  <p class="red package_price">￥$!{addToCar.package_price}</p>
+                  <s class="col"> ￥$!{addToCar.package_discount_price}</s>
+                  <p class="col get">×<span class="this_count get"></span></p>
+              </div>
+              <input type="hidden" class="house_package_sn_hidden" 
+                                       value="$!{addToCar.house_package_sn}"/>
+          </div>
+          <div class="row">
+           <p>购买数量</p>
+          <p>
+              <span class="square reduce" data-price="$!{addToCar.package_price}">-</span>
+              <span class="count"></span>
+              <span class="square add" data-price="$!{addToCar.package_price}">+</span>
+          </p>
+          </div>
+          #end
+          <!--  -->
+          <div class="row">
+          <input type="text" class="house_package_sn_hidden" 
+                                       value="1.这里因为没有全景看不到效果，仅用于模拟获取订单信息"/>
+          <input type="text" class="house_package_sn_hidden" 
+                                       value="2.这里因为没有全景看不到效果，仅用于模拟获取订单信息"/>
+          <input type="hidden" class="house_package_sn_hidden" 
+                                       value="3.这里因为没有全景看不到效果，仅用于模拟获取订单信息"/>
+          <input type="hidden" class="house_package_sn_hidden" 
+                                       value="4.这里因为没有全景看不到效果，仅用于模拟获取订单信息"/>
+              <p>请输入兑换优惠码：</p>
+              <p>
+                  <span class="square">1</span>
+                  <span class="square">1</span>
+                  <span class="square">1</span>
+                  <span class="square">1</span>
+                  <span class="square">1</span>
+                  <span class="square">1</span>
+              </p>
+          </div>
+          <div class="row noboder">
+              <p>付款方式：</p>
+          </div>
+          <p>
+              <a href="#" class="paying">付全款
+                  <span class="red">95折</span>
+            </a>
+              <a href="#" class="paid">预付2成</a>
+          </p>
+          <div class="row2">
+              <p>
+                  <img src="/style/h5static/image/img/choose2.png" alt="">
+                  <a onclick="$('.wrap').show();" >我已阅读并同意
+                      <span class="red">合同条款</span>
+                  </a>
+              </p>
+          </div>
+          <div class="total">
+              
+              共 <span id="package_count"></span>件套餐 合计￥<span class="red price_all"></span>元
+              
+              <a class="tj" onclick="$('.wrap1').show();">
+                  支付
+              </a>
+          </div>
+      </div>
+    </section>
+</div>
+<!--合同条款弹窗-->
+<div class="wrap">
+    <div id="agree">
+        <h3>合同条款</h3>
+        <p>
+            我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款
+            我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款
+            我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款我是条款
+        </p>
+        <div>
+            <a href="#" class="paid" onclick="$('.wrap').hide();"> 我已阅读</a>
+        </div>
+    </div>
+</div>
+<!--提交订单弹窗-->
+<div class="wrap1">
+    <div id="confirm">
+        <!-- <form action="/usersSide/toVerify" method="post"> -->
+            <form method="post">
+            <div class="confirm-title">
+                输入下列验证码意味着您确认合同内容并且签署此合同
+                <div class="confirm-close">
+                    <i class="iconfont">&#xe70c;</i>
+                </div>
+            </div>
+            <div class="row">
+                <i class=" iconfont">&#xe61b;</i>
+                <input type="tel" name="phone" placeholder="请输入手机号" id="j_phone"/>
+            </div>
+            <div class="row">
+                <i class=" iconfont">&#xe66f;</i>
+                <input type="text" id="verify" placeholder="验证码"/>
+                <span id="j_getVerifyCode">获取验证码</span>
+                <span id="msg"></span>
+            </div>
+            <button id="toSubmit" type="submit">立即验证</button>
+        </form>
+    </div>
+</div>
+<script>
+var price_all=$!{price_sum};
+var package_count=$!{package_count};
+$("#package_count").html(package_count);
+$(document).ready(function () {
+	//显示默认总价
+	$(".price_all").html(price_all);
+	console.log("默认总价:"+price_all);
+	$(".this_count").html(1);
+	$(".count").html(1);
+	$(".hidden_price_this_sum").val(0);
+	reduce_add();
+	
+});
+//prev前兄弟节点,next后兄弟节点;parent父节点,children子节点
+function reduce_add()
+{
+	//点-
+    $(".reduce").click(function () {
+        var count_this_str = $(this).next().text();
+        var count = parseInt(count_this_str);
+		//点-
+        if(count<=1){
+			//$(this).html(1);
+			$(this).next().text(1);
+			
+		}else if(count>1){
+			//$(this).html(count-1);
+			count=count-1;
+			$(this).next().text(count);
+			//$(".this_count").html(count);//显示在折扣价格后面
+			$(this).parent().parent().prev().children("div.get").children("p.get").children("span.get").html(count);
+			//获取当前数量套餐价格
+			var price_this=parseFloat($(this)[0].dataset.price);
+			//var price_this_addSum=(count-1)*price_this;
+			price_all=price_all - price_this;
+			console.log("1.点-后："+price_all);
+			$(".price_all").html(price_all);
+			package_count=package_count-1;
+			$("#package_count").html(package_count);
+		}
+        
+    });
+    //点+
+    $(".add").click(function () {
+        var count_this_str = $(this).prev().text();
+        var count = parseInt(count_this_str);
+        count=count+1;
+        $(this).prev().text(count);
+        //$(".this_count").html(count);//显示在折扣价格后面
+        $(this).parent().parent().prev().children("div.get").children("p.get").children("span.get").html(count);
+        //获取当前数量套餐价格
+        /* var price_this=parseFloat($(this)[0].dataset.price);
+		var price_this_sum=count*price_this;
+        console.log("当前数量套餐价格:"+price_this_sum); */
+        var price_this=parseFloat($(this)[0].dataset.price);
+		//var price_this_addSum=(count-1)*price_this;
+		price_all=price_all + price_this;
+		console.log("2.点+后："+price_all);
+		$(".price_all").html(price_all);
+		package_count=package_count+1;
+		$("#package_count").html(package_count);
+    });
+}
+</script>
+<!--注册验证-->
+<script>
+$(function(){
+	$("#toSubmit").click(toSubmit);
+})
+
+function toSubmit(){
+	var path=window.document.location.href.substring(0, window.document.location.href.indexOf
+			(window.document.location.pathname));
+    var phone=$("#j_phone").val();
+    var verify=$("#verify").val();
+    console.log("手机号："+phone+"，验证码："+verify);
+    $.ajax({
+		url:path+"/usersSide/toVerify",
+		type:"post",
+	    data:{"phone":phone,"verify":verify},
+	    datatype:"json",
+	    success:function(result){
+	    	var msg=JSON.parse(result);
+	    	console.log("msg:"+msg);
+	    	if(msg=="success"){
+	    		//获取所有订单sn,发到后台方法
+	    		var house_packArr = document.getElementsByClassName("house_package_sn_hidden");
+	    		var house_pack_strs="";
+	    		for(var i=0;i<house_packArr.length;i++){
+	    			house_pack_strs=house_pack_strs+"/"+$(house_packArr[i]).val();
+	    		}
+	    		console.log("house_pack_strs:"+house_pack_strs);
+	    		//把户型订单sn发到/wechat/testPay，用户查询订单信息，连接支付
+	    		 var price_all_pay=$(".price_all").html();
+	    		$.ajax({
+	    			url:path+"/wechat/testPay",
+	    			type:"post",
+	    		    data:{"house_pack_strs":house_pack_strs,"price_all_pay":price_all_pay},
+	    		    datatype:"json",
+	    		    success:function(result){
+	    		    	var msg_topay=JSON.parse(result);
+	    		    	if(msg_topay=="yeslogin"){
+	    		    		location.href="/wechat/pay";
+	    		    	}else{
+	    		    		alert("尚未微信登陆！");
+	    		    	}
+	    		    }
+	    		});
+	    		
+	    		
+	    		//location.href="/usersSide/toYM";
+	    	}else{
+	    		$("#msg").html("验证码错误");
+	    	}
+	    	
+	    	//location.href="/usersSide/toYM";
+	    }
+	}); 
+	
+}
+</script>
+<script>
+//toSubmit
+    //获取手机验证码-登录
+    $("#j_getVerifyCode").on("click",getVerifyCode({
+        callBack: function (){//按钮点击后的回调函数，-----必须-----
+            //在这里你还是可以对你的按钮进行操作
+            //alert("验证码发送成功");
+        	var path=window.document.location.href.substring(0, window.document.location.href.indexOf
+        			(window.document.location.pathname));
+            var phone=$("#j_phone").val();
+            console.log("手机号："+phone);
+            $.ajax({
+    			url:path+"/usersSide/getVerifyCode_order",
+    			type:"post",
+    		    data:{"phone":phone}/* ,
+    		    datatype:"json",
+    		    success:function(result){
+    		    	var projectList=JSON.parse(result);
+    		    } */
+    		}); 
+        },
+        time: 60,//定时时间，以秒为单位，默认60秒
+        getCurrentTime: function (time){//获取倒计时当前时间
+        },
+        isPhone: true,//是否为发送手机验证码，如果是则会验证手机号格式，-----必须-----
+        getPhone: function (){//获取手机号，此处一定要return
+            return $("#j_phone").val();
+        },
+        phoneReg: /^1[34578]\d{9}$/,//手机号验证正则
+        phoneCallBack: function (){//当手机号有误时的回调，默认会中止操作
+            alert("您输入的手机号有误");
+        },
+        timeIsUpText: "重新发送",//倒计时时间到了后按钮所显示文字
+        timeRunnigText: "s后重新发送",//倒计时时间正在走的时候按钮所显示文字。默认为"xxs后重新获取"
+        unabledClass: "unlabed"//按钮不能用的样式，即点击按钮后的样式
+    }));
+
+//    点击确认订单消失
+    $(function(){
+        $(".wrap1").click(function(){
+            $(".wrap1").hide();
+            return false;
+        })
+        $("#confirm").click(function(){
+            return false;
+        })
+    })
+</script>
+</body>
+</html>

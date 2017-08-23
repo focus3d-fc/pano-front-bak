@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, user-scalable=no, initial-scale=1.0">
+<title>个人中心</title>
+<link rel="stylesheet" href="/style/h5static/css/bass.css">
+<link rel="stylesheet" href="/style/h5static/css/index.css">
+<script src="/style/h5static/js/main.js"></script>
+</head>
+<body>
+	<div class="container">
+	<a href="/usersSide/toIndex" class="back">
+            <i class="iconfont">&#xe6bc;</i>
+            返回
+        </a>
+
+		<!--头像-->
+		<section class="my-bg">
+			<div class="blur">
+				<img src="$!fs.url($!memuser.HEAD_IMG_SN)" alt="">
+			</div>
+			<div class="my-content">
+				<img src="$!fs.url($!memuser.HEAD_IMG_SN)" alt="">
+				<p class="name">$!{memuser.NICK_NAME}</p>
+				<p class="other">$!{memuser.CITY}</p>
+			</div>
+
+		</section>
+		<!--订单-->
+		<section class="order">
+			<p class="title">我的订单</p>
+			<div class="order-statu">
+				<a href="/personal/toorderAll"> <img
+					src="/style/h5static/image/img/36.png" alt="">
+					<p>全部订单</p>
+				</a> <a href="/personal/topaying"> <img
+					src="/style/h5static/image/img/34.png" alt="">
+					<p>待付款</p>
+				</a> <a href="/personal/topaid"> <img
+					src="/style/h5static/image/img/35.png" alt="">
+					<p>已付款</p>
+				</a>
+			</div>
+			<div class="my-order">
+				<a href="/personal/toaddress?USER_SN=$!{memuser.SN}"> <img
+					src="/style/h5static/image/img/39.png" alt="">
+					<p>收货地址</p> <img src="/style/h5static/image/img/28.png" alt="">
+				</a>
+			</div>
+			<div class="my-order">
+				<a href="#"> <img src="/style/h5static/image/img/40.png" alt="">
+					<p>联系我们</p> <img src="/style/h5static/image/img/28.png" alt="">
+				</a>
+			</div>
+			<div class="my-order">
+				<a href="/personal/tocer?SN=$!{memuser.SN}"> <img
+					src="/style/h5static/image/img/38.png" alt="">
+					<p>实名认证</p> <img src="/style/h5static/image/img/28.png" alt="">
+				</a>
+			</div>
+		</section>
+		<section class="operation">
+			<a href="/usersSide/exitLogin">退出登录</a>
+		</section>
+
+
+	</div>
+
+</body>
+</html>
