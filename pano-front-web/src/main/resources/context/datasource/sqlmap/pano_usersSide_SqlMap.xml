@@ -279,12 +279,13 @@ pano_ad
  resultClass="com.focus3d.pano.model.Style">
 SELECT 
 project.`NAME` AS project_name,
-baseStyle.`NAME`,
-house.IMG_SN,
+baseStyle.`NAME` as name,
+houseStyle.IMG_SN as img_sn,
+baseStyle.IMG_SN as style_sn,
 projectStyle.PROJECT_SN AS project_sn,
 projectStyle.SN AS id,
-projectStyle.START_PRICE,
-projectStyle.END_PRICE
+projectStyle.START_PRICE as start_price,
+projectStyle.END_PRICE as end_price
 FROM pano_project_style projectStyle
 INNER JOIN pano_project_base_style baseStyle
 ON baseStyle.sn = projectStyle.style_sn

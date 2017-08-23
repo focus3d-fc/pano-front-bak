@@ -53,9 +53,15 @@
     #foreach ($!{style} in $!{styleList})
     <section class="content">
         <div class="title">
-            <img src="/style/h5static/image/img/bo.png" alt="">
+            <img src="$!fs.url($!{style.style_sn})" alt="">
             <!-- <span>北<span class="line">|</span>欧<span class="line">|</span>风<span class="line">|</span>格</span> -->
-            <span>$!{style.name}</span>
+            
+            #set($styleName = "")
+            #set ($array = $style.name.split(""))
+            #foreach($word in $array)
+            	<span>$word</span>
+            	<span>|</span>
+            #end
         </div>
         <a href="/usersSide/to720?style_id=$!{style.id}">
         <img id="dtli" src="$!fs.url($!{style.img_sn})" alt="" class="img-rounded img-responsive">
