@@ -1,6 +1,7 @@
 package com.focus3d.pano.filter;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,8 +59,6 @@ public class LoginFilter extends AbstractFilter {
 		, "/f/*"
 		, "/fp/*"
 		, "/out/*"
-		,"/usersSide/*"
-		,"/userside/*"
 		,"/member/login/*"
 	};
 	public static Auth auth = new Auth();
@@ -86,8 +85,18 @@ public class LoginFilter extends AbstractFilter {
 		boolean isAuthed = true;
 		
 		if(isWeixinBrowser(request) && SessionDB.get(sessionId) == null){
+			Enumeration parameterNames = request.getParameterNames();
+			StringBuffer urlParameterUrl = new StringBuffer("?1=1");
+			while (parameterNames.hasMoreElements()) {
+				Object object = (Object) parameterNames.nextElement();
+				String parameterKey = TCUtil.sv(object);
+				String parameterValue = request.getParameter(parameterKey);
+				urlParameterUrl.append("&" + parameterKey + "=" + parameterValue);
+			}
+			String callbackUrl = servletPath + urlParameterUrl.toString();
+			log.info("微信登录后跳转链接：" + callbackUrl);
 			log.info("跳转到微信授权登录");
-			response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxed31115f33aab720&redirect_uri=" + WECHAT_SERVER_AUTH + "&response_type=code&scope=snsapi_userinfo&state=proj720ANDloginAND" + sessionId + "AND" + HttpUtil.encodeUrl(siteDomain) + "AND" + HttpUtil.encodeUrl(servletPath) + "#wechat_redirect");
+			response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxed31115f33aab720&redirect_uri=" + WECHAT_SERVER_AUTH + "&response_type=code&scope=snsapi_userinfo&state=proj720ANDloginAND" + sessionId + "AND" + HttpUtil.encodeUrl(siteDomain) + "AND" + HttpUtil.encodeUrl(callbackUrl) + "#wechat_redirect");
 			return;
 		} 
 		if(isNotNeedAuthCheckUrl(servletPath, request)){
