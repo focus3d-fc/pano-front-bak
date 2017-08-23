@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.focus3d.pano.common.controller.BaseController;
+import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.model.AddToCar;
 import com.focus3d.pano.model.Lable;
 import com.focus3d.pano.model.PanoProjectPackage;
@@ -291,21 +292,12 @@ public class UsersSideController extends BaseController{
 	
 	@RequestMapping("/tocar")
 	public String tocar(HttpServletRequest request,HttpSession session){
-		System.out.println("进入tocar方法:");
-		pano_mem_user userMsg_phone =(pano_mem_user) session.getAttribute("userMsg_phone");
-		if(userMsg_phone==null){
-			return this.redirect("/userside/tologin");
-		}else{
-			//查询显示在购物车里的属性信息
-			long user_sn=userMsg_phone.getSN();
-			List<AddToCar> addToCarList=usersSideService.get_selectAddToCar2(user_sn);
-			System.out.println("addToCarList:"+addToCarList);
-			request.setAttribute("addToCarList",addToCarList);
-			return "/usersSide/car";
-			
-		}
-		
-		
+		//查询显示在购物车里的属性信息
+		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
+		//List<AddToCar> addToCarList=usersSideService.get_selectAddToCar2(userSn);
+		//System.out.println("addToCarList:"+addToCarList);
+		//request.setAttribute("addToCarList",addToCarList);
+		return "/usersSide/car";
 	}
 	@RequestMapping("/addToCar")
 	public void addToCar(String packageSn,HttpServletRequest request,HttpServletResponse response,HttpSession session) throws Exception{

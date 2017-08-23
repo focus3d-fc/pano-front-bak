@@ -106,7 +106,6 @@ public class LoginFilter extends AbstractFilter {
 				session.setAttribute(SESSION_GOTO, servletPath);
 				return;
 			} else {
-				LoginThreadLocal.setLoginInfo(sessionObj);
 				req.setAttribute("usn", EncryptUtil.encode(((PanoMemLoginModel)sessionObj).getUserSn()));
 				req.setAttribute("fserver", fileServerDomain);
 				isAuthed = isAuthedUrl(servletPath, sessionObj);
@@ -119,6 +118,7 @@ public class LoginFilter extends AbstractFilter {
 				session.removeAttribute(SESSION_GOTO);
 				response.sendRedirect(gotoPage);
 			}
+			LoginThreadLocal.setLoginInfo(sessionObj);
 		}
 		if(isAuthed){
 			AuthHolder.setAuth(auth);
