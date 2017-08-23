@@ -38,7 +38,7 @@ public class LoginFilter extends AbstractFilter {
 	public static final String SESSION_GOTO = "goto";
 	public static final String LOGIN_PAGE_NAME = "userside/tologin";
 	//public static final String WECHAT_SERVER_AUTH = "http%3A%2F%2F" + "app-wx.3d-focus.com%2Fwechat%2Fpage-auth";
-	public static final String WECHAT_SERVER_AUTH = "http%3A%2F%2F" + "gwzj.joy-homeplus.com" + "%2Fwechat%2Fpage-auth";
+	public static final String WECHAT_SERVER_AUTH = "http%3A%2F%2F" + "wx.joy-homeplus.com" + "%2Fwechat%2Fpage-auth";
 	//动态链接
 	protected static final String[] DYNAMIC_RESOURCES = {
 		"/index.html"
