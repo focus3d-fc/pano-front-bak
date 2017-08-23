@@ -1,7 +1,6 @@
 package com.focus3d.pano.filter;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,20 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.focus3d.pano.auth.service.PanoResourceService;
-import com.focus3d.pano.auth.service.PanoRoleResourceService;
-import com.focus3d.pano.auth.service.PanoUserRoleService;
 import com.focus3d.pano.model.PanoLoginModel;
-import com.focus3d.pano.model.PanoResourceModel;
-import com.focus3d.pano.model.PanoRoleResourceModel;
-import com.focus3d.pano.model.PanoUserRoleModel;
 import com.focustech.cief.cop.ws.auth.Auth;
 import com.focustech.cief.cop.ws.auth.AuthHolder;
 import com.focustech.common.utils.EncryptUtil;
-import com.focustech.common.utils.ListUtils;
 import com.focustech.common.utils.TCUtil;
 /**
  *
@@ -59,17 +50,13 @@ public class LoginFilter extends AbstractFilter {
 		, "/f/*"
 		, "/fp/*"
 		, "/out/*"
+		,"/usersSide/*"
+		,"/"
 	};
 	public static Auth auth = new Auth();
 	
 	@Value("${rpc.fs.domain}")
 	private String fileServerDomain;
-	@Autowired
-	private PanoUserRoleService<PanoUserRoleModel> userRoleService;
-	@Autowired
-	private PanoRoleResourceService<PanoRoleResourceModel> roleResourceService;
-	@Autowired
-	private PanoResourceService<PanoResourceModel> resourceService;
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain fc) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest)req;
@@ -141,7 +128,7 @@ public class LoginFilter extends AbstractFilter {
 	 * @param servletPath
 	 * @return
 	 */
-	public boolean isAuthedUrl(String servletPath, Object sessinObj){
+	public boolean isAuthedUrl(String servletPath, Object sessinObj){/*
 		boolean isPass = false;
 		if(sessinObj != null) {
 			//登录用户验证功能菜单权限
@@ -170,6 +157,8 @@ public class LoginFilter extends AbstractFilter {
 			}
 		}
 		return isPass;
+	*/
+		return true;
 	}
 
 	@Override
