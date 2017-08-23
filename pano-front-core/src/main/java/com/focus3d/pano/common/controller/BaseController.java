@@ -59,7 +59,7 @@ public class BaseController {
 	public boolean isWeixinBrowser(HttpServletRequest req){
        String ua = TCUtil.sv(req.getHeader("User-Agent")).toLowerCase();
        return ua.contains("micromessenger");
-   }
+	}
 	/**
 	 *
 	 * *

@@ -58,12 +58,17 @@ public class IndexController extends BaseController{
 		}
 		model.addAttribute("pano_projectList",pano_projectList);
 		//查询   楼盘sn(100007)-风格styleList     *project_sn:100012***此事还要关联户型表查询house_sn
-		List<Style> styleList=usersSideService.selectStyleByProject_sn(project_sn);
-		model.addAttribute("styleList",styleList);
-		//根据每个风格-查询对应的-标签集合
-		for(int i = 0; i < styleList.size(); i ++){
-			Long style_sn = styleList.get(i).getId();
-			List<Lable> lableList = usersSideService.selectLableByStyle_sn(style_sn);
+		List<Style> styleList;
+		try {
+			styleList = usersSideService.selectStyleByProject_sn(project_sn);
+			model.addAttribute("styleList",styleList);
+			//根据每个风格-查询对应的-标签集合
+			for(int i = 0; i < styleList.size(); i ++){
+				Long style_sn = styleList.get(i).getId();
+				List<Lable> lableList = usersSideService.selectLableByStyle_sn(style_sn);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return "/usersside/index";
 	}

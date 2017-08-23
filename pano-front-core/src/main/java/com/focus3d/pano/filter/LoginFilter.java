@@ -13,12 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.focus3d.pano.model.PanoMemLoginModel;
 import com.focustech.cief.cop.ws.auth.Auth;
 import com.focustech.cief.cop.ws.auth.AuthHolder;
 import com.focustech.common.utils.EncryptUtil;
+import com.focustech.common.utils.HttpUtil;
 import com.focustech.common.utils.StringUtils;
 import com.focustech.common.utils.TCUtil;
 /**
@@ -28,9 +31,11 @@ import com.focustech.common.utils.TCUtil;
  *
  */
 public class LoginFilter extends AbstractFilter {
+	private static final Logger log = LoggerFactory.getLogger(LoginFilter.class);
 	public static final String SESSION_KEY = "login";
 	public static final String SESSION_GOTO = "goto";
 	public static final String LOGIN_PAGE_NAME = "userside/tologin";
+	public static final String WECHAT_SERVER_AUTH = "http%3A%2F%2Fwx-app.3d-focus.com%2Fwechat%2Fpage-auth";
 	//动态链接
 	protected static final String[] DYNAMIC_RESOURCES = {
 		"/index.html"
@@ -71,6 +76,7 @@ public class LoginFilter extends AbstractFilter {
 		}
 		
 		HttpSession session = request.getSession();
+		String sessionId = session.getId();
 		Object sessionObj = session.getAttribute(SESSION_KEY);
 		String servletPath = request.getServletPath();
 		
@@ -88,7 +94,13 @@ public class LoginFilter extends AbstractFilter {
 			}
 		} else {
 			if(!isLogin) {
-				response.sendRedirect("/" + LOGIN_PAGE_NAME);
+				if(isWeixinBrowser(request)){
+					log.info("跳转到微信授权登录");
+					response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxed31115f33aab720&redirect_uri=" + WECHAT_SERVER_AUTH + "&response_type=code&scope=snsapi_userinfo&state=proj720ANDloginAND" + sessionId + "AND" + HttpUtil.encodeUrl(servletPath) + "#wechat_redirect");
+				} else {
+					log.info("跳转到常规页面登录");
+					response.sendRedirect("/" + LOGIN_PAGE_NAME);
+				}
 				session.setAttribute(SESSION_GOTO, servletPath);
 			} else {
 				LoginThreadLocal.setLoginInfo(sessionObj);
@@ -105,7 +117,6 @@ public class LoginFilter extends AbstractFilter {
 				response.sendRedirect(gotoPage);
 			}
 		}
-		
 		if(isAuthed){
 			AuthHolder.setAuth(auth);
 			fc.doFilter(req, resp);
@@ -187,5 +198,15 @@ public class LoginFilter extends AbstractFilter {
 		auth.setUsername("system");
 		auth.setUserSn(-1L);
 		auth.setFromSubSystem("focus3d_agent");
+	}
+	/**
+	 * 
+	 * *
+	 * @param req
+	 * @return
+	 */
+	public boolean isWeixinBrowser(HttpServletRequest req){
+		String ua = TCUtil.sv(req.getHeader("User-Agent")).toLowerCase();
+		return ua.contains("micromessenger");
 	}
 }
