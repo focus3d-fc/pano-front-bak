@@ -47,7 +47,7 @@ public class PasswordController extends BaseController{
 	@RequestMapping(value = "modify", method = RequestMethod.GET)
 	public String modify(ModelMap modelMap, HttpServletRequest req){
 		try {
-			PanoLoginModel currentLogin = RequestThreadLocal.getLoginInfo();
+			PanoLoginModel currentLogin = null;//RequestThreadLocal.getLoginInfo();
 			if(currentLogin != null){
 				PanoLoginModel PtsLogin = loginService.getBySn(currentLogin.getSn());
 				Long userId = PtsLogin.getUserSn();
@@ -75,7 +75,7 @@ public class PasswordController extends BaseController{
 	 */
 	@RequestMapping(value = "modify", method = RequestMethod.POST)
 	public String modify(PanoLoginModel loginVO, ModelMap modelMap, HttpServletRequest req){
-		PanoLoginModel currentLogin = RequestThreadLocal.getLoginInfo();
+		PanoLoginModel currentLogin = null;//RequestThreadLocal.getLoginInfo();
 		String loginName = currentLogin.getLoginName();
 		String password = loginVO.getPassword();
 		String passwordNew = loginVO.getPasswordNew();
