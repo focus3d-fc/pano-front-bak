@@ -61,7 +61,7 @@ public class LoginFilter extends AbstractFilter {
 		, "/fp/*"
 		, "/out/*"
 		,"/member/login/*"
-		,"/pub/*"
+		,"/ft/*"
 	};
 	public static Auth auth = new Auth();
 	

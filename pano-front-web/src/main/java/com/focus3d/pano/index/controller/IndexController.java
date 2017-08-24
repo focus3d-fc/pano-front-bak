@@ -70,7 +70,7 @@ public class IndexController extends BaseController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "/usersside/index";
+		return "/pub/index";
 	}
 	
 }
