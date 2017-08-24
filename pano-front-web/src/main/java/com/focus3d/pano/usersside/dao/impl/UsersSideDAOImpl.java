@@ -42,10 +42,7 @@ public class UsersSideDAOImpl  extends BaseDao implements UsersSideDAO{
 
 	@Override
 	public List<Lable> selectLableByStyle_sn(Long style_sn) {
-		System.out.println("1.查询style_sn:"+style_sn);
-		List<Lable> lableList=(List<Lable>) getSqlMapClientTemplate().
-				queryForList("selectStyleByProject_sn",style_sn);
-		System.out.println("2.查询标签，进入DAO");
+		List<Lable> lableList=(List<Lable>) getSqlMapClientTemplate().queryForList("selectLableByStyle_sn",style_sn);
 		return lableList;
 	}
 
