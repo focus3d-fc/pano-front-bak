@@ -1,6 +1,9 @@
 package com.focus3d.pano.index.controller;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -38,9 +41,6 @@ public class IndexController extends BaseController{
 	@RequestMapping(method = RequestMethod.GET)
 	public String index(ModelMap model, HttpServletRequest request,HttpSession session){
 		//模拟登陆状态，方便后面代码获取user_sn
-		//从广告表取img_sn集合
-		List<pano_ad> adList=usersSideService.selectAdImg_sn();
-		model.addAttribute("adList",adList);
 		//根据楼盘信息，查询楼盘sn
 		String province=request.getParameter("province");
 		String city=request.getParameter("city");
@@ -62,14 +62,32 @@ public class IndexController extends BaseController{
 		try {
 			styleList = usersSideService.selectStyleByProject_sn(project_sn);
 			model.addAttribute("styleList",styleList);
+			
+			List<pano_ad> adList=usersSideService.selectAdImg_sn(project_sn);
+			model.addAttribute("adList",adList);
+			
 			//根据每个风格-查询对应的-标签集合
-			for(int i = 0; i < styleList.size(); i ++){
-				Long style_sn = styleList.get(i).getId();
-				List<Lable> lableList = usersSideService.selectLableByStyle_sn(style_sn);
-			}
+			Set<String>  set=new HashSet<String>();
+			Iterator<Style> style_iterator = styleList.iterator();    
+		    while (style_iterator.hasNext()) {    
+		        Style style = style_iterator.next();
+				Long style_sn=style.getId();
+				if(set.contains(style.getName())){
+					style_iterator.remove();
+					continue;
+				}else{
+					set.add(style.getName());
+					List<Lable> lableList=usersSideService.selectLableByStyle_sn(style_sn);
+					style.setLableList(lableList);
+				}
+		    }    
+			System.out.println(styleList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
+		
 		return "/pub/index";
 	}
 	

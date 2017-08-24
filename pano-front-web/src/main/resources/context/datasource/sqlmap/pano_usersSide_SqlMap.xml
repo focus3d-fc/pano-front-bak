@@ -18,9 +18,7 @@ values
 
 
 <!-- 插叙订单 -->
-<select id="get_selectOrderByHouse_Pack_Sn" parameterClass="long" 
-                         resultClass="com.focus3d.pano.model.pano_order">
-
+<select id="get_selectOrderByHouse_Pack_Sn" parameterClass="long" resultClass="com.focus3d.pano.model.pano_order">
 SELECT
 pano_order.ORDER_NUM,
 pano_order.ORDER_TIME,
@@ -267,12 +265,13 @@ INNER JOIN pano_order_shopcart ON pano_order_shopcart.HOUSE_PACKAGE_SN = pano_pr
 where pano_order_shopcart.USER_SN=#user_sn#;
 </select>
  <!-- <typeAlias alias="style" type="com.focus3d.pano.model.Style" /> -->
- <select id="selectAdImg_sn" resultClass="com.focus3d.pano.model.pano_ad">
+ <select id="selectAdImg_sn" resultClass="com.focus3d.pano.model.pano_ad" parameterClass="long">
  SELECT
 pano_ad.IMG_SN,
 pano_ad.LINK
 FROM
 pano_ad
+where project_sn = #PROJECT_SN#
  </select>
  <!-- 查风格img_sn和name -->
  <select id="selectStyleByProject_sn" parameterClass="long" 
@@ -298,7 +297,7 @@ ON project.sn = houseStyle.project_sn
 where project.SN=#project_sn#
  </select>
  <!-- 根据style_sn查询lable集合 -->
- <select id="selectLableByStyle_sn" parameterClass="com.focus3d.pano.model.Lable"
+ <select id="selectLableByStyle_sn" parameterClass="long"
   resultClass="com.focus3d.pano.model.Lable">
  SELECT
 pano_project_label.SN as id,
