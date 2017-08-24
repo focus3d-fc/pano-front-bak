@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class VisitLimitFilter implements Filter {
 	private final Logger log = LoggerFactory.getLogger(VisitLimitFilter.class);
 	//静态文件目录
-	private static String[] STATIC_FILE = new String[]{"css", "style", "images", "fonts", "script", "js", "product", "krp", "component", "index.html"};
+	private static String[] STATIC_FILE = new String[]{"css", "style", "images", "html", "fonts", "script", "js", "product", "krp", "component", "index.html"};
 	
 	@Value("${pano.domain}")
 	private String panoDomain;
@@ -84,7 +84,7 @@ public class VisitLimitFilter implements Filter {
 				Matcher matcher = pattern.matcher(url);
 				flag = matcher.matches();
 				if(!flag){
-					flag = url.equals("/" + dir);
+					flag = url.equals("/" + dir) || url.equals("/" + dir + "/");
 				}
 				type = 1;
 				break;

@@ -47,4 +47,7 @@
 	<sqlMap resource="context/datasource/sqlmap/pano_mem_login_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/pano_mem_user_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/pano_user_receive_address_SqlMap.xml" />
+	
+	<sqlMap resource="context/datasource/sqlmap/pano_order_shopcart_SqlMap.xml" />
+	<sqlMap resource="context/datasource/sqlmap/pano_order_shopcart_detail_SqlMap.xml" />
 </sqlMapConfig>
