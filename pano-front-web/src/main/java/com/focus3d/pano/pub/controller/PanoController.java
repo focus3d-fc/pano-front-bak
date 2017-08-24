@@ -21,7 +21,7 @@ import com.focus3d.pano.usersside.service.UsersSideService;
  *
  */
 @Controller
-@RequestMapping(value = "/ft")
+@RequestMapping(value = "/fp")
 public class PanoController extends BaseController {
 	@Autowired
 	private UsersSideService usersSideService;
