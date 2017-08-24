@@ -13,6 +13,7 @@ import com.focustech.cief.ibatis.IbatisWrapper;
 import com.focustech.cief.ibatis.annotation.SqlMap;
 import com.focustech.cief.ibatis.domain.BaseEntity;
 import com.focustech.common.utils.ReflectUtils;
+import com.focustech.common.utils.TCUtil;
 /**
  *
  * *
@@ -59,12 +60,13 @@ public class CommonDao<T> extends IbatisWrapper {
 	
 	public <T> T getBySn(Long sn) {
 		try {
+			long nonullSn = TCUtil.lv(sn);
 			ParameterizedType genericType = (ParameterizedType)this.getClass().getGenericSuperclass();
 			Class<T> cls = (Class<T>)genericType.getActualTypeArguments()[0];
 			Object newInstance = cls.newInstance();
-			if(newInstance instanceof CommonModel && sn != null && sn > 0){
+			if(newInstance instanceof CommonModel && nonullSn > 0){
 				CommonModel commonModel = (CommonModel)newInstance;
-				commonModel.setSn(sn);
+				commonModel.setSn(nonullSn);
 				return convertIfNecessary(getSqlMapClient().queryForObject(acquireSqlMapName(cls) + SELECT_BY_PRIMARYKEY, commonModel),
 						cls);
 			} else {

@@ -15,6 +15,25 @@ public class PanoOrderPackageDetailModel extends PanoOrderPackageDetail<PanoOrde
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private PanoProductModel packageProduct;
+	
+	private PanoProjectPackageTypeModel packageType;
 
+	public PanoProductModel getPackageProduct() {
+		return packageProduct;
+	}
 
+	public void setPackageProduct(PanoProductModel packageProduct) {
+		this.packageProduct = packageProduct;
+	}
+
+	public PanoProjectPackageTypeModel getPackageType() {
+		return packageType;
+	}
+
+	public void setPackageType(PanoProjectPackageTypeModel packageType) {
+		this.packageType = packageType;
+	}
+	
 }

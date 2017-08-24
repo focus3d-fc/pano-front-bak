@@ -1,4 +1,4 @@
-package com.focus3d.pano.shopcart.dao;
+package com.focus3d.pano.order.dao;
 
 import java.util.List;
 

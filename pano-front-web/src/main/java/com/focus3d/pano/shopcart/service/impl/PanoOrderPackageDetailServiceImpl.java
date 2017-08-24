@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.focus3d.pano.common.dao.CommonDao;
 import com.focus3d.pano.common.service.impl.CommonServiceImpl;
 import com.focus3d.pano.model.PanoOrderPackageDetailModel;
-import com.focus3d.pano.shopcart.dao.PanoOrderPackageDetailDao;
+import com.focus3d.pano.order.dao.PanoOrderPackageDetailDao;
 import com.focus3d.pano.shopcart.service.PanoOrderPackageDetailService;
 /**
  * 

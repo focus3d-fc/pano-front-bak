@@ -13,4 +13,6 @@ import com.focus3d.pano.common.service.CommonService;
 public interface PanoOrderShopCartService<T> extends CommonService<T> {
 
 	List<T> listByUser(long userSn);
+	
+	void add(long housePackageSn);
 }
