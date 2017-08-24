@@ -79,6 +79,6 @@ public class PanoController extends BaseController {
 		request.setAttribute("img_house",img_house);
 		request.setAttribute("img_cart",img_cart);
 		
-		return "/usersside/720";
+		return "/pub/720";
 	}
 }
