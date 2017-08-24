@@ -1,5 +1,7 @@
 package com.focus3d.pano.shopcart.service;
 
+import java.util.List;
+
 import com.focus3d.pano.common.service.CommonService;
 /**
  * 
@@ -10,4 +12,5 @@ import com.focus3d.pano.common.service.CommonService;
  */
 public interface PanoOrderShopCartService<T> extends CommonService<T> {
 
+	List<T> listByUser(long userSn);
 }
