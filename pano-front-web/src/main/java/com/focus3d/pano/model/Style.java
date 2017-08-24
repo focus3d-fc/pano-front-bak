@@ -13,6 +13,7 @@ public class Style implements Serializable,CommonModel{
 	private long id;
 	private String name;
 	private long img_sn;
+	private long style_sn;
 	private BigDecimal start_price;
 	private BigDecimal end_price;
 	private long adder_sn;
@@ -32,7 +33,7 @@ public class Style implements Serializable,CommonModel{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Style(long id, String name, long img_sn, BigDecimal start_price,
+	public Style(long id, String name, long img_sn, long style_sn,BigDecimal start_price,
 			BigDecimal end_price, long adder_sn, String adder_name,
 			String add_time, long updater_sn, String updater_name,
 			String update_time, long project_sn, String project_name,
@@ -41,6 +42,7 @@ public class Style implements Serializable,CommonModel{
 		this.id = id;
 		this.name = name;
 		this.img_sn = img_sn;
+		this.style_sn = style_sn;
 		this.start_price = start_price;
 		this.end_price = end_price;
 		this.adder_sn = adder_sn;
@@ -76,6 +78,14 @@ public class Style implements Serializable,CommonModel{
 
 	public void setImg_sn(long img_sn) {
 		this.img_sn = img_sn;
+	}
+	
+	public long getStyle_sn() {
+		return style_sn;
+	}
+
+	public void setStyle_sn(long style_sn) {
+		this.style_sn = style_sn;
 	}
 
 	public BigDecimal getStart_price() {
