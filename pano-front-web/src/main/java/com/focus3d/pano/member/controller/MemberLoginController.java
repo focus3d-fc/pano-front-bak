@@ -43,12 +43,21 @@ public class MemberLoginController extends BaseController {
 	/**
 	 * 常规登录
 	 * *
+	 * @return
+	 */
+	@RequestMapping(value = "nomal", method = RequestMethod.GET)
+	public String nomalLogin() {
+		return "/member/login";
+	}
+	/**
+	 * 常规登录
+	 * *
 	 * @param memLoginModel
 	 * @param modelMap
 	 * @return
 	 */
 	@RequestMapping(value = "nomal", method = RequestMethod.POST)
-	public String login(PanoMemLoginModel memLoginModel, ModelMap modelMap, HttpServletRequest request){
+	public String nomalLogin(PanoMemLoginModel memLoginModel, ModelMap modelMap, HttpServletRequest request){
 		String mobile = memLoginModel.getLoginName();
 		String smsCode = memLoginModel.getSmsCode();
 		if(StringUtils.isNotEmpty(mobile) && StringUtils.isNotEmpty(smsCode)){
