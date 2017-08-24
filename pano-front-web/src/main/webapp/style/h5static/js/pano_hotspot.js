@@ -243,6 +243,7 @@ function getTcshow(houseId){
 	    }
 	});
 };
+
 /**
  * 
  * 点击全景产品热点回调方法
@@ -307,7 +308,12 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    }
 	});
 }
-
+/**
+ * 关闭全景产品热点回调方法
+ */
+function closeHotspotWin(){
+	$(".rd-show").hide();
+}
 /**
  * 全景客户端
  */
