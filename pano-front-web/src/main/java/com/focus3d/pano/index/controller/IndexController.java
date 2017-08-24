@@ -67,16 +67,16 @@ public class IndexController extends BaseController{
 			model.addAttribute("adList",adList);
 			
 			//根据每个风格-查询对应的-标签集合
-			Set<String>  set=new HashSet<String>();
+			Set<Long>  set=new HashSet<Long>();
 			Iterator<Style> style_iterator = styleList.iterator();    
 		    while (style_iterator.hasNext()) {    
 		        Style style = style_iterator.next();
 				Long style_sn=style.getId();
-				if(set.contains(style.getName())){
+				if(set.contains(style_sn)){
 					style_iterator.remove();
 					continue;
 				}else{
-					set.add(style.getName());
+					set.add(style_sn);
 					List<Lable> lableList=usersSideService.selectLableByStyle_sn(style_sn);
 					style.setLableList(lableList);
 				}

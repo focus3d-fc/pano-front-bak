@@ -283,12 +283,12 @@ houseStyle.IMG_SN as img_sn,
 baseStyle.IMG_SN as style_sn,
 projectStyle.PROJECT_SN AS project_sn,
 projectStyle.SN AS id,
-projectStyle.START_PRICE as start_price,
-projectStyle.END_PRICE as end_price
+houseStyle.start_price AS start_price,
+houseStyle.end_price AS end_price
 FROM pano_project_style projectStyle
 INNER JOIN pano_project_base_style baseStyle
 ON baseStyle.sn = projectStyle.style_sn
-INNER JOIN pano_project_house_style houseStyle
+INNER JOIN (SELECT MIN(package_price) AS start_price,SUM(package_price)AS end_price,_houseStyle.* FROM pano_project_house_style _houseStyle LEFT JOIN pano_project_house_package package ON package.house_style_sn = _houseStyle.sn GROUP BY _houseStyle.sn) AS houseStyle
 ON houseStyle.style_sn = projectStyle.sn
 INNER JOIN pano_project_house house
 ON house.sn = houseStyle.house_sn
