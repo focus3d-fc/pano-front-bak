@@ -57,4 +57,8 @@
 	<sqlMap resource="context/datasource/sqlmap/pano_order_shopcart_detail_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/pano_order_package_detail_SqlMap.xml" />
 	
+	<sqlMap resource="context/datasource/sqlmap/pano_project_house_style_SqlMap.xml" />
+	<sqlMap resource="context/datasource/sqlmap/pano_project_house_SqlMap.xml" />
+	<sqlMap resource="context/datasource/sqlmap/pano_project_style_SqlMap.xml" />
+	<sqlMap resource="context/datasource/sqlmap/pano_project_base_style_SqlMap.xml" />
 </sqlMapConfig>

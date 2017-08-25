@@ -13,15 +13,23 @@ import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
 import com.focus3d.pano.model.PanoProductModel;
+import com.focus3d.pano.model.PanoProjectBaseStyleModel;
+import com.focus3d.pano.model.PanoProjectHouseModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
+import com.focus3d.pano.model.PanoProjectHouseStyleModel;
 import com.focus3d.pano.model.PanoProjectPackageModel;
 import com.focus3d.pano.model.PanoProjectPackageProductModel;
 import com.focus3d.pano.model.PanoProjectPackageTypeModel;
+import com.focus3d.pano.model.PanoProjectStyleModel;
 import com.focus3d.pano.product.dao.PanoProductDao;
+import com.focus3d.pano.project.dao.PanoProjectBaseStyleDao;
+import com.focus3d.pano.project.dao.PanoProjectHouseDao;
 import com.focus3d.pano.project.dao.PanoProjectHousePackageDao;
+import com.focus3d.pano.project.dao.PanoProjectHouseStyleDao;
 import com.focus3d.pano.project.dao.PanoProjectPackageDao;
 import com.focus3d.pano.project.dao.PanoProjectPackageProductDao;
 import com.focus3d.pano.project.dao.PanoProjectPackageTypeDao;
+import com.focus3d.pano.project.dao.PanoProjectStyleDao;
 import com.focus3d.pano.shopcart.dao.PanoOrderShopCartDao;
 import com.focus3d.pano.shopcart.dao.PanoOrderShopcartDetailDao;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
@@ -49,7 +57,14 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 	private PanoProjectPackageProductDao packageProductDao;
 	@Autowired
 	private PanoProjectPackageDao packageDao;
-	
+	@Autowired
+	private PanoProjectHouseStyleDao houseStyleDao;
+	@Autowired
+	private PanoProjectHouseDao houseDao;
+	@Autowired
+	private PanoProjectStyleDao projectStyleDao;
+	@Autowired
+	private PanoProjectBaseStyleDao baseStyleDao;
 	@Override
 	public CommonDao<PanoOrderShopcartModel> getDao() {
 		return orderShopCartDao;
@@ -66,7 +81,21 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 				housePackage.setName(projectPackage.getName());
 				shopcart.setHousePackage(housePackage);
 				//风格
-				housePackage.getHouseStyleSn();
+				Long houseStyleSn = housePackage.getHouseStyleSn();
+				PanoProjectHouseStyleModel houseStyle = houseStyleDao.getBySn(houseStyleSn);
+				Long houseSn = houseStyle.getHouseSn();
+				PanoProjectHouseModel house = houseDao.getBySn(houseSn);
+				if(house != null){
+					housePackage.setHouse(house);
+				}
+				Long projectStyleSn = houseStyle.getStyleSn();
+				PanoProjectStyleModel projectStyle = projectStyleDao.getBySn(projectStyleSn);
+				if(projectStyle != null){
+					Long baseStyleSn = projectStyle.getStyleSn();
+					PanoProjectBaseStyleModel baseStyle = baseStyleDao.getBySn(baseStyleSn);
+					projectStyle.setName(baseStyle.getName());
+					housePackage.setStyle(projectStyle);
+				}
 				
 				List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
 				//设置购物车明细信息

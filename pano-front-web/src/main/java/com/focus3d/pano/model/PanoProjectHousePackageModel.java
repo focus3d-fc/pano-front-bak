@@ -17,6 +17,27 @@ public class PanoProjectHousePackageModel extends PanoProjectHousePackage<PanoPr
 	private static final long serialVersionUID = 1L;
 
 	private String name;
+	
+	private PanoProjectHouseModel house;
+	
+	private PanoProjectStyleModel style;
+
+	public PanoProjectHouseModel getHouse() {
+		return house;
+	}
+
+	public void setHouse(PanoProjectHouseModel house) {
+		this.house = house;
+	}
+
+
+	public PanoProjectStyleModel getStyle() {
+		return style;
+	}
+
+	public void setStyle(PanoProjectStyleModel style) {
+		this.style = style;
+	}
 
 	public String getName() {
 		return name;
