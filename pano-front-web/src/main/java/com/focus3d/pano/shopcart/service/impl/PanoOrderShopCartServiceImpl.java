@@ -14,10 +14,12 @@ import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
 import com.focus3d.pano.model.PanoProductModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
+import com.focus3d.pano.model.PanoProjectPackageModel;
 import com.focus3d.pano.model.PanoProjectPackageProductModel;
 import com.focus3d.pano.model.PanoProjectPackageTypeModel;
 import com.focus3d.pano.product.dao.PanoProductDao;
 import com.focus3d.pano.project.dao.PanoProjectHousePackageDao;
+import com.focus3d.pano.project.dao.PanoProjectPackageDao;
 import com.focus3d.pano.project.dao.PanoProjectPackageProductDao;
 import com.focus3d.pano.project.dao.PanoProjectPackageTypeDao;
 import com.focus3d.pano.shopcart.dao.PanoOrderShopCartDao;
@@ -45,6 +47,8 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 	private PanoProjectPackageTypeDao packageTypeDao;
 	@Autowired
 	private PanoProjectPackageProductDao packageProductDao;
+	@Autowired
+	private PanoProjectPackageDao packageDao;
 	
 	@Override
 	public CommonDao<PanoOrderShopcartModel> getDao() {
@@ -58,7 +62,12 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 			Long housePackageSn = shopcart.getHousePackageSn();
 			PanoProjectHousePackageModel housePackage = housePackageDao.getBySn(housePackageSn);
 			if(housePackage != null){
+				PanoProjectPackageModel projectPackage = packageDao.getBySn(housePackage.getPackageSn());
+				housePackage.setName(projectPackage.getName());
 				shopcart.setHousePackage(housePackage);
+				//风格
+				housePackage.getHouseStyleSn();
+				
 				List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
 				//设置购物车明细信息
 				for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {

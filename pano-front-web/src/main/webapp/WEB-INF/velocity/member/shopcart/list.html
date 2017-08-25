@@ -11,29 +11,31 @@
     </header>
     <!--订单-->
     <section class="order-items">
-        <div class="order-item">
-            <div class="title">
-              <span>
-                  <i class="iconfont">&#xe71f;</i>
-                  	基础套餐
-              </span>
-            </div>
-            <div class="cont">
-                <div class="choose">
-                    <input type="radio" >
-                </div>
-                <a href="#"><img src="/style/admstatic/image/image/2.jpg" ></a>
-                <div class="detail">
-                    <a href="#"><p>简约现代大会议桌现代风格套餐A带实木全套</p></a>
-                    <p >户型：三室量两厅</p>
-                    <p class="red">￥26000 <s class="col"> ￥26000</s></p>
-                </div>
-            </div>
-            <div class="total show">
-                <a href="/html/carshow.html"> 点击展开 <i class="iconfont">&#xe612;</i></a>
-            </div>
-
-        </div>
+    	#foreach($!shopcart in $!shopcartList)
+    	<div>
+	        <div class="order-item">
+	            <div class="title">
+	              <span>
+	                  <i class="iconfont">&#xe71f;</i>
+	                  	$!shopcart.housePackage.name
+	              </span>
+	            </div>
+	            <div class="cont">
+	                <div class="choose">
+	                    <input type="radio" >
+	                </div>
+	                <a href="#"><img src="/style/admstatic/image/image/2.jpg" ></a>
+	                <div class="detail">
+	                    <a href="#"><p>简约现代大会议桌现代风格套餐A带实木全套</p></a>
+	                    <p >户型：三室量两厅</p>
+	                    <p class="red">￥26000 <s class="col"> ￥26000</s></p>
+	                </div>
+	            </div>
+	            <div class="total show">
+	                <a href="/html/carshow.html"> 点击展开 <i class="iconfont">&#xe612;</i></a>
+	            </div>
+	
+	        </div>
         
         <div class="pro-show">
 				<div class="pro-raw">
@@ -85,7 +87,8 @@
 				<a href="/userside/tocar"> 点击收起 <i class="iconfont">&#xe60c;</i>
 				</a>
 			</div>
-			
+    	</div>
+		#end
  
         <nav class="nav">
             <a href="#"  id="tcshow">

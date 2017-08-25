@@ -50,6 +50,7 @@
 	
 	<sqlMap resource="context/datasource/sqlmap/pano_product_SqlMap.xml"/>
 	<sqlMap resource="context/datasource/sqlmap/pano_project_house_package_SqlMap.xml" />
+	<sqlMap resource="context/datasource/sqlmap/pano_project_package_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/pano_project_package_type_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/pano_project_package_product_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/pano_order_shopcart_SqlMap.xml" />
