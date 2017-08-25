@@ -26,28 +26,46 @@ function addToShopcar(packageSn){
 	});
 }
 
+var totalPrice = 0.0;
 $(function(){
-	
 	$("input[id^='selectItem_']").click(function(){
 		var status = $(this).attr("status");
+		var price = parseFloat($(this).attr("price"));
 		if(!status || status == 0){
 			$(this).attr("status", 1);
+			totalPrice += price;
 		} else {
 			$(this).attr("status", 0);
 			$(this).attr("checked", false);
+			$("#selectAll").attr("checked", false);
+			$("#selectAll").attr("status", 0);
+			totalPrice -= price;
 		}
+		$("#totalPrice").text(totalPrice);
 	});
 	
 	$("#selectAll").click(function(){
+		totalPrice = 0.0;
 		var status = $(this).attr("status");
 		if(!status || status == 0){
 			$(this).attr("status", 1);
 			$("input[id^='selectItem_']").prop('checked', true);
+			$("input[id^='selectItem_']").attr("status", 1);
+			$("input[id^='selectItem_']").each(function(){
+				var price = parseFloat($(this).attr("price"));
+				totalPrice += price;
+			});
 		} else {
 			$(this).attr("status", 0);
 			$(this).attr("checked", false);
 			$("input[id^='selectItem_']").prop('checked', false);
+			$("input[id^='selectItem_']").attr("status", 0);
+			$("input[id^='selectItem_']").each(function(){
+				var price = parseFloat($(this).attr("price"));
+				totalPrice -= price;
+			});
 		}
+		$("#totalPrice").text(totalPrice);
 	});
 	
 	$("#addToOrder").click(function(){
