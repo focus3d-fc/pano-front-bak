@@ -48,7 +48,9 @@ public class PanoOrderShopCartController extends BaseController {
 		for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
 			Long housePackageSn = panoOrderShopcartModel.getHousePackageSn();
 			PanoProjectHousePackageModel housePackage = housePackageService.getDetail(housePackageSn);
-			panoOrderShopcartModel.setHousePackage(housePackage);
+			if(housePackage != null){
+				panoOrderShopcartModel.setHousePackage(housePackage);
+			}
 		}
 		modelMap.put("shopcartList", shopcartList);
 		return "/member/shopcart/list";
