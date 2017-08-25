@@ -110,9 +110,9 @@
 .order-items .order-item .cont .col { color: #858585; }
 .order-items .order-item .total { height: .6rem; line-height: .6rem; font-size: .2rem; padding: 0 .2rem; background-color: #fff; text-align: right; border-bottom: 1px solid #ddd; }
 .order-items .order-item>p { padding: .3rem .2rem; background-color: #fff; text-align: right; }
-.order-items .order-item .paying { padding: .1rem .3rem; /*border: .01rem solid #fff;*/
+.order-items  .paying { padding: .1rem .3rem; /*border: .01rem solid #fff;*/
 border-radius: .05rem; background-color: #000; color: #fff; }
-.order-items .order-item .paid, #agree .paid { padding: .1rem .3rem; border: .01rem solid #000; border-radius: .05rem; background-color: #fff; color: #000; }
+.order-items  .paid, #agree .paid { padding: .1rem .3rem; border: .01rem solid #000; border-radius: .05rem; background-color: #fff; color: #000; }
 /*确认订单页面*/
 .address { background-color: #000; border-top: 1px solid #fff; padding: .2rem .2rem .2rem 0; color: #fff; display: -webkit-flex; display: -moz-flex; display: flex; display: -ms-flexbox; flex-flow: row nowrap; justify-content: space-between; }
 .address img { align-self: flex-end; width: .65rem; height: .65rem; margin-bottom: .2rem; }
@@ -127,10 +127,10 @@ border-radius: .05rem; background-color: #000; color: #fff; }
 .confirm .row .square { width: .3rem; height: .3rem; line-height: .3rem; text-align: center; background-color: #f6f6f6; margin: 0 .05rem; }
 .confirm .noboder { border: 0; }
 .order-item>p a { margin-left: .1rem; }
-.order-item .row2 { padding: 1rem 0; text-align: center; background-color: #fff; }
-.order-item .row2 img { width: .32 rem; height: .32rem; vertical-align: middle; }
-.confirm .order-item .total { position: absolute; bottom: 0; width: 100%; height: .9rem; line-height: .9rem; border-top: 1px solid #ddd; padding: 0 0 0 .2rem; }
-.confirm .order-item .total .tj { display: inline-block; width: 1.7rem; height: 1rem; line-height: 1rem; text-align: center; background-color: #000; color: #fff; font-size: .21rem; margin-left: .1rem; }
+.order-items .row2 { padding: 1rem 0; text-align: center; background-color: #fff; }
+.order-items .row2 img { width: .32 rem; height: .32rem; vertical-align: middle; }
+.confirm .order-items .total { position: absolute; bottom: 0; width: 100%; height: .9rem; line-height: .9rem; border-top: 1px solid #ddd; padding: 0 0 0 .2rem; }
+.confirm .order-items .total .tj { display: inline-block; width: 1.7rem; height: 1rem; line-height: 1rem; text-align: center; background-color: #000; color: #fff; font-size: .21rem; margin-left: .1rem; }
 /*合同条款弹窗*/
 #agree { width: 80%; background-color: #fff; padding: .4rem; top: 20%; left: 10%; position: fixed; border-radius: .1rem; }
 #agree h3, #agree div { text-align: center; margin-bottom: .1rem; }
