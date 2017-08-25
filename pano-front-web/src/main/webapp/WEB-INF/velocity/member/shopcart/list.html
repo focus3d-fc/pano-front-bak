@@ -32,53 +32,26 @@
 	                    <p class="red">￥$!shopcart.housePackage.packagePrice</p>
 	                </div>
 	            </div>
-	            <div class="total show">
-	                <a href="/html/carshow.html"> 点击展开 <i class="iconfont">&#xe612;</i></a>
-	            </div>
-	
 	        </div>
         
-        <div class="pro-show">
+       		<div class="pro-show">
+        			#foreach($!detail in $!shopcart.details)
 					<div class="left">
-						<a href="/perspective/QueryPerspective"> <img
-							src="/images/member/sofa111.png" alt="">
+						<a href="/perspective/QueryPerspective"> 
+							<img src="$!fs.url($!detail.packageProduct.fullImgSn)" alt="">
 							<div class="de">
-								<p>xxxxx北欧风格沙发xxxxx</p>
-								<p class="col">2100*15*21</p>
-								<p>xxxxx黄色xxxxx *1</p>
+								<p>$!detail.packageProduct.name</p>
+								<p class="col">$!{detail.packageProduct.length}*$!{detail.packageProduct.wide}*$!detail.packageProduct.height</p>
+								<p>$!detail.packageProduct.fabricColor</p>
 							</div>
 						</a>
 					</div>
+					#end
+					#if($!shopcart.details.size() % 2 != 0)
 					<div class="left">
-						<a href="/pro/topro"> <img
-							src="/images/member/sofa111.png" alt="">
-							<div class="de">
-								<p>北欧风格沙发</p>
-								<p class="col">2100*15*21</p>
-								<p>黄色 *1</p>
-							</div>
-						</a>
+						
 					</div>
-					<div class="left">
-						<a href="/pro/topro"> <img
-							src="/images/member/sofa111.png" alt="">
-							<div class="de">
-								<p>北欧风格沙发</p>
-								<p class="col">2100*15*21</p>
-								<p>黄色 *1</p>
-							</div>
-						</a>
-					</div>
-					<div class="left">
-						<a href="/pro/topro"> <img
-							src="/images/member/sofa111.png" alt="">
-							<div class="de">
-								<p>北欧风格沙发</p>
-								<p class="col">2100*15*21</p>
-								<p>黄色 *1</p>
-							</div>
-						</a>
-					</div>
+					#end
 			</div>
 			<div class="total show">
 				<a href="/userside/tocar"> 点击收起 <i class="iconfont">&#xe60c;</i>
@@ -114,7 +87,7 @@
         <p>合计：<span class="red">1400</span></p>
         <div class="button">
         	<form action="/order/confirmpage" method="post">
-        		<input id="packageSns" type="hidden"/>
+        		<input id="packageSns" name="packageSns" type="hidden"/>
             	<a href="#" id="addToOrder">结算</a>
         	</form>
         </div>
