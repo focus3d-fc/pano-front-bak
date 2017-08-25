@@ -903,6 +903,12 @@
     background-color: #f6f6f6;
 
 }
+.pro-show { adding-top: .2rem; background-color: #fff; width: 100%; display: -webkit-flex; display: -moz-flex; display: flex; display: -ms-flexbox; flex-flow: row wrap; justify-content: space-around; padding: .1rem; }
+.pro-show .left { width: 50%; padding: .1rem .1rem; }
+.pro-show .left a { width: 100%; display: -webkit-flex; display: -moz-flex; display: flex; display: -ms-flexbox; flex-flow: row nowrap; justify-content: center; padding: .1rem; border: .01rem solid #ddd; border-radius: .05rem; background-color: #f6f6f6; }
+.pro-show .left img { width: 40%; height: 1rem; margin-right: .1rem; }
+.pro-show .left div { width: 60%; }
+.pro-show .left div p { margin-bottom: .05rem; }
 .pro-raw .left img{
     width: 40%;
     height: 1rem;
