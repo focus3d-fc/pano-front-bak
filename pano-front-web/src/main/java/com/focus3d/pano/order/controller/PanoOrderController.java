@@ -23,6 +23,7 @@ import com.focus3d.pano.model.PanoUserReceiveAddressModel;
 import com.focus3d.pano.model.ibator.PanoPerspectiveViewModel;
 import com.focus3d.pano.order.service.PanoOrderCouponItemService;
 import com.focus3d.pano.project.service.PanoProjectHousePackageService;
+import com.focustech.common.utils.EncryptUtil;
 
 /**
  * 
@@ -58,7 +59,7 @@ public class PanoOrderController extends BaseController {
 		BigDecimal payAmount = BigDecimal.ZERO;
 		for (String packageSn : packageSns) {
 			PanoProjectHousePackageModel housePackage = housePackageService
-					.getDetail(Long.parseLong(packageSn));
+					.getDetail(EncryptUtil.decode(packageSn));
 			housePackages.add(housePackage);
 			payAmount = payAmount.add(housePackage.getPackagePrice());
 		}
