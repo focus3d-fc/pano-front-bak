@@ -11,6 +11,11 @@ import com.focus3d.pano.model.ibator.PanoProjectHouseCriteria;
  */
 public class PanoProjectHouseModel extends PanoProjectHouse<PanoProjectHouseModel, PanoProjectHouseCriteria> implements CommonModel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	
 
 }

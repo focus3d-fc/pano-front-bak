@@ -74,49 +74,25 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 	public List<PanoOrderShopcartModel> listByUser(long userSn) {
 		List<PanoOrderShopcartModel> shopcarts = orderShopCartDao.listByUser(userSn);
 		for (PanoOrderShopcartModel shopcart : shopcarts) {
-			Long housePackageSn = shopcart.getHousePackageSn();
-			PanoProjectHousePackageModel housePackage = housePackageDao.getBySn(housePackageSn);
-			if(housePackage != null){
-				PanoProjectPackageModel projectPackage = packageDao.getBySn(housePackage.getPackageSn());
-				housePackage.setName(projectPackage.getName());
-				shopcart.setHousePackage(housePackage);
-				//风格
-				Long houseStyleSn = housePackage.getHouseStyleSn();
-				PanoProjectHouseStyleModel houseStyle = houseStyleDao.getBySn(houseStyleSn);
-				Long houseSn = houseStyle.getHouseSn();
-				PanoProjectHouseModel house = houseDao.getBySn(houseSn);
-				if(house != null){
-					housePackage.setHouse(house);
-				}
-				Long projectStyleSn = houseStyle.getStyleSn();
-				PanoProjectStyleModel projectStyle = projectStyleDao.getBySn(projectStyleSn);
-				if(projectStyle != null){
-					Long baseStyleSn = projectStyle.getStyleSn();
-					PanoProjectBaseStyleModel baseStyle = baseStyleDao.getBySn(baseStyleSn);
-					projectStyle.setName(baseStyle.getName());
-					housePackage.setStyle(projectStyle);
-				}
-				
-				List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
-				//设置购物车明细信息
-				for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {
-					Long packageProductSn = shopcartDetail.getPackageProductSn();
-					if(packageProductSn != null){
-						PanoProductModel packageProduct = productDao.getBySn(packageProductSn);
-						if(packageProduct != null){
-							shopcartDetail.setPackageProduct(packageProduct);
-						}
-					}
-					Long packageTypeSn = shopcartDetail.getPackageTypeSn();
-					if(packageTypeSn != null){
-						PanoProjectPackageTypeModel packageType = packageTypeDao.getBySn(packageTypeSn);
-						if(packageType != null){
-							shopcartDetail.setPackageType(packageType);
-						}
+			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
+			//设置购物车明细信息
+			for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {
+				Long packageProductSn = shopcartDetail.getPackageProductSn();
+				if(packageProductSn != null){
+					PanoProductModel packageProduct = productDao.getBySn(packageProductSn);
+					if(packageProduct != null){
+						shopcartDetail.setPackageProduct(packageProduct);
 					}
 				}
-				shopcart.setDetails(shopcartDetails);
+				Long packageTypeSn = shopcartDetail.getPackageTypeSn();
+				if(packageTypeSn != null){
+					PanoProjectPackageTypeModel packageType = packageTypeDao.getBySn(packageTypeSn);
+					if(packageType != null){
+						shopcartDetail.setPackageType(packageType);
+					}
+				}
 			}
+			shopcart.setDetails(shopcartDetails);
 		}
 		return shopcarts;
 	}

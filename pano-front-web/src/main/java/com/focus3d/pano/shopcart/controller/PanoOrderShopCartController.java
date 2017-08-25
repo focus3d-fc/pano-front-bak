@@ -15,6 +15,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.focus3d.pano.common.controller.BaseController;
 import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
+import com.focus3d.pano.model.PanoProjectHousePackageModel;
+import com.focus3d.pano.project.service.PanoProjectHousePackageService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focustech.common.utils.EncryptUtil;
 import com.focustech.common.utils.StringUtils;
@@ -29,6 +31,8 @@ import com.focustech.common.utils.StringUtils;
 public class PanoOrderShopCartController extends BaseController {
 	@Autowired
 	private PanoOrderShopCartService<PanoOrderShopcartModel> orderShopCartService;
+	@Autowired
+	private PanoProjectHousePackageService<PanoProjectHousePackageModel> housePackageService;
 
 	/**
 	 * 购物车列表
@@ -41,6 +45,11 @@ public class PanoOrderShopCartController extends BaseController {
 	public String list(ModelMap modelMap, HttpServletRequest request){
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
+		for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
+			Long housePackageSn = panoOrderShopcartModel.getHousePackageSn();
+			PanoProjectHousePackageModel housePackage = housePackageService.getDetail(housePackageSn);
+			panoOrderShopcartModel.setHousePackage(housePackage);
+		}
 		modelMap.put("shopcartList", shopcartList);
 		return "/member/shopcart/list";
 	}
