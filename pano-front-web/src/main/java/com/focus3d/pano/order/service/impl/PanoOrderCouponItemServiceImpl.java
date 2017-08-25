@@ -20,6 +20,7 @@ import com.focus3d.pano.order.service.PanoOrderCouponItemService;
 public class PanoOrderCouponItemServiceImpl extends CommonServiceImpl<PanoOrderCouponItemModel> implements PanoOrderCouponItemService<PanoOrderCouponItemModel> {
 	@Autowired
 	private PanoOrderCouponItemDao orderCouponItemDao;
+	
 	@Override
 	public CommonDao<PanoOrderCouponItemModel> getDao() {
 		return orderCouponItemDao;
