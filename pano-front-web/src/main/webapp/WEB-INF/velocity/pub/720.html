@@ -1,75 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="renderer" content="webkit">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<meta name="keywords" content="$!pano.keywords" />
-	<meta name="description" content="$!pano.description" />
-    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
-    <title>720</title>
-    <link rel="stylesheet" href="/style/h5static/css/bass.css">
-    <link rel="stylesheet" href="/style/h5static/css/index.css">
-    <link rel="stylesheet" href="/style/h5static/lib/swiper/swiper.min.css">
-    <script src="/style/h5static/js/main.js"></script>
-     <script src="/style/h5static/js/pano.js"></script>
-     <style>
-            @-ms-viewport { width:device-width;}
-            @media only screen and (min-device-width:800px) { html { overflow:hidden; } }
-            html { height:100%; }
-            body { height:100%; overflow:hidden; margin:0; padding:0; font-family:微软雅黑, Arial, Helvetica, sans-serif; font-size:16px; color:#FFFFFF; background-color:#000000; }
-       		.bd-r2 {width: 95.5px; margin-right: 10px;}
-       		.bd-r1 {width: 37.5px; margin-right: 10px;}
-        </style>
-</head>
-<body>
-<script src="/style/h5static/js/pano.js"></script>
+#set($layout="layout/pub/layout_pano.html")
 		<div id="pano" style="width:100%;height:100%;">
 			<!-- 这里是全景显示区域 -->
 		</div>
-			<div id="scrollArea" style="position: absolute;bottom: 100px;left: 100px;width:100%;height: 50px;"></div> 
-<div class="container se720">
-
-    <!--场景-->
-    <section class="hide">
-        <p class="location location3">客厅</p>
-         <div class="re-box">
-            <div class="rd-show">
-                <div class="swiper-container swiper4">
-                    <div class="swiper-wrapper" id="product-swiper-wrapper">
-                    
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        
-        <nav class="nav">
-            <a href="#"  id="tcshow">
-                <img src="$!fs.url($!{img_tc})" alt="">
-                <p>套餐</p>
-            </a>
-            <a href="#" id="fjshow">
-                <img src="$!fs.url($!{img_space})" alt="">
-                <p>房间</p>
-            </a>
-            <a href="#" id="hxshow">
-                <img src="$!fs.url($!{img_house})" alt="">
-                <p>户型</p>
-            </a>
-            <a href="/shopcart/list" >
-                <img src="$!fs.url($!{img_cart})" alt="">
-                <p>购物车</p>
-            </a>
-        </nav>
-    </section>
+		<div id="scrollArea" style="position: absolute;bottom: 100px;left: 100px;width:100%;height: 50px;"></div> 
+			<div class="container se720">
+		    <!--场景-->
+		    <section class="hide">
+		        <p class="location location3">客厅</p>
+		         <div class="re-box">
+		            <div class="rd-show">
+		                <div class="swiper-container swiper4">
+		                    <div class="swiper-wrapper" id="product-swiper-wrapper">
+		                    
+		                    </div>
+		                </div>
+		            </div>
+		
+		        </div>
+		        
+		        <nav class="nav">
+		            <a href="#"  id="tcshow">
+		                <img src="$!fs.url($!{img_tc})" alt="">
+		                <p>套餐</p>
+		            </a>
+		            <a href="#" id="fjshow">
+		                <img src="$!fs.url($!{img_space})" alt="">
+		                <p>房间</p>
+		            </a>
+		            <a href="#" id="hxshow">
+		                <img src="$!fs.url($!{img_house})" alt="">
+		                <p>户型</p>
+		            </a>
+		            <a href="/shopcart/list" >
+		                <img src="$!fs.url($!{img_cart})" alt="">
+		                <p>购物车</p>
+		            </a>
+		        </nav>
+		    </section>
      		<!--户型弹窗-->
     			<div id="hx" >
 					<div class="swiper-container swiper3">
@@ -91,11 +58,9 @@
         <input type="hidden" id="houseId"/>
         <input type="hidden" id="panoId"/>
         <!-- 对接的js文件 -->
-<script src="/style/h5static/js/pano_hotspot.js"></script>
-<script src="/style/h5static/js/addtoshopcart.js"></script>
-<script src="/style/h5static/js/clickHouse.js"></script>
-<script src="/style/h5static/lib/jQuery/jquery-3.2.1.min.js"></script>
-<script src="/style/h5static/lib/swiper/swiper.jquery.min.js"></script>
+		<script src="/script/pub/pano_hotspot.js"></script>
+		<script src="/script/member/shopcart/add.js"></script>
+		<script src="/style/h5static/lib/swiper/swiper.jquery.min.js"></script>
 <script>
     $(function(){
        $('.rd').click(function () {
@@ -210,6 +175,3 @@
     })
     
 </script>
-</body>
-
-</html>

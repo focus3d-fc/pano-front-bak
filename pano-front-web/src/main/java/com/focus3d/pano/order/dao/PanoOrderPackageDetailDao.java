@@ -16,14 +16,14 @@ import com.focus3d.pano.model.ibator.PanoOrderPackageDetailCriteria;
 @Repository
 public class PanoOrderPackageDetailDao extends CommonDao<PanoOrderPackageDetailModel> {
 	/**
-	 * 
+	 * 订单内套餐明细列表
 	 * *
-	 * @param housePackageSn
+	 * @param housePackageSn 订单套餐sn
 	 * @return
 	 */
-	public List<PanoOrderPackageDetailModel> listByHousePackage(long housePackageSn){
+	public List<PanoOrderPackageDetailModel> listByOrderPackage(long orderPackageSn){
 		PanoOrderPackageDetailCriteria criteria = new PanoOrderPackageDetailCriteria();
-		criteria.createCriteria().andHousePackageSnEqualTo(housePackageSn);
+		criteria.createCriteria().andOrderPackageSnEqualTo(orderPackageSn);
 		return selectByCriteria(criteria, PanoOrderPackageDetailModel.class);
 	}
 }

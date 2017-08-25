@@ -1,9 +1,9 @@
 package com.focus3d.pano.shopcart.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,17 +11,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.alibaba.fastjson.JSONObject;
 import com.focus3d.pano.common.controller.BaseController;
 import com.focus3d.pano.filter.LoginThreadLocal;
-import com.focus3d.pano.model.PanoOrderPackageDetailModel;
-import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
-import com.focus3d.pano.model.PanoProductModel;
-import com.focus3d.pano.model.PanoProjectPackageTypeModel;
-import com.focus3d.pano.project.service.PanoProjectPackageTypeService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focustech.common.utils.EncryptUtil;
-import com.focustech.common.utils.ListUtils;
 import com.focustech.common.utils.StringUtils;
 /**
  * 购物车
@@ -34,11 +29,9 @@ import com.focustech.common.utils.StringUtils;
 public class PanoOrderShopCartController extends BaseController {
 	@Autowired
 	private PanoOrderShopCartService<PanoOrderShopcartModel> orderShopCartService;
-	@Autowired
-	private PanoProjectPackageTypeService<PanoProjectPackageTypeModel> packageTypeService;
 
 	/**
-	 * 
+	 * 购物车列表
 	 * *
 	 * @param request
 	 * @param session
@@ -52,38 +45,19 @@ public class PanoOrderShopCartController extends BaseController {
 		return "/member/shopcart/list";
 	}
 	/**
-	 * 
+	 * 添加套餐到购物车
 	 * *
 	 * @param packageEncryptSn
 	 * @throws Exception 
 	 */
 	@RequestMapping(value = "add", method = RequestMethod.POST)
-	public void add(String packageEncryptSn) throws Exception{
+	public void add(String packageEncryptSn, HttpServletResponse response) throws Exception{
 		if(StringUtils.isNotEmpty(packageEncryptSn)){
-			Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 			Long packageSn = EncryptUtil.decode(packageEncryptSn);
-			List<PanoProjectPackageTypeModel> housePackageTypeList = packageTypeService.listByHousePackage(packageSn);
-			PanoOrderShopcartModel shopcartModel = new PanoOrderShopcartModel();
-			shopcartModel.setUserSn(userSn);
-			shopcartModel.setHousePackageSn(packageSn);
-			int housePackageNum = 0;
-			//套餐类别
-			List<PanoOrderShopcartDetailModel> orderShopcartDetails = new ArrayList<PanoOrderShopcartDetailModel>();
-			for (PanoProjectPackageTypeModel housePackageType : housePackageTypeList) {
-				//取类别下第一条产品
-				List<PanoProductModel> products = housePackageType.getProducts();
-				if(ListUtils.isNotEmpty(products)){
-					housePackageNum ++;
-					PanoProductModel product = products.get(0);
-					/*PanoOrderPackageDetailModel orderPackageDetailModel = new PanoOrderPackageDetailModel();
-					orderPackageDetailModel.setPackageProductSn(product.getSn());
-					orderPackageDetailModel.setPackageTypeSn(housePackageType.getSn());
-					orderPackageDetailModel.setHousePackageSn(packageSn);
-					orderShopcartDetails.add(orderPackageDetailModel);*/
-				}
-			}
-			shopcartModel.setPackageTypeNum(housePackageNum);
-			orderShopCartService.insert(shopcartModel);
+			int status = orderShopCartService.addOrDelete(packageSn);
+			JSONObject jo = new JSONObject();
+			jo.put("status", status);
+			ajaxOutput(response, jo.toString());
 		}
 	}
 }

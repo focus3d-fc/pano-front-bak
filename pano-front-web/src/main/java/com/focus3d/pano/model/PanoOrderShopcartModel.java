@@ -20,7 +20,7 @@ public class PanoOrderShopcartModel extends PanoOrderShopcart<PanoOrderShopcartM
 	
 	private PanoProjectHousePackageModel housePackage;
 	
-	private List<PanoOrderPackageDetailModel> housePackageDetails = new ArrayList<PanoOrderPackageDetailModel>();
+	private List<PanoOrderShopcartDetailModel> details = new ArrayList<PanoOrderShopcartDetailModel>();
 
 	public PanoProjectHousePackageModel getHousePackage() {
 		return housePackage;
@@ -30,13 +30,12 @@ public class PanoOrderShopcartModel extends PanoOrderShopcart<PanoOrderShopcartM
 		this.housePackage = housePackage;
 	}
 
-	public List<PanoOrderPackageDetailModel> getHousePackageDetails() {
-		return housePackageDetails;
+	public List<PanoOrderShopcartDetailModel> getDetails() {
+		return details;
 	}
 
-	public void setHousePackageDetails(
-			List<PanoOrderPackageDetailModel> housePackageDetails) {
-		this.housePackageDetails = housePackageDetails;
+	public void setDetails(List<PanoOrderShopcartDetailModel> details) {
+		this.details = details;
 	}
 
 	

@@ -201,10 +201,6 @@ function getTcshow(houseId){
 	    		var imgUrl = data[i].imgUrl;
 	    		var img = $("<img/>").attr("src", imgUrl).attr("package_sn",sn);
 	    		$("<div/>").addClass("bd-r1").addClass("swiper-slide" + (i == 0 ? " bd-r " : "")).append($("<div/>").append(img).append($("<p/>").text(name))).appendTo($("#tc-swiper-wrapper"));
-//	    		img.css({'width','.65rem'},
-//	    				{'height','.65rem'})
-	    		
-	    		
 	    		img.bind("click", function(){
 	    			//显示热点
 	    			//全景id
@@ -213,6 +209,7 @@ function getTcshow(houseId){
 	    			var sceneId = editorKrpano().get("xml.scene");
 	    			//套餐sn
 	    			var packageSn = $(this).attr("package_sn");
+	    			//添加至购物车
 	    			addToShopcar(packageSn);
 	    			//获取当前场景下的套餐下所有类别的热点
 	    			$.ajax({
