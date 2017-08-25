@@ -1,4 +1,4 @@
-//添加套餐到购物车
+//全景里面点击套餐，添加套餐到购物车
 function addToShopcar(packageSn){
 	var panoDomain = $("#panoDomain").val();
 	$.ajax({
@@ -25,3 +25,19 @@ function addToShopcar(packageSn){
 	    }
 	});
 }
+
+$(function(){
+	
+	$("#addToOrder").click(function(){
+		var packageSns = "";
+		$("input[id^='selectItem']:checked").each(function(){
+			packageSns += $(this).val() + ",";
+		});
+		if(!packageSns){
+			alert("请选择一个套餐");
+		} else {
+			$("#packageSns").val(packageSns);
+			$("form").submit();
+		}
+	});
+});

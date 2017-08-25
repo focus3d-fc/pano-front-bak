@@ -22,7 +22,7 @@
 	            </div>
 	            <div class="cont">
 	                <div class="choose">
-	                    <input type="radio" >
+	                    <input id="selectItem_$!velocityCount" value="$!shopcart.housePackage.encryptSn" type="radio" >
 	                </div>
 	                <a href="#"><img src="/style/admstatic/image/image/2.jpg" ></a>
 	                <div class="detail">
@@ -112,12 +112,16 @@
     
     <div class="car-total">
         <div class="choose">
-            <input type="radio" >
+            <input id="selectAll" type="radio">全选
         </div>
         <p>合计：<span class="red">1400</span></p>
         <div class="button">
-            <a href="/order/confirm">结算</a>
+        	<form action="/order/confirm" method="post">
+        		<input id="packageSns" type="hidden"/>
+            	<a href="#" id="addToOrder">结算</a>
+        	</form>
         </div>
     </div>
     
    </div>
+<script src="/script/member/shopcart/add.js"></script>
