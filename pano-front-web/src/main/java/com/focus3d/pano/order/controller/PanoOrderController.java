@@ -91,8 +91,8 @@ public class PanoOrderController extends BaseController {
 		PanoOrderCouponItemModel panoOrderCouponItemModel =	panoOrderCouponItemService.getByCode(code);
 		
 		JSONObject jo = new JSONObject();
-		jo.put("isUsable", 1);
-		jo.put("total", 1);
+		jo.put("status", panoOrderCouponItemModel.getStatus());
+		jo.put("discountAmount", panoOrderCouponItemModel.getPriceDiscount());
 		ajaxOutput(response, jo.toString());
 	}
 }

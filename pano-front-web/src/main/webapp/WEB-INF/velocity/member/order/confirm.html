@@ -58,7 +58,7 @@
            #end
             <div class="row">
               <p>请输入兑换优惠码：</p>
-              <p onclick="$('[name=promotionSn]').focus();"><input type="text" style="color:transparent;" name="promotionSn"  />
+              <p onclick="$('[name=promotionSn]').focus();"><input type="text" style="outline:medium;color:transparent;border:none;display:none" name="promotionSn"  />
                   <span class="square"></span>
                   <span class="square"></span>
                   <span class="square"></span>
@@ -71,11 +71,16 @@
 		              <p>付款方式：</p>
 		          </div>
 		          <p>
-		              <a href="#" class="paying">付全款
+		              <a href="#" class="paying" onclick="choosePayScheme(1)">付全款
 		                  <span class="red">95折</span>
 		            </a>
-		              <a href="#" class="paid">预付2成</a>
+		              <a href="#" class="paid" onclick="choosePayScheme(2)">预付2成</a>
 		          </p>
+		          <div class="stages" style="display:none;">
+		          	<div><span>阶段1：定金</span><span style="margin-left:40px;">优惠券抵扣：￥<span class="couponAmount"></span></span><span style="margin-left:40px;">小计：￥<span class="stage1Amount"></span></span></div>
+		          	<div><span>阶段2：尾款</span><span style="margin-left:40px;">小计：￥<span class="stage2Amount"></span></div>
+		          	<div></div>
+		          </div>
 		          <div class="row2">
 		              <p>
 		                  <img src="../image/img/choose2.png" alt="">
@@ -85,7 +90,7 @@
 		              </p>
 		          </div>
 		          <div class="total">
-		              共 <span>$!housePackages.size()</span>件产品 合计￥<span class="red">$!payAmount</span>元
+		              共 <span class="totalCount"></span>件产品 <span class="payAmountDesc">合计</span>￥<span class="red"></span>元
 		              <a class="tj" onclick="$('.wrap1').show();">
 		                  提交订单
 		              </a>
@@ -133,6 +138,62 @@
 </div>
 <!--注册验证-->
 <script>
+var payScheme=1;
+var payAmount = 0;
+var couponAmount = 0;
+var couponCode = null;
+
+var packages = new Object();
+
+#foreach($!housePackage in $!housePackages)
+packages['$!housePackage.sn'] = new Object();
+	packages['$!housePackage.sn'].price=$!housePackage.packagePrice
+	packages['$!housePackage.sn'].count=1
+#end
+
+calculate();
+	
+function calculate(){
+	payAmount  =0;
+	var totalCount = 0;
+	for(var i in packages){
+        if (packages.hasOwnProperty(i)) { //filter,只输出man的私有属性
+        	payAmount = payAmount+(packages[i].price*packages[i].count)
+        	totalCount = totalCount+ packages[i].count;
+        };
+    }
+	payAmount = payAmount - couponAmount;
+	if(payScheme == 1){
+		
+		$('.total .red').text(payAmount)
+		$('.total .totalCount').text(totalCount)
+		$('.payAmountDesc').text('合计')
+	}else{
+		var stage1Amount = payAmount*0.2;
+		stage1Amount= parseFloat(stage1Amount.toFixed(2))
+		var stage2Amount = payAmount - stage1Amount;
+		payAmount=stage1Amount;
+		$('.total .red').text(payAmount)
+		$('.total .totalCount').text(totalCount)
+		$('.couponAmount').text(couponAmount)
+		$('.stage1Amount').text(stage1Amount)
+		$('.stage2Amount').text(stage2Amount)
+		$('.payAmountDesc').text('定金')
+		
+		
+	}
+}
+
+function choosePayScheme(paySchemeParam){
+	payScheme = paySchemeParam;
+	if(payScheme== 1){
+		$('.stages').hide();
+	}else{
+		$('.stages').show();
+	}
+	
+	calculate();
+}
     //获取手机验证码-登录
     $("#j_getVerifyCode").on("click",getVerifyCode({
         callBack: function (){//按钮点击后的回调函数，-----必须-----
@@ -143,7 +204,7 @@
         getCurrentTime: function (time){//获取倒计时当前时间
         },
         isPhone: true,//是否为发送手机验证码，如果是则会验证手机号格式，-----必须-----
-        getPhone: function (){//获取手机号，此处一定要return
+        getPhone: function (){//获取手机号，此+处一定要return
             return $("#j_phone").val();
         },
         phoneReg: /^1[34578]\d{9}$/,//手机号验证正则
@@ -165,24 +226,28 @@
             return false;
         })
         
-        	$('[name=promotionSn]').onblur(function(event){
-        		alert(event.data)
+        	$('[name=promotionSn]').blur(function(event){
         		$.ajax({
                     type: 'GET',
                     async: false,
                     data: {},
-                    url: '/order/coupon',
+                    url: '/order/coupon?code='+event.target.value,
                     dataType: 'json',
                     success: function (data) {
-                        if(data.isUsable == 0){
-                        	alert('优惠券不可用')
+                    	if(!data.discountAmount)
+                    		alert('未找到该优惠券')
+                        if(data.status == 1){
+                        	alert('优惠券未生效')
+                        }else if(data.status == 2){
+                        	alert('优惠券过期')
                         }else{
-                        	
+                        	couponAmount = data.discountAmount;
+                        	couponCode = event.target.value;
                         }
                         
                     },
                     error:function(xhr, msg, reasonString){
-                        alert(xhr.status+":"+JSON.parse(xhr.responseText).error)
+                        alert('优惠券获取失败')
                     }
                 });
         	})
@@ -201,17 +266,20 @@
     function subCount(packageId){
 		var count = parseInt($('#'+packageId+' .buyCount').text())-1;
 	if(count >= 1){
-		$('.total .red').text(parseInt($('.total .red').text())-parseInt( $('#'+packageId+' .price .red .price_val').text()))
 		$('#'+packageId+' .buyCount').text(count)
+		//$('.total .red').text(parseInt($('.total .red').text())-parseInt( $('#'+packageId+' .price .red .price_val').text()))
+		packages[packageId].count=count
+		calculate()
 	}
 	 
    }
    
     function addCount(packageId){
 		var count = parseInt($('#'+packageId+' .buyCount').text())+1;
-		$('.total .red').text(parseInt($('.total .red').text())+parseInt($('#'+packageId+' .price .red .price_val').text()))
-
-	$('#'+packageId+' .buyCount').text(count)
+		//$('.total .red').text(parseInt($('.total .red').text())+parseInt($('#'+packageId+' .price .red .price_val').text()))
+		$('#'+packageId+' .buyCount').text(count)
+		packages[packageId].count=count
+		calculate()
    }
     
     

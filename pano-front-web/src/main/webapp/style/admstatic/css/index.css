@@ -248,7 +248,7 @@
 .order-items .order-item .cont .price p { padding-bottom: 0; text-align: right; }
 .order-items .order-item .cont p { padding-bottom: .2rem; }
 .order-items .order-item .cont .col { color: #858585; }
-.order-items .order-item .total { height: .6rem; line-height: .6rem; font-size: .2rem; padding: 0 .2rem; background-color: #fff; text-align: right; border-bottom: 1px solid #ddd; }
+.order-items  .total { height: .6rem; line-height: .6rem; font-size: .2rem; padding: 0 .2rem; background-color: #fff; text-align: right; border-bottom: 1px solid #ddd; }
 .order-items .order-item>p { padding: .3rem .2rem; background-color: #fff; text-align: right; }
 .order-items  .paying { padding: .1rem .3rem; /*border: .01rem solid #fff;*/
 border-radius: .05rem; background-color: #000; color: #fff; }
@@ -423,7 +423,7 @@ border-radius: .05rem; background-color: #000; color: #fff; }
 .order-items .order-item .cont  .col{
     color: #858585;
 }
-.order-items .order-item .total{
+.order-items  .total{
     height: .6rem;
     line-height: .6rem;
     font-size: .2rem;
@@ -437,14 +437,14 @@ border-radius: .05rem; background-color: #000; color: #fff; }
     background-color: #fff;
     text-align: right;
 }
-.order-items .order-item .paying{
+.order-items .paying{
     padding: .1rem .3rem;
     /*border: .01rem solid #fff;*/
     border-radius: .05rem;
     background-color: #000;
     color: #fff;
 }
-.order-items .order-item .paid,
+.order-items  .paid,
 #agree .paid{
     padding: .1rem .3rem;
     border: .01rem solid #000;
