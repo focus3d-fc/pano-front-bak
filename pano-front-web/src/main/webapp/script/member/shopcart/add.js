@@ -28,6 +28,28 @@ function addToShopcar(packageSn){
 
 $(function(){
 	
+	$("input[id^='selectItem_']").click(function(){
+		var status = $(this).attr("status");
+		if(!status || status == 0){
+			$(this).attr("status", 1);
+		} else {
+			$(this).attr("status", 0);
+			$(this).attr("checked", false);
+		}
+	});
+	
+	$("#selectAll").click(function(){
+		var status = $(this).attr("status");
+		if(!status || status == 0){
+			$(this).attr("status", 1);
+			$("input[id^='selectItem_']").prop('checked', true);
+		} else {
+			$(this).attr("status", 0);
+			$(this).attr("checked", false);
+			$("input[id^='selectItem_']").prop('checked', false);
+		}
+	});
+	
 	$("#addToOrder").click(function(){
 		var packageSns = "";
 		$("input[id^='selectItem']:checked").each(function(){
