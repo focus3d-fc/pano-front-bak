@@ -1,5 +1,7 @@
 package com.focus3d.pano.model;
 
+import java.math.BigDecimal;
+
 import com.focus3d.pano.common.model.CommonModel;
 import com.focus3d.pano.model.ibator.PanoOrderCouponItem;
 import com.focus3d.pano.model.ibator.PanoOrderCouponItemCriteria;
@@ -16,6 +18,24 @@ public class PanoOrderCouponItemModel extends PanoOrderCouponItem<PanoOrderCoupo
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
 
+	private BigDecimal priceDiscount;//优惠价
+	
+	private int status;//0-可用 1-未生效 2-过期
+
+	public BigDecimal getPriceDiscount() {
+		return priceDiscount;
+	}
+
+	public void setPriceDiscount(BigDecimal priceDiscount) {
+		this.priceDiscount = priceDiscount;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 }
