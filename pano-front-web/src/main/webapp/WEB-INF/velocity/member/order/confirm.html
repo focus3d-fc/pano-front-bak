@@ -10,18 +10,19 @@
         <img src="../image/img/8.png" alt="">
         <div>
             <p class="clearfix">
-                <span class="fl">收货人：周俊龙</span>
-                <span class="fr">13495937497</span>
+                <span class="fl">收货人：$!defaultAddress.userName</span>
+                <span class="fr">$!defaultAddress.mobile</span>
             </p>
             <p>
-                收货地址：上海上海市皮东新区花木街道海桐小区40号402室区40号402室
+                收货地址：$!defaultAddress.province $!defaultAddress.province.city $!defaultAddress.province.area $!defaultAddress.province.street
             </p>
         </div>
         <a href="address.html" class="right"><i class="iconfont">&#xe6c7;</i></a>
     </section>
     <!--订单-->
     <section class="order-items">
-      <div class="order-item">
+    #foreach($!housePackage in $!housePackages)
+      <div class="order-item" id="$!housePackage.sn">
           <div class="title">
               <div>
                   <img src="../image/img/30.png" alt="">
@@ -32,61 +33,66 @@
               </span>
           </div>
           <div class="cont">
-              <a href="#"><img src="../image/image/2.jpg" ></a>
+              <a href="#"><img src="$!fs.url($!housePackage.imgSn)" ></a>
               <div class="detail">
-                  <a href="#"><p class="detail-tlt">简约现代大会议桌现代风格套餐A带实木全套</p></a>
-                  <p class="col detail-con">窗帘套餐</p>
+                  <a href="#"><p class="detail-tlt">$!housePackage.style.name $!housePackage.house.name</p></a>
+                  <p class="col detail-con">$!housePackage.name</p>
               </div>
               <div class="price">
-                  <p class="red">￥26000</p>
-                  <s class="col"> ￥26000</s>
+                  <p class="red">￥<span class='price_val'>$!housePackage.packagePrice</span></p>
+                  <s class="col">￥$!housePackage.discountPrice</s>
                   <p class="col">×<span>1</span></p>
               </div>
           </div>
           <div class="row">
            <p>购买数量</p>
           <p>
-              <span class="square">-</span>
-              <span>1</span>
-              <span class="square">+</span>
+              <span class="square" onclick="subCount('$!housePackage.sn')">-</span>
+              <span class="buyCount">1</span>
+              <span class="square" onclick="addCount('$!housePackage.sn')">+</span>
           </p>
           </div>
-          <div class="row">
+         
+         
+          </div>
+           #end
+            <div class="row">
               <p>请输入兑换优惠码：</p>
-              <p>
-                  <span class="square">1</span>
-                  <span class="square">1</span>
-                  <span class="square">1</span>
-                  <span class="square">1</span>
-                  <span class="square">1</span>
-                  <span class="square">1</span>
+              <p onclick="$('[name=promotionSn]').focus();"><input type="text" style="color:transparent;" name="promotionSn"  />
+                  <span class="square"></span>
+                  <span class="square"></span>
+                  <span class="square"></span>
+                  <span class="square"></span>
+                  <span class="square"></span>
+                  <span class="square"></span>
               </p>
           </div>
-          <div class="row noboder">
-              <p>付款方式：</p>
-          </div>
-          <p>
-              <a href="#" class="paying">付全款
-                  <span class="red">95折</span>
-            </a>
-              <a href="#" class="paid">预付2成</a>
-          </p>
-          <div class="row2">
-              <p>
-                  <img src="../image/img/choose2.png" alt="">
-                  <a onclick="$('.wrap').show();" >我已阅读并同意
-                      <span class="red">合同条款</span>
-                  </a>
-              </p>
-          </div>
-          <div class="total">
-              共 <span>1</span>件产品 合计￥<span class="red">18000</span>元
-              <a class="tj" onclick="$('.wrap1').show();">
-                  提交订单
-              </a>
-          </div>
-      </div>
+		         <div class="row noboder">
+		              <p>付款方式：</p>
+		          </div>
+		          <p>
+		              <a href="#" class="paying">付全款
+		                  <span class="red">95折</span>
+		            </a>
+		              <a href="#" class="paid">预付2成</a>
+		          </p>
+		          <div class="row2">
+		              <p>
+		                  <img src="../image/img/choose2.png" alt="">
+		                  <a onclick="$('.wrap').show();" >我已阅读并同意
+		                      <span class="red">合同条款</span>
+		                  </a>
+		              </p>
+		          </div>
+		          <div class="total">
+		              共 <span>$!housePackages.size()</span>件产品 合计￥<span class="red">$!payAmount</span>元
+		              <a class="tj" onclick="$('.wrap1').show();">
+		                  提交订单
+		              </a>
+		          </div>
+      
     </section>
+     
 </div>
 <!--合同条款弹窗-->
 <div class="wrap">
@@ -158,5 +164,55 @@
         $("#confirm").click(function(){
             return false;
         })
+        
+        	$('[name=promotionSn]').onblur(function(event){
+        		alert(event.data)
+        		$.ajax({
+                    type: 'GET',
+                    async: false,
+                    data: {},
+                    url: '/order/coupon',
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.isUsable == 0){
+                        	alert('优惠券不可用')
+                        }else{
+                        	
+                        }
+                        
+                    },
+                    error:function(xhr, msg, reasonString){
+                        alert(xhr.status+":"+JSON.parse(xhr.responseText).error)
+                    }
+                });
+        	})
+        $('[name=promotionSn]').keydown(function(event){ 
+        	$($('[name=promotionSn]').nextAll('span.square')).each(function(index,ele){
+        		if($(ele).text() == ''){
+        			$(ele).text(String.fromCharCode(event.which))
+        			return false;
+        		}
+        		
+        	})
+        }
+        );
     })
+    
+    function subCount(packageId){
+		var count = parseInt($('#'+packageId+' .buyCount').text())-1;
+	if(count >= 1){
+		$('.total .red').text(parseInt($('.total .red').text())-parseInt( $('#'+packageId+' .price .red .price_val').text()))
+		$('#'+packageId+' .buyCount').text(count)
+	}
+	 
+   }
+   
+    function addCount(packageId){
+		var count = parseInt($('#'+packageId+' .buyCount').text())+1;
+		$('.total .red').text(parseInt($('.total .red').text())+parseInt($('#'+packageId+' .price .red .price_val').text()))
+
+	$('#'+packageId+' .buyCount').text(count)
+   }
+    
+    
 </script>

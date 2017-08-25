@@ -24,5 +24,9 @@ public class PanoOrderCouponItemServiceImpl extends CommonServiceImpl<PanoOrderC
 	public CommonDao<PanoOrderCouponItemModel> getDao() {
 		return orderCouponItemDao;
 	}
+	@Override
+	public PanoOrderCouponItemModel getByCode(String codeNum) {
+		return orderCouponItemDao.getByCode(codeNum);
+	}
 
 }
