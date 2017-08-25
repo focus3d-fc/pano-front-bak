@@ -111,10 +111,15 @@ public class LoginFilter extends AbstractFilter {
 			}
 		} else {
 			if(!isLogin) {
-				log.info("跳转到常规页面登录");
-				response.sendRedirect("/" + LOGIN_PAGE_NAME);
-				session.setAttribute(SESSION_GOTO, servletPath);
-				return;
+				 if(request.getHeader("x-requested-with") != null && request.getHeader("x-requested-with").equals("XMLHttpRequest")) {
+					 log.info("ajax 请求未登录，需要登录");
+					 response.setHeader("sessionstatus", "timeout"); 
+				 } else {
+					 log.info("跳转到常规页面登录");
+					 response.sendRedirect("/" + LOGIN_PAGE_NAME);
+					 session.setAttribute(SESSION_GOTO, servletPath);
+				 }
+				 return;
 			} else {
 				req.setAttribute("usn", EncryptUtil.encode(((PanoMemLoginModel)sessionObj).getUserSn()));
 				req.setAttribute("fserver", fileServerDomain);

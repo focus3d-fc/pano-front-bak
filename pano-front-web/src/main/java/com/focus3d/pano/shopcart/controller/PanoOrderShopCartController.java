@@ -50,7 +50,7 @@ public class PanoOrderShopCartController extends BaseController {
 	 * @param packageEncryptSn
 	 * @throws Exception 
 	 */
-	@RequestMapping(value = "add", method = RequestMethod.POST)
+	@RequestMapping(value = "add", method = RequestMethod.GET)
 	public void add(String packageEncryptSn, HttpServletResponse response) throws Exception{
 		if(StringUtils.isNotEmpty(packageEncryptSn)){
 			Long packageSn = EncryptUtil.decode(packageEncryptSn);

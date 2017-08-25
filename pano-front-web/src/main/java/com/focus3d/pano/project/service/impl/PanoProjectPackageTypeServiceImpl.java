@@ -50,8 +50,8 @@ public class PanoProjectPackageTypeServiceImpl extends CommonServiceImpl<PanoPro
 	 */
 	private void addProducts(PanoProjectPackageTypeModel packageType) {
 		Long packageTypeSn = packageType.getSn();
-		List<PanoProjectPackageProductModel> packageTypes = packageProductDao.listByPackageType(packageTypeSn);
-		for (PanoProjectPackageProductModel packageProduct : packageTypes) {
+		List<PanoProjectPackageProductModel> packageProducts = packageProductDao.listByPackageType(packageTypeSn);
+		for (PanoProjectPackageProductModel packageProduct : packageProducts) {
 			Long productSn = packageProduct.getProductSn();
 			PanoProductModel product = productDao.getBySn(productSn);
 			if(product != null){

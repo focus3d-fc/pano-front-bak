@@ -14,9 +14,11 @@ import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
 import com.focus3d.pano.model.PanoProductModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
+import com.focus3d.pano.model.PanoProjectPackageProductModel;
 import com.focus3d.pano.model.PanoProjectPackageTypeModel;
 import com.focus3d.pano.product.dao.PanoProductDao;
 import com.focus3d.pano.project.dao.PanoProjectHousePackageDao;
+import com.focus3d.pano.project.dao.PanoProjectPackageProductDao;
 import com.focus3d.pano.project.dao.PanoProjectPackageTypeDao;
 import com.focus3d.pano.shopcart.dao.PanoOrderShopCartDao;
 import com.focus3d.pano.shopcart.dao.PanoOrderShopcartDetailDao;
@@ -41,6 +43,8 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 	private PanoProductDao productDao;
 	@Autowired
 	private PanoProjectPackageTypeDao packageTypeDao;
+	@Autowired
+	private PanoProjectPackageProductDao packageProductDao;
 	
 	@Override
 	public CommonDao<PanoOrderShopcartModel> getDao() {
@@ -97,7 +101,7 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 			List<PanoOrderShopcartDetailModel> orderShopcartDetails = new ArrayList<PanoOrderShopcartDetailModel>();
 			int housePackageNum = 0;
 			//套餐类别
-			List<PanoProjectPackageTypeModel> housePackageTypeList = packageTypeDao.listByHousePackage(housePackageSn);
+			List<PanoProjectPackageTypeModel> housePackageTypeList = listPackageType(housePackageSn);
 			for (PanoProjectPackageTypeModel housePackageType : housePackageTypeList) {
 				//取类别下第一条产品
 				List<PanoProductModel> products = housePackageType.getProducts();
@@ -110,17 +114,42 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 					housePackageNum ++;
 				}
 			}
-			PanoOrderShopcartModel shopcartModel = new PanoOrderShopcartModel();
-			shopcartModel.setUserSn(userSn);
-			shopcartModel.setHousePackageSn(housePackageSn);
-			shopcartModel.setPackageTypeNum(housePackageNum);
-			orderShopCartDao.insert(shopcartModel);
-			Long shopcartSn = shopcartModel.getSn();
-			for(PanoOrderShopcartDetailModel shopcartDetail : orderShopcartDetails){
-				shopcartDetail.setShopcartSn(shopcartSn);
-				orderShopcartDetailDao.insert(shopcartDetail);
+			if(ListUtils.isNotEmpty(orderShopcartDetails)){
+				PanoOrderShopcartModel shopcartModel = new PanoOrderShopcartModel();
+				shopcartModel.setUserSn(userSn);
+				shopcartModel.setHousePackageSn(housePackageSn);
+				shopcartModel.setPackageTypeNum(housePackageNum);
+				shopcartModel.setPurchaseNum(1);
+				orderShopCartDao.insert(shopcartModel);
+				Long shopcartSn = shopcartModel.getSn();
+				for(PanoOrderShopcartDetailModel shopcartDetail : orderShopcartDetails){
+					shopcartDetail.setShopcartSn(shopcartSn);
+					orderShopcartDetailDao.insert(shopcartDetail);
+				}
 			}
 		}
 		return status;
 	}
+	
+	/**
+	 * 
+	 * *
+	 * @param packageType
+	 */
+	private List<PanoProjectPackageTypeModel> listPackageType(long housePackageSn) {
+		List<PanoProjectPackageTypeModel> housePackageTypeList = packageTypeDao.listByHousePackage(housePackageSn);
+		for (PanoProjectPackageTypeModel packageType : housePackageTypeList) {
+			Long packageTypeSn = packageType.getSn();
+			List<PanoProjectPackageProductModel> packageProducts = packageProductDao.listByPackageType(packageTypeSn);
+			for (PanoProjectPackageProductModel packageProduct : packageProducts) {
+				Long productSn = packageProduct.getProductSn();
+				PanoProductModel product = productDao.getBySn(productSn);
+				if(product != null){
+					packageType.getProducts().add(product);
+				}
+			}
+		}
+		return housePackageTypeList;
+	}
+
 }
