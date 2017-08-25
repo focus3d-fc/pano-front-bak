@@ -395,7 +395,7 @@ border-radius: .05rem; background-color: #000; color: #fff; }
 .order-items .order-item span i{
     padding-right: .1rem;
 }
-.order-items .order-item .red{
+.order-items  .red{
     color:#e30000;
 
 }

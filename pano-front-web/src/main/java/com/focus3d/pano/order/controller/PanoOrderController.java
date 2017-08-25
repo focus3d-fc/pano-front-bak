@@ -40,6 +40,7 @@ public class PanoOrderController extends BaseController {
 	private PanoUserReceiveAddressService<PanoUserReceiveAddressModel> receiveAddressService;
 	@Autowired
 	private PanoOrderCouponItemService<PanoOrderCouponItemModel> panoOrderCouponItemService;
+
 	@RequestMapping("/test")
 	public String QueryInfo(PanoPerspectiveViewModel model, ModelMap map) {
 		return "/test.html";
@@ -88,11 +89,15 @@ public class PanoOrderController extends BaseController {
 	public void coupon(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		String code = request.getParameter("code");
-		PanoOrderCouponItemModel panoOrderCouponItemModel =	panoOrderCouponItemService.getByCode(code);
-		
+		PanoOrderCouponItemModel panoOrderCouponItemModel = panoOrderCouponItemService
+				.getByCode(code);
+
 		JSONObject jo = new JSONObject();
-		jo.put("status", panoOrderCouponItemModel.getStatus());
-		jo.put("discountAmount", panoOrderCouponItemModel.getPriceDiscount());
+		if (panoOrderCouponItemModel != null) {
+			jo.put("status", panoOrderCouponItemModel.getStatus());
+			jo.put("discountAmount",
+					panoOrderCouponItemModel.getPriceDiscount());
+		}
 		ajaxOutput(response, jo.toString());
 	}
 }

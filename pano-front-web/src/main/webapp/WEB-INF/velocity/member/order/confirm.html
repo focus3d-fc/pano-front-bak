@@ -58,7 +58,7 @@
            #end
             <div class="row">
               <p>请输入兑换优惠码：</p>
-              <p onclick="$('[name=promotionSn]').focus();"><input type="text" style="outline:medium;color:transparent;border:none;display:none" name="promotionSn"  />
+              <p  class="couponCodeSquares" onclick="$('[name=couponCode]').focus();"><input  type="number"  maxlength='6' style="outline:medium;color:transparent;border:none;" name="couponCode"  />
                   <span class="square"></span>
                   <span class="square"></span>
                   <span class="square"></span>
@@ -226,7 +226,8 @@ function choosePayScheme(paySchemeParam){
             return false;
         })
         
-        	$('[name=promotionSn]').blur(function(event){
+        	$('[name=couponCode]').blur(function(event){
+        		if(event.target.value && event.target.value.length==6){
         		$.ajax({
                     type: 'GET',
                     async: false,
@@ -250,15 +251,19 @@ function choosePayScheme(paySchemeParam){
                         alert('优惠券获取失败')
                     }
                 });
+        		}
         	})
-        $('[name=promotionSn]').keydown(function(event){ 
-        	$($('[name=promotionSn]').nextAll('span.square')).each(function(index,ele){
+        $('[name=couponCode]').keydown(function(event){ 
+        	$($('[name=couponCode]').nextAll('span.square')).each(function(index,ele){
         		if($(ele).text() == ''){
         			$(ele).text(String.fromCharCode(event.which))
         			return false;
         		}
         		
         	})
+        	if($('[name=couponCode]').val().length==6){
+        		$('[name=couponCode]').blur();
+        	}
         }
         );
     })
