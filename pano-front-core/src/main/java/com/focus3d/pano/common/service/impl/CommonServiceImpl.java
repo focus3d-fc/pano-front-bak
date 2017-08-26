@@ -31,9 +31,9 @@ public abstract class CommonServiceImpl<T> {
 	}
 
 	public int delete(Object u) {
-		return getDao().deleteByCriteria(u);
+		return getDao().deleteByKey(u);
 	}
-
+	
 	public List<T> get(Object u, Class<?> targetClass) {
 		return getDao().selectByCriteria(u, targetClass);
 	}

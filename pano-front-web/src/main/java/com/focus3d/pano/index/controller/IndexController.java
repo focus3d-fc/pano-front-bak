@@ -62,10 +62,8 @@ public class IndexController extends BaseController{
 		try {
 			styleList = usersSideService.selectStyleByProject_sn(project_sn);
 			model.addAttribute("styleList",styleList);
-			
 			List<pano_ad> adList=usersSideService.selectAdImg_sn(project_sn);
 			model.addAttribute("adList",adList);
-			
 			//根据每个风格-查询对应的-标签集合
 			Set<Long>  set=new HashSet<Long>();
 			Iterator<Style> style_iterator = styleList.iterator();    
@@ -81,13 +79,9 @@ public class IndexController extends BaseController{
 					style.setLableList(lableList);
 				}
 		    }    
-			System.out.println(styleList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 		return "/pub/index";
 	}
 	
