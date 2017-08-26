@@ -42,6 +42,7 @@ import com.focus3d.pano.order.service.PanoOrderPackageService;
 import com.focus3d.pano.order.service.PanoOrderService;
 import com.focus3d.pano.order.service.PanoOrderTransService;
 import com.focus3d.pano.project.service.PanoProjectHousePackageService;
+import com.focus3d.pano.shopcart.service.PanoOrderShopCartDetailService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focus3d.pano.sms.service.SmsValidateService;
 import com.focus3d.pano.user.service.PanoMemUserService;
@@ -445,7 +446,7 @@ public class PanoOrderController extends BaseController {
 										.getPackageProductSn());
 						panoOrderPackageDetailService
 								.insert(orderPackageDetailModel);
-						orderShopCartDetailService.detailByKey(shopcartPackageDetail);
+						orderShopCartDetailService.delete(shopcartPackageDetail);
 					}
 					shopCartService.delete(shopcart);
 				}
