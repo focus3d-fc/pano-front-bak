@@ -49,7 +49,6 @@ import com.focus3d.pano.user.service.PanoMemUserService;
 import com.focus3d.pano.user.service.PanoUserService;
 import com.focustech.common.codec.encrypter.DefaultEncryptComponentImpl;
 import com.focustech.common.utils.EncryptUtil;
-import com.lianpay.share.config.PartnerConfig;
 import com.lianpay.share.security.Md5Algorithm;
 import com.lianpay.share.util.DateUtil;
 import com.llpay.client.utils.LLPayUtil;
@@ -79,8 +78,6 @@ public class PanoOrderController extends BaseController {
 	private PanoOrderService<PanoOrderModel> orderService;
 	@Autowired
 	private PanoOrderPackageDetailService<PanoOrderPackageDetailModel> panoOrderPackageDetailService;
-	@Autowired
-	private PanoUserService<PanoUserModel> panoUserService;
 	@Autowired
 	private PanoMemUserService<PanoMemUserModel> panoMemUserService;
 	@Autowired
@@ -167,12 +164,12 @@ public class PanoOrderController extends BaseController {
 			String phone = StringUtils
 					.trimToNull(request.getParameter("phone"));
 
-			if (panoUserService.getByMobile(phone) == null) {
-				data.put("exist", 0);
-			} else {
-				data.put("exist", 1);
-			}
-
+//			if (panoUserService.getByMobile(phone) == null) {
+//				data.put("exist", 0);
+//			} else {
+//				data.put("exist", 1);
+//			}
+			data.put("exist", 1);
 			data.put("status", 0);
 		} catch (Exception e) {
 			logger.debug(ExceptionUtils.getStackTrace(e));
@@ -295,13 +292,8 @@ public class PanoOrderController extends BaseController {
 			String mobilePhone = request.getParameter("mobile_phone");
 			String verifycode = request.getParameter("verifycode");
 
-			PanoUserModel panoUserModel = panoUserService
-					.getByMobile(mobilePhone);
 
 			// 验证手机号
-			if (panoUserModel == null) {
-				throw new RuntimeException("手机号不存在");
-			}
 			// 验证验证码
 			if (!"111111".equals(verifycode)) {
 				PanoValidateModel messageValidate = smsValidateService
