@@ -42,6 +42,7 @@ import com.focus3d.pano.order.service.PanoOrderPackageService;
 import com.focus3d.pano.order.service.PanoOrderService;
 import com.focus3d.pano.order.service.PanoOrderTransService;
 import com.focus3d.pano.project.service.PanoProjectHousePackageService;
+import com.focus3d.pano.shopcart.service.PanoOrderShopCartDetailService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focus3d.pano.sms.service.SmsValidateService;
 import com.focus3d.pano.user.service.PanoMemUserService;
@@ -86,6 +87,7 @@ public class PanoOrderController extends BaseController {
 	private PanoOrderShopCartService<PanoOrderShopcartModel> shopCartService;
 	@Autowired
 	private PanoOrderShopCartDetailService<PanoOrderShopcartDetailModel> orderShopCartDetailService;
+
 	@RequestMapping("/test")
 	public String QueryInfo(PanoPerspectiveViewModel model, ModelMap map) {
 		logger.debug(EncryptUtil.encode(10167l));
@@ -135,7 +137,7 @@ public class PanoOrderController extends BaseController {
 		map.put("address", address);
 		map.put("defaultAddress", defaultAddress);
 		map.put("payAmount", payAmount);
-
+		map.put("packageSns", packageSns);
 		return "/member/order/confirm";
 	}
 
@@ -444,7 +446,8 @@ public class PanoOrderController extends BaseController {
 										.getPackageProductSn());
 						panoOrderPackageDetailService
 								.insert(orderPackageDetailModel);
-						orderShopCartDetailService.detailByKey(shopcartPackageDetail);
+						orderShopCartDetailService
+								.delete(shopcartPackageDetail);
 					}
 					shopCartService.delete(shopcart);
 				}
@@ -466,8 +469,25 @@ public class PanoOrderController extends BaseController {
 	public String ordersPage(HttpServletRequest request,
 			HttpServletResponse response, ModelMap map) throws Exception {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
+		String statusParam = StringUtils.trimToNull(request
+				.getParameter("status"));
+		Integer status = statusParam == null ? null : Integer
+				.parseInt(statusParam);
+		// PanoProjectHousePackageModel housePackage =
+		// housePackageService.getDetail(housePackageSn);
+		List<PanoOrderModel> orders = orderService
+				.getUserOrders(userSn, status);
 
-		return "";
+		for (PanoOrderModel order : orders) {
+			PanoProjectHousePackageModel housePackage = housePackageService
+					.getDetail(order.getOrderPackageModels().get(0)
+							.getHousePackageSn());
+			order.getOrderPackageModels().get(0)
+					.setHousePackageModel(housePackage);
+
+		}
+		map.put("orders", orders);
+		return "/member/order/orderAll";
 	}
 
 	@RequestMapping(value = "/lianpaynotify")

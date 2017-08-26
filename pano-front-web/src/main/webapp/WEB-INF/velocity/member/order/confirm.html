@@ -63,8 +63,8 @@
                 <p>请输入兑换优惠码：</p>
                 <p class="couponCodeSquares"
 				onclick="$('[name=couponCode]').focus();">
-				<input type="number" maxlength='6'
-					style="outline: medium; color: transparent; border: none;"
+				<input type="tel"  maxLength="6" oninput="couponcode_input()"
+					style=" outline: medium; color: transparent; border: none; "
 					name="couponCode" />
                     <span class="square"></span>
                     <span class="square"></span>
@@ -293,48 +293,57 @@ function choosePayScheme(paySchemeParam){
             return false;
         })
         
-        	$('[name=couponCode]').blur(function(event){
-        		if(event.target.value && event.target.value.length==6){
-        		$.ajax({
-                    type: 'GET',
-                    async: false,
-                    data: {},
-                    url: '/order/coupon?code='+event.target.value,
-                    dataType: 'json',
-                    success: function (data) {
-                    	if(!data.discountAmount){
-                    		alert('未找到该优惠券')
-                    	}else if(data.status == 1){
-                        	alert('优惠券未生效')
-                        }else if(data.status == 2){
-                        	alert('优惠券过期')
-                        }else{
-                        	couponAmount = data.discountAmount;
-                        	couponCode = event.target.value;
-                        	calculate();
-                        }
-                        
-                    },
-                    error:function(xhr, msg, reasonString){
-                        alert('优惠券获取失败')
-                    }
-                });
-        		}
-        	})
-        $('[name=couponCode]').keydown(function(event){ 
+        /* $('[name=couponCode]').input(function(event){ 
+        	if(value.length>6)
+        		value=value.slice(0,5)
         	$($('[name=couponCode]').nextAll('span.square')).each(function(index,ele){
-        		if($(ele).text() == ''){
-        			$(ele).text(String.fromCharCode(event.which))
-        			return false;
-        		}
-        		
+        			$(ele).text($('[name=couponCode]').val().charAt(index))        		
         	})
+        	
         	if($('[name=couponCode]').val().length==6){
         		$('[name=couponCode]').blur();
         	}
+        	
+        	
+        	
         }
-        );
+        ); */
     })
+    function couponcode_input(){
+    	$($('[name=couponCode]').nextAll('span.square')).each(function(index,ele){
+			$(ele).text($('[name=couponCode]').val().charAt(index))        		
+	})
+	
+    	
+    	if($('[name=couponCode]').val().length==6){
+    		$('[name=couponCode]').blur();
+    		$.ajax({
+                type: 'GET',
+                async: false,
+                data: {},
+                url: '/order/coupon?code='+event.target.value,
+                dataType: 'json',
+                success: function (data) {
+                	if(!data.discountAmount){
+                		alert('未找到该优惠券')
+                	}else if(data.status == 1){
+                    	alert('优惠券未生效')
+                    }else if(data.status == 2){
+                    	alert('优惠券过期')
+                    }else{
+                    	couponAmount = data.discountAmount;
+                    	couponCode = event.target.value;
+                    	calculate();
+                    }
+                    
+                },
+                error:function(xhr, msg, reasonString){
+                    alert('优惠券获取失败')
+                }
+            });
+	}
+    	
+}
     
     function subCount(packageId){
 		var count = parseInt($('#'+packageId+' .buyCount').text())-1;

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.focus3d.pano.common.dao.CommonDao;
 import com.focus3d.pano.common.service.impl.CommonServiceImpl;
 import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
+import com.focus3d.pano.model.PanoOrderShopcartModel;
 import com.focus3d.pano.shopcart.dao.PanoOrderShopcartDetailDao;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartDetailService;
 /**
@@ -26,4 +27,5 @@ public class PanoOrderShopCartDetailServiceImpl extends CommonServiceImpl<PanoOr
 		return orderShopcartDetailDao;
 	}
 
+	
 }

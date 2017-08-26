@@ -24,13 +24,18 @@
     </header>
     <!--列表头-->
     <section class="order-title">
-        <a href="/userside/toorderAll" class="on">全部列表</a>
-        <a href="/userside/topaying">待付款</a>
-        <a href="paid">已付款</a>
+        <a href="/order/orderspage" class="on">全部列表</a>
+        <a href="/order/orderspage?status=1">待付款</a>
+        <a href="/order/orderspage?status=2">已付款</a>
     </section>
     <!--订单-->
     <section class="order-items">
-      <div class="order-item">
+    #if($!orders.size() == 0)
+    	<p style="margin:auto;width:60px">无数据</p>
+    #end
+    #foreach($!order in $!orders)
+    #if($!order.status == 1)
+      <div class="order-item" onclick="location.href='/order/orderpage?order_sn=$!order.sn'">
           <div class="title">
               <span>
                   <i class="iconfont">&#xe71f;</i>
@@ -40,23 +45,25 @@
                   等待买家付款
               </span>
           </div>
-          <div class="cont">
-              <a href="#"><img src="/style/admstatic/image/image/2.jpg" ></a>
+          <div class="cont" >
+              <a href="#"><img src="$!fs.url($!order.orderPackageModels.get(0).housePackageModel.imgSn)" ></a>
               <div class="detail">
-                  <a href="#"><p>简约现代大会议桌现代风格套餐A带实木全套</p></a>
-                  <p class="col">颜色分类:“360*100*75 木板8公分”</p>
+                  <a href="#"><p>$!order.orderPackageModels.get(0).housePackageModel.style.name $!order.orderPackageModels.get(0).housePackageModel.house.name</p></a>
+                  <p class="col"></p>
               </div>
               <div class="price">
-                  <p class="red">￥26000</p>
-                  <s class="col"> ￥26000</s>
+                  <p class="red">￥$!order.orderPackageModels.get(0).housePackageModel.packagePrice</p>
+                  <s class="col"> ￥$!order.orderPackageModels.get(0).housePackageModel.discountPrice</s>
               </div>
           </div>
           <div class="total">
-            共 <span>1</span>件产品 合计￥<span>18000</span>元（含运费 <span>0.00</span>元 ）
+            共 <span>$!order.orderPackageModels.size()</span>件产品 合计￥<span>$!order.payMoney</span>元（含运费 <span>0.00</span>元 ）
           </div>
-          <p><a href="/userside/toconfirm" class="paying">立即付款</a></p>
+          <p><a href="#" class="paying">立即付款</a></p>
       </div>
-        <div class="order-item">
+    #end
+     #if($!order.status==2)
+        <div class="order-item" onclick="location.href='/order/orderpage?order_sn=$!order.sn'">
             <div class="title">
               <span>
                    <i class="iconfont">&#xe71f;</i>
@@ -67,21 +74,23 @@
               </span>
             </div>
             <div class="cont">
-                <a href="#"><img src="/style/admstatic/image/image/2.jpg" ></a>
+                <a href="#"><img src="$!fs.url($!order.orderPackageModels.get(0).housePackageModel.imgSn)" ></a>
                 <div class="detail">
-                    <a href="#"><p>简约现代大会议桌现代风格套餐A带实木全套</p></a>
-                    <p class="col">颜色分类:“360*100*75 木板8公分”</p>
+                    <a href="#"><p>$!order.orderPackageModels.get(0).housePackageModel.style.name $!order.orderPackageModels.get(0).housePackageModel.house.name</p></a>
+                    <p class="col"></p>
                 </div>
                 <div class="price">
-                    <p class="red">￥26000</p>
-                    <s class="col"> ￥26000</s>
+                    <p class="red">￥$!order.orderPackageModels.get(0).housePackageModel.packagePrice</p>
+                  <s class="col"> ￥$!order.orderPackageModels.get(0).housePackageModel.discountPrice</s>
                 </div>
             </div>
-            <div class="total">
-                共 <span>1</span>件产品 合计￥<span>18000</span>元（含运费 <span>0.00</span>元 ）
-            </div>
+             <div class="total">
+            共 <span>$!order.orderPackageModels.size()</span>件产品 合计￥<span>$!order.payMoney</span>元（含运费 <span>0.00</span>元 ）
+          </div>
             <p><a href="#" class="paid">已付款</a></p>
         </div>
+        #end
+          #end
     </section>
 </div>
 
