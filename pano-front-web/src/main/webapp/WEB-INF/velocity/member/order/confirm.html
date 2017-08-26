@@ -190,7 +190,7 @@ function calculate(){
 	
 	payAmount = payAmount - couponAmount;
 	if(payScheme == 'FULL'){
-		payAmount = parseFloat(payAmount*0.95.toFixed(2));
+		payAmount = parseFloat((payAmount*0.95).toFixed(2));
 		$('.total .red').text(payAmount)
 		$('.total .totalCount').text(totalCount)
 		$('.payAmountDesc').text('合计')
