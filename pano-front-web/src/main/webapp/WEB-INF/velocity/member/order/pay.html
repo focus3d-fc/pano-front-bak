@@ -54,7 +54,8 @@
                 		return;
                 	}else{
                 		if(pay_type=='LIANPAY'){
-                			document.write(data.linkString);
+                			$('#lianpay [name=req_data]').val(data.linkString);
+                			$('#lianpay').submit();
                 		}
                 	}
                 },
@@ -70,6 +71,12 @@
 </head>
 
 <body>
+<form id="lianpay" action="https://wap.lianlianpay.com/payment.htm" method="get" hidden>
+				<ul>
+					<li><input type="hidden" name="req_data" value='' />
+						<button name="next_btn" class="btn" type="submit" id="next_btn">连连支付</button></li>
+				</ul>
+			</form>
 <div class="container addr">
     <!--图片-->
     <section class="addr-section">

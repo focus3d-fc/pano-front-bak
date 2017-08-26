@@ -28,7 +28,9 @@ import com.focus3d.pano.model.PanoOrderCouponItemModel;
 import com.focus3d.pano.model.PanoOrderModel;
 import com.focus3d.pano.model.PanoOrderPackageDetailModel;
 import com.focus3d.pano.model.PanoOrderPackageModel;
+import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
+import com.focus3d.pano.model.PanoOrderTransModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
 import com.focus3d.pano.model.PanoUserModel;
 import com.focus3d.pano.model.PanoUserReceiveAddressModel;
@@ -39,6 +41,7 @@ import com.focus3d.pano.order.service.PanoOrderCouponItemService;
 import com.focus3d.pano.order.service.PanoOrderPackageDetailService;
 import com.focus3d.pano.order.service.PanoOrderPackageService;
 import com.focus3d.pano.order.service.PanoOrderService;
+import com.focus3d.pano.order.service.PanoOrderTransService;
 import com.focus3d.pano.project.service.PanoProjectHousePackageService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focus3d.pano.sms.service.SmsValidateService;
@@ -79,7 +82,8 @@ public class PanoOrderController extends BaseController {
 	private PanoUserService<PanoUserModel> panoUserService;
 	@Autowired
 	private PanoMemUserService<PanoMemUserModel> panoMemUserService;
-	
+	@Autowired
+	private PanoOrderTransService<PanoOrderTransModel> panoOrderTransService;
 	@Autowired
 	private SmsValidateService smsValidateService;
 	@Autowired
@@ -90,6 +94,7 @@ public class PanoOrderController extends BaseController {
 		logger.debug(EncryptUtil.encode(10167l));
 		return "/test.html";
 	}
+
 	@RequestMapping(value = "/topaypage")
 	public String toPayPage(HttpServletRequest request, ModelMap map) {
 		logger.debug(EncryptUtil.encode(10167l));
@@ -97,6 +102,7 @@ public class PanoOrderController extends BaseController {
 		map.put("payAmount", request.getParameter("pay_amount"));
 		return "/member/order/pay";
 	}
+
 	@RequestMapping(value = "/confirmpage")
 	public String orderConfirmPage(HttpServletRequest request, ModelMap map)
 			throws Exception {
@@ -159,7 +165,7 @@ public class PanoOrderController extends BaseController {
 		try {
 			String phone = StringUtils
 					.trimToNull(request.getParameter("phone"));
-			
+
 			if (panoUserService.getByMobile(phone) == null) {
 				data.put("exist", 0);
 			} else {
@@ -185,7 +191,7 @@ public class PanoOrderController extends BaseController {
 		String payType = StringUtils.trimToNull(request
 				.getParameter("pay_type"));
 		JSONObject data = new JSONObject();
-		
+
 		try {
 			PanoOrderModel orderModel = orderService.getBySn(Long
 					.parseLong(orderSn));
@@ -198,8 +204,8 @@ public class PanoOrderController extends BaseController {
 			if (orderModel.getPayMoney().compareTo(BigDecimal.ZERO) != 1)
 				throw new RuntimeException("订单金额有误");
 
-			PanoMemUserModel panoMemUserModel = panoMemUserService.getBySn(orderModel
-					.getUserSn());
+			PanoMemUserModel panoMemUserModel = panoMemUserService
+					.getBySn(orderModel.getUserSn());
 			// 根据支付类型组装相应参数
 			if ("LIANPAY".equals(payType)) {
 				StringBuffer strBuf = new StringBuffer();
@@ -222,7 +228,7 @@ public class PanoOrderController extends BaseController {
 				payInfo.setMoney_order(orderModel.getPayMoney().toString());
 				strBuf.append("money_order=").append(payInfo.getMoney_order());
 				// 商品名称
-				payInfo.setName_goods("套餐");
+				payInfo.setName_goods("package");
 				strBuf.append("name_goods=").append(payInfo.getName_goods());
 				// payInfo.setNo_agree(request.getParameter("no_agree"));签约协议号
 				// 商户唯一订单号
@@ -237,16 +243,19 @@ public class PanoOrderController extends BaseController {
 				// 风险控制参数
 				JSONObject riskItem = new JSONObject();
 				riskItem.put("frms_ware_category", "4001");
-				riskItem.put("user_info_mercht_userno", orderModel.getUserSn());
-				riskItem.put("user_info_bind_phone", panoMemUserModel.getMobile());
+				riskItem.put("user_info_mercht_userno", orderModel.getUserSn()
+						+ "");
 				riskItem.put("user_info_dt_register",
 						DateUtil.getCurrentDateTimeStr1());
 				payInfo.setRisk_item(riskItem.toJSONString());
 				strBuf.append("risk_item=").append(payInfo.getRisk_item());
+
 				payInfo.setSign_type("MD5");
 				strBuf.append("sign_type=").append(payInfo.getSign_type());
+
 				payInfo.setUrl_return(Constant.lianpay_notify_url);
 				strBuf.append("url_return=").append(payInfo.getUrl_return());
+
 				payInfo.setUser_id(orderModel.getUserSn() + "");
 				strBuf.append("user_id=").append(payInfo.getUser_id());
 				// payInfo.setValid_order(request.getParameter("valid_order"));
@@ -262,7 +271,7 @@ public class PanoOrderController extends BaseController {
 				payInfo.setSign(sign);
 				String req_data = JSON.toJSONString(payInfo);
 				logger.debug(req_data);
-				data.put("linkString", "<html><head></head><body><form action=\"https://wap.lianlianpay.com/payment.htm\" method=\"post\"><ul> <li><input type=\"hidden\" name=\"req_data\" value=\'"+req_data+"\' /> <button name=\"next_btn\" class=\"btn\" type=\"submit\" id=\"next_btn\">连连支付</button></li></ul></form></body><script>document.forms[0].submit();</script></html>");
+				data.put("linkString", req_data);
 			} else {
 				throw new RuntimeException("不支持的支付方式");
 			}
@@ -287,7 +296,7 @@ public class PanoOrderController extends BaseController {
 
 			PanoUserModel panoUserModel = panoUserService
 					.getByMobile(mobilePhone);
-			
+
 			// 验证手机号
 			if (panoUserModel == null) {
 				throw new RuntimeException("手机号不存在");
@@ -428,26 +437,24 @@ public class PanoOrderController extends BaseController {
 				orderPackageModel.setPrice(packages.get(i).getPackagePrice());
 				panoOrderPackageService.insert(orderPackageModel);
 
-				// PanoOrderShopcartModel shopcart = shopCartService
-				// .getUserShopcartPackage(userSn, packages.get(i).getSn());
-				// if (shopcart != null) {
-				// for (PanoOrderShopcartDetailModel shopcartPackageDetail :
-				// shopcart
-				// .getDetails()) {
-				// PanoOrderPackageDetailModel orderPackageDetailModel = new
-				// PanoOrderPackageDetailModel();
-				// orderPackageDetailModel
-				// .setOrderPackageSn(orderPackageModel.getSn());
-				// orderPackageDetailModel
-				// .setPackageTypeSn(shopcartPackageDetail
-				// .getPackageTypeSn());
-				// orderPackageDetailModel
-				// .setPackageProductSn(shopcartPackageDetail
-				// .getPackageProductSn());
-				// panoOrderPackageDetailService
-				// .insert(orderPackageDetailModel);
-				// }
-				// }
+				PanoOrderShopcartModel shopcart = shopCartService
+						.getUserShopcartPackage(userSn, packages.get(i).getSn());
+				if (shopcart != null) {
+					for (PanoOrderShopcartDetailModel shopcartPackageDetail : shopcart
+							.getDetails()) {
+						PanoOrderPackageDetailModel orderPackageDetailModel = new PanoOrderPackageDetailModel();
+						orderPackageDetailModel
+								.setOrderPackageSn(orderPackageModel.getSn());
+						orderPackageDetailModel
+								.setPackageTypeSn(shopcartPackageDetail
+										.getPackageTypeSn());
+						orderPackageDetailModel
+								.setPackageProductSn(shopcartPackageDetail
+										.getPackageProductSn());
+						panoOrderPackageDetailService
+								.insert(orderPackageDetailModel);
+					}
+				}
 			}
 
 			data.put("status", 0);
@@ -470,55 +477,82 @@ public class PanoOrderController extends BaseController {
 	}
 
 	@RequestMapping(value = "/lianpaynotify")
-	public void lianpayNotify(HttpServletRequest req,
-			HttpServletResponse resp, ModelMap map) throws Exception {
+	public void lianpayNotify(HttpServletRequest req, HttpServletResponse resp,
+			ModelMap map) throws Exception {
 		resp.setCharacterEncoding("UTF-8");
-        System.out.println("进入支付异步通知数据接收处理");
-        RetBean retBean = new RetBean();
-        String reqStr = LLPayUtil.readReqStr(req);
-        if (LLPayUtil.isnull(reqStr))
-        {
-            retBean.setRet_code("9999");
-            retBean.setRet_msg("交易失败");
-            resp.getWriter().write(JSON.toJSONString(retBean));
-            resp.getWriter().flush();
-            return;
-        }
-        System.out.println("接收支付异步通知数据：【" + reqStr + "】");
-        try
-        {
-            if (!LLPayUtil.checkSign(reqStr, Constant.lianpay_yt_pub_key,
-            		 Constant.lianpay_md5_key))
-            {
-                retBean.setRet_code("9999");
-                retBean.setRet_msg("交易失败");
-                resp.getWriter().write(JSON.toJSONString(retBean));
-                resp.getWriter().flush();
-                System.out.println("支付异步通知验签失败");
-                return;
-            }
-        } catch (Exception e)
-        {
-            System.out.println("异步通知报文解析异常：" + e);
-            retBean.setRet_code("9999");
-            retBean.setRet_msg("交易失败");
-            resp.getWriter().write(JSON.toJSONString(retBean));
-            resp.getWriter().flush();
-            return;
-        }
-        retBean.setRet_code("0000");
-        retBean.setRet_msg("交易成功");
-        resp.getWriter().write(JSON.toJSONString(retBean));
-        resp.getWriter().flush();
-        System.out.println("支付异步通知数据接收处理成功");
-        // 解析异步通知对象
-        
-        PayDataBean payDataBean = JSON.parseObject(reqStr, PayDataBean.class);
-        if("SUCCESS".equals(payDataBean.getResult_pay())){
-        	
-        }
-        // TODO:更新订单，发货等后续处理
-		return ;
+		System.out.println("进入支付异步通知数据接收处理");
+		RetBean retBean = new RetBean();
+		String reqStr = LLPayUtil.readReqStr(req);
+		if (LLPayUtil.isnull(reqStr)) {
+			retBean.setRet_code("9999");
+			retBean.setRet_msg("交易失败");
+			resp.getWriter().write(JSON.toJSONString(retBean));
+			resp.getWriter().flush();
+			return;
+		}
+		System.out.println("接收支付异步通知数据：【" + reqStr + "】");
+		try {
+			if (!LLPayUtil.checkSign(reqStr, Constant.lianpay_yt_pub_key,
+					Constant.lianpay_md5_key)) {
+				retBean.setRet_code("9999");
+				retBean.setRet_msg("交易失败");
+				resp.getWriter().write(JSON.toJSONString(retBean));
+				resp.getWriter().flush();
+				System.out.println("支付异步通知验签失败");
+				return;
+			}
+		} catch (Exception e) {
+			System.out.println("异步通知报文解析异常：" + e);
+			retBean.setRet_code("9999");
+			retBean.setRet_msg("交易失败");
+			resp.getWriter().write(JSON.toJSONString(retBean));
+			resp.getWriter().flush();
+			return;
+		}
+
+		// 解析异步通知对象
+		try {
+			PayDataBean payDataBean = JSON.parseObject(reqStr,
+					PayDataBean.class);
+			if ("SUCCESS".equals(payDataBean.getResult_pay())) {
+				BigDecimal payAmount = new BigDecimal(
+						payDataBean.getMoney_order());
+				long orderSn = Long.parseLong(payDataBean.getNo_order());
+				String outPayId = payDataBean.getOid_paybill();
+				PanoOrderModel orderModel = orderService.getBySn(orderSn);
+				if (payAmount.compareTo(orderModel.getPayMoney()) != 0) {
+					throw new RuntimeException("支付金额不对");
+				}
+				if ("2".equals(orderModel.getStatus())) {
+					throw new RuntimeException("订单已经支付");
+				}
+				orderModel.setStatus(2);
+				orderService.update(orderModel);
+
+				PanoOrderTransModel orderTransModel = new PanoOrderTransModel();
+				orderTransModel.setOrderId(orderSn + "");
+				orderTransModel.setTransDate(new Date());
+				orderTransModel.setTransType("001");
+				orderTransModel.setTransPlatformType(1);
+				orderTransModel.setTransMoney(payAmount);
+				orderTransModel.setTransId(outPayId);
+				panoOrderTransService.insert(orderTransModel);
+			}
+
+			retBean.setRet_code("0000");
+			retBean.setRet_msg("交易成功");
+			resp.getWriter().write(JSON.toJSONString(retBean));
+			resp.getWriter().flush();
+			System.out.println("支付异步通知数据接收处理成功");
+		} catch (Exception e) {
+			System.out.println(ExceptionUtils.getStackTrace(e));
+			retBean.setRet_code("9999");
+			retBean.setRet_msg(e.getMessage());
+			resp.getWriter().write(JSON.toJSONString(retBean));
+			resp.getWriter().flush();
+		}
+
+		return;
 	}
 
 	public static void main(String[] args) throws Exception {
