@@ -68,6 +68,22 @@ $(function(){
 		$("#totalPrice").text(totalPrice);
 	});
 	
+	$("a[id^='closeOrOpen_']").click(function(){
+		var status = $(this).attr("status");
+		if(!status || status == 0){
+			$(this).parent().prev().show(200);
+			$(this).text("");
+			$(this).append("点击收起 <i class='iconfont'>&#xe60c;</i>");
+			$(this).attr("status", 1);
+		} else {
+			$(this).parent().prev().hide(200);
+			$(this).text("");
+			$(this).append("点击展开 <i class='iconfont'>&#xe612;</i>");
+			$(this).attr("status", 0);
+		}
+	});
+	
+	
 	$("#addToOrder").click(function(){
 		var packageSns = "";
 		$("input[id^='selectItem']:checked").each(function(){

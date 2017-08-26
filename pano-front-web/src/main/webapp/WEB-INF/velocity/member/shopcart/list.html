@@ -34,7 +34,7 @@
 	            </div>
 	        </div>
         
-       		<div class="pro-show">
+       		<div class="pro-show" style="display: none;">
         			#foreach($!detail in $!shopcart.details)
 					<div class="left">
 						<a href="/perspective/QueryPerspective"> 
@@ -53,14 +53,18 @@
 					</div>
 					#end
 			</div>
-			<div class="total show">
-				<a href="#"> 点击收起 <i class="iconfont">&#xe60c;</i>
-				</a>
-			</div>
-			 <div class="total show">
-                <a href="#"> 点击展开 <i class="iconfont">&#xe612;</i></a>
-            </div>
 			
+			<div class="total show">
+				<a id="closeOrOpen_$!velocityCount" href="#"> 点击展开 <i class="iconfont">&#xe612;</i></a>
+			</div>
+			<!-- 
+			<div class="total show">
+				<a id="closeOrOpen_$!velocityCount" href="#"> 点击收起 <i class="iconfont">&#xe60c;</i></a>
+			</div>
+			<div class="total show">
+                <a id="doOpen_$!velocityCount" href="#"> 点击展开 <i class="iconfont">&#xe612;</i></a>
+            </div>
+			 -->
     	</div>
 		#end
  
@@ -99,12 +103,3 @@
     
    </div>
 <script src="/script/member/shopcart/add.js"></script>
-<script>
-
-    $(function(){
-        $('.choose').click(function () {
-            $(this).toggleClass("imgChoose")
-        })
-    })
-
-</script>
