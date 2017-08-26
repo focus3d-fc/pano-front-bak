@@ -45,12 +45,10 @@ public class PanoOrderShopCartController extends BaseController {
 	@RequestMapping(value = "list", method = RequestMethod.GET)
 	public String list(ModelMap modelMap, HttpServletRequest request) {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		List<PanoOrderShopcartModel> shopcartList = orderShopCartService
-				.listByUser(userSn);
+		List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
 		for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
 			Long housePackageSn = panoOrderShopcartModel.getHousePackageSn();
-			PanoProjectHousePackageModel housePackage = housePackageService
-					.getDetail(housePackageSn);
+			PanoProjectHousePackageModel housePackage = housePackageService.getDetail(housePackageSn);
 			if (housePackage != null) {
 				panoOrderShopcartModel.setHousePackage(housePackage);
 			}
@@ -66,8 +64,7 @@ public class PanoOrderShopCartController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "add", method = RequestMethod.GET)
-	public void add(String packageEncryptSn, HttpServletResponse response)
-			throws Exception {
+	public void add(String packageEncryptSn, HttpServletResponse response) throws Exception {
 		if (StringUtils.isNotEmpty(packageEncryptSn)) {
 			Long packageSn = EncryptUtil.decode(packageEncryptSn);
 			int status = orderShopCartService.addOrDelete(packageSn);

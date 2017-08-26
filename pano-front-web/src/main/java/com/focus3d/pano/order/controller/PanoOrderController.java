@@ -46,7 +46,6 @@ import com.focus3d.pano.user.service.PanoMemUserService;
 import com.focus3d.pano.user.service.PanoUserService;
 import com.focustech.common.codec.encrypter.DefaultEncryptComponentImpl;
 import com.focustech.common.utils.EncryptUtil;
-import com.lianpay.share.config.PartnerConfig;
 import com.lianpay.share.security.Md5Algorithm;
 import com.lianpay.share.util.DateUtil;
 import com.llpay.client.utils.LLPayUtil;
