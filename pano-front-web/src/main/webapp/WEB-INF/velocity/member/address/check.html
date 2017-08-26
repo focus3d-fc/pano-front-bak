@@ -12,14 +12,13 @@
 
 <script>
 	function setDef(SN) {
-		window.location.href = "/personal/setDef?SN=" + SN + "&packageSns=" + $("#packageSns").val();
+		window.location.href = "/personal/setDef?SN=" + SN;
 	}
 </script>
 
 </head>
 <body>
 	<div class="container addr">
-		<input type="hidden" id="packageSns" value="$!packageSns"/>
 		<!--图片-->
 		<section class="addr-section">
 			#foreach ($!address in $!addressList) 
@@ -45,7 +44,7 @@
 				</div>
 				#end
 		</section>
-		<a href="/personal/toaddaddress?packageSns=$!packageSns" class="button bcdz"> 添加地址 </a>
+		<a href="/personal/toaddaddress" class="button bcdz"> 添加地址 </a>
 
 	</div>
 </body>

@@ -9,8 +9,10 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.focus3d.pano.common.controller.BaseController;
 import com.focus3d.pano.filter.LoginThreadLocal;
@@ -23,6 +25,8 @@ import com.focus3d.pano.model.pano_order;
 import com.focus3d.pano.model.pano_user_receive_address;
 import com.focus3d.pano.user.service.PanoMemUserService;
 import com.focus3d.pano.usersside.service.PersonalService;
+import com.focustech.common.utils.HttpUtil;
+import com.focustech.common.utils.StringUtils;
 import com.focustech.common.utils.TCUtil;
 
 /**
@@ -75,8 +79,10 @@ public class PersonalController extends BaseController {
 	@RequestMapping("/toaddress")
 	public String toaddress(HttpServletRequest request) {
 		long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
+		String packageSns = HttpUtil.sv(request, "packageSns");
 		List<PanoUserReceiveAddressModel> address = receiveAddressService.listByUser(userSn);
 		request.setAttribute("addressList", address);
+		request.setAttribute("packageSns", packageSns);
 		return "/userside/address";
 	}
 
@@ -85,9 +91,11 @@ public class PersonalController extends BaseController {
 	 */
 	@RequestMapping("/toaddress2")
 	public String toaddress2(HttpServletRequest request) {
-		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
+ 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		List<PanoUserReceiveAddressModel> address = receiveAddressService.listByUser(userSn);
 		request.setAttribute("addressList", address);
+		String packageSns = HttpUtil.sv(request, "packageSns");
+		request.setAttribute("packageSns", packageSns);
 		return "/userside/address";
 	}
 
@@ -105,7 +113,9 @@ public class PersonalController extends BaseController {
 	 * 进入到添加地址
 	 */
 	@RequestMapping("/toaddaddress")
-	public String toaddaddress() {
+	public String toaddaddress(HttpServletRequest request, ModelMap modelMap) {
+		String packageSns = HttpUtil.sv(request, "packageSns");
+		modelMap.put("packageSns", packageSns);
 		return "/userside/addaddress";
 	}
 
@@ -133,17 +143,17 @@ public class PersonalController extends BaseController {
 		String add_time = sdf.format(date);
 		site.setADD_TIME(add_time);
 		personalService.addAddress(site);
-		return redirect("toaddress2");
+		String packageSns = HttpUtil.sv(request, "packageSns");
+		return redirect("toaddress2" + (StringUtils.isEmpty(packageSns) ? "" :  "?packageSns=" + packageSns));
 	}
 
 	/**
 	 * 进入到编辑地址
 	 */
 	@RequestMapping("/toupAddress")
-	public String toupAddress(HttpServletRequest request) {
-		Long SN = Long.parseLong(request.getParameter("SN"));
-		pano_user_receive_address address = personalService.selAddressbySN(SN);
-		request.setAttribute("address", address);
+	public String toupAddress(String SN, ModelMap modelMap) {
+		PanoUserReceiveAddressModel address = receiveAddressService.getBySn(TCUtil.lv(SN));
+		modelMap.put("address", address);
 		return "/userside/upaddress";
 	}
 
@@ -186,26 +196,24 @@ public class PersonalController extends BaseController {
 	@RequestMapping("/setDef")
 	public String setDef(HttpServletRequest request) {
 		Long ADDRESS_SN = Long.parseLong(request.getParameter("SN"));
-
-		pano_user_receive_address address = personalService
-				.selAddressbySN(ADDRESS_SN);
-
-		if (address.getDEFAULT() == 0) {
-
-			List<pano_user_receive_address> addressed = personalService
-					.selAddressbyDef(address.getUSER_SN());
-			pano_user_receive_address aed = new pano_user_receive_address();
-			aed.setSN(addressed.get(0).getSN());
-			aed.setDEFAULT(0);
-			personalService.upDef(aed);
-
-			pano_user_receive_address a = new pano_user_receive_address();
-			a.setSN(address.getSN());
-			a.setDEFAULT(1);
-			personalService.upDef(a);
+		String packageSns = HttpUtil.sv(request, "packageSns");
+		PanoUserReceiveAddressModel defaltAddress = receiveAddressService.getBySn(ADDRESS_SN);
+		if (defaltAddress.getDefaultFirst() == 0) {
+			List<PanoUserReceiveAddressModel> addressList = receiveAddressService.listByUser(defaltAddress.getUserSn());
+			for (PanoUserReceiveAddressModel ads : addressList) {
+				if(!ads.getSn().equals(defaltAddress.getSn())){
+					ads.setDefaultFirst(0);
+					receiveAddressService.update(ads);
+				}
+			}
+			defaltAddress.setDefaultFirst(1);
+			receiveAddressService.update(defaltAddress);
 		}
-
-		return redirect("toaddress2");
+		if(StringUtils.isNotEmpty(packageSns)){
+  			return redirect("/order/confirmpage?packageSns=" + packageSns);
+		} else {
+			return redirect("toaddress2");
+		}
 	}
 
 	// --------------------------------------------实名认证--------------------------------------------

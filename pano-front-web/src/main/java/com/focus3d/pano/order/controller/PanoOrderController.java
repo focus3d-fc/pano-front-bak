@@ -138,6 +138,7 @@ public class PanoOrderController extends BaseController {
 		map.put("address", address);
 		map.put("defaultAddress", defaultAddress);
 		map.put("payAmount", payAmount);
+		map.put("packageSns", packageSnsParam);
 
 		return "/member/order/confirm";
 	}
