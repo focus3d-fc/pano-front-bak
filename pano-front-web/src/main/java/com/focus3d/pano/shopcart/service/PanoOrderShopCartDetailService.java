@@ -8,6 +8,6 @@ import com.focus3d.pano.common.service.CommonService;
  *
  * @param <T>
  */
-public interface PanoOrderPackageDetailService<T> extends CommonService<T> {
+public interface PanoOrderShopCartDetailService<T> extends CommonService<T> {
 
 }

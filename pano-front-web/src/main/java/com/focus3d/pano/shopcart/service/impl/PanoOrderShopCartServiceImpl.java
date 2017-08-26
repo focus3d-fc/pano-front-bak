@@ -113,12 +113,10 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 	public int addOrDelete(long housePackageSn) {
 		int status = 1;// 0-从购物车删除 ，1-添加到购物车
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		PanoOrderShopcartModel shopcart = orderShopCartDao
-				.getByHousePackage(housePackageSn);
+		PanoOrderShopcartModel shopcart = orderShopCartDao.getByHousePackage(housePackageSn);
 		if (shopcart != null) {
 			// 从购物车中删除套餐项
-			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao
-					.listByShopcart(shopcart.getSn());
+			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
 			for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {
 				orderShopcartDetailDao.deleteByKey(shopcartDetail);
 			}
@@ -132,8 +130,7 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 			List<PanoProjectPackageTypeModel> housePackageTypeList = listPackageType(housePackageSn);
 			for (PanoProjectPackageTypeModel housePackageType : housePackageTypeList) {
 				// 取类别下第一条产品
-				List<PanoProductModel> products = housePackageType
-						.getProducts();
+				List<PanoProductModel> products = housePackageType.getProducts();
 				if (ListUtils.isNotEmpty(products)) {
 					PanoProductModel product = products.get(0);
 					PanoOrderShopcartDetailModel shopcartDetail = new PanoOrderShopcartDetailModel();
