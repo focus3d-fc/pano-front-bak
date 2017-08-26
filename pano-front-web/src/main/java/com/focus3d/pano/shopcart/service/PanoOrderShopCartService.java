@@ -3,6 +3,7 @@ package com.focus3d.pano.shopcart.service;
 import java.util.List;
 
 import com.focus3d.pano.common.service.CommonService;
+import com.focus3d.pano.model.PanoOrderShopcartModel;
 /**
  * 
  * *
@@ -11,6 +12,13 @@ import com.focus3d.pano.common.service.CommonService;
  * @param <T>
  */
 public interface PanoOrderShopCartService<T> extends CommonService<T> {
+	/**
+	 * 获取用户购物车列表
+	 * *
+	 * @param userSn packageSn
+	 * @return
+	 */
+	 PanoOrderShopcartModel getUserShopcartPackage(long userSn,long packageSn);
 	/**
 	 * 获取用户购物车列表
 	 * *

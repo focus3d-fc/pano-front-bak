@@ -20,11 +20,12 @@ import com.focus3d.pano.project.service.PanoProjectHousePackageService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focustech.common.utils.EncryptUtil;
 import com.focustech.common.utils.StringUtils;
+
 /**
- * 购物车
- * *
+ * 购物车 *
+ * 
  * @author lihaijun
- *
+ * 
  */
 @Controller
 @RequestMapping(value = "/shopcart")
@@ -35,35 +36,39 @@ public class PanoOrderShopCartController extends BaseController {
 	private PanoProjectHousePackageService<PanoProjectHousePackageModel> housePackageService;
 
 	/**
-	 * 购物车列表
-	 * *
+	 * 购物车列表 *
+	 * 
 	 * @param request
 	 * @param session
 	 * @return
 	 */
 	@RequestMapping(value = "list", method = RequestMethod.GET)
-	public String list(ModelMap modelMap, HttpServletRequest request){
+	public String list(ModelMap modelMap, HttpServletRequest request) {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
+		List<PanoOrderShopcartModel> shopcartList = orderShopCartService
+				.listByUser(userSn);
 		for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
 			Long housePackageSn = panoOrderShopcartModel.getHousePackageSn();
-			PanoProjectHousePackageModel housePackage = housePackageService.getDetail(housePackageSn);
-			if(housePackage != null){
+			PanoProjectHousePackageModel housePackage = housePackageService
+					.getDetail(housePackageSn);
+			if (housePackage != null) {
 				panoOrderShopcartModel.setHousePackage(housePackage);
 			}
 		}
 		modelMap.put("shopcartList", shopcartList);
 		return "/member/shopcart/list";
 	}
+
 	/**
-	 * 添加套餐到购物车
-	 * *
+	 * 添加套餐到购物车 *
+	 * 
 	 * @param packageEncryptSn
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "add", method = RequestMethod.GET)
-	public void add(String packageEncryptSn, HttpServletResponse response) throws Exception{
-		if(StringUtils.isNotEmpty(packageEncryptSn)){
+	public void add(String packageEncryptSn, HttpServletResponse response)
+			throws Exception {
+		if (StringUtils.isNotEmpty(packageEncryptSn)) {
 			Long packageSn = EncryptUtil.decode(packageEncryptSn);
 			int status = orderShopCartService.addOrDelete(packageSn);
 			JSONObject jo = new JSONObject();

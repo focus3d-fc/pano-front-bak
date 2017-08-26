@@ -1,17 +1,15 @@
 package com.focus3d.pano.model;
 
-import java.util.Date;
-
 import com.focus3d.pano.common.model.CommonModel;
+import com.focus3d.pano.model.ibator.PanoOrderPackage;
 import com.focus3d.pano.model.ibator.PanoOrderPackageCriteria;
-import com.focus3d.pano.model.ibator.PanoOrderPackageDetail;
 /**
  * 
  * *
  * @author lihaijun
  *
  */
-public class PanoOrderPackageModel extends PanoOrderPackageDetail<PanoOrderPackageModel, PanoOrderPackageCriteria> implements CommonModel {
+public class PanoOrderPackageModel extends PanoOrderPackage<PanoOrderPackageModel, PanoOrderPackageCriteria> implements CommonModel {
 
 	/**
 	 * 

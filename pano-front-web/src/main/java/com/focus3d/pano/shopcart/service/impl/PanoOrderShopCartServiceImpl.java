@@ -34,15 +34,19 @@ import com.focus3d.pano.shopcart.dao.PanoOrderShopCartDao;
 import com.focus3d.pano.shopcart.dao.PanoOrderShopcartDetailDao;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focustech.common.utils.ListUtils;
+
 /**
  * 
  * *
+ * 
  * @author lihaijun
- *
+ * 
  */
 @Service
 @Transactional
-public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderShopcartModel> implements PanoOrderShopCartService<PanoOrderShopcartModel> {
+public class PanoOrderShopCartServiceImpl extends
+		CommonServiceImpl<PanoOrderShopcartModel> implements
+		PanoOrderShopCartService<PanoOrderShopcartModel> {
 	@Autowired
 	private PanoOrderShopCartDao orderShopCartDao;
 	@Autowired
@@ -65,29 +69,63 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 	private PanoProjectStyleDao projectStyleDao;
 	@Autowired
 	private PanoProjectBaseStyleDao baseStyleDao;
+
 	@Override
 	public CommonDao<PanoOrderShopcartModel> getDao() {
 		return orderShopCartDao;
 	}
 
 	@Override
+	public PanoOrderShopcartModel getUserShopcartPackage(long userSn, long packageSn) {
+		PanoOrderShopcartModel shopcart = orderShopCartDao
+				.getUserShopcartPackage(userSn, packageSn);
+		List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao
+				.listByShopcart(shopcart.getSn());
+		// 设置购物车明细信息
+		for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {
+			Long packageProductSn = shopcartDetail.getPackageProductSn();
+			if (packageProductSn != null) {
+				PanoProductModel packageProduct = productDao
+						.getBySn(packageProductSn);
+				if (packageProduct != null) {
+					shopcartDetail.setPackageProduct(packageProduct);
+				}
+			}
+			Long packageTypeSn = shopcartDetail.getPackageTypeSn();
+			if (packageTypeSn != null) {
+				PanoProjectPackageTypeModel packageType = packageTypeDao
+						.getBySn(packageTypeSn);
+				if (packageType != null) {
+					shopcartDetail.setPackageType(packageType);
+				}
+			}
+		}
+		shopcart.setDetails(shopcartDetails);
+		return shopcart;
+	}
+
+	@Override
 	public List<PanoOrderShopcartModel> listByUser(long userSn) {
-		List<PanoOrderShopcartModel> shopcarts = orderShopCartDao.listByUser(userSn);
+		List<PanoOrderShopcartModel> shopcarts = orderShopCartDao
+				.listByUser(userSn);
 		for (PanoOrderShopcartModel shopcart : shopcarts) {
-			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
-			//设置购物车明细信息
+			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao
+					.listByShopcart(shopcart.getSn());
+			// 设置购物车明细信息
 			for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {
 				Long packageProductSn = shopcartDetail.getPackageProductSn();
-				if(packageProductSn != null){
-					PanoProductModel packageProduct = productDao.getBySn(packageProductSn);
-					if(packageProduct != null){
+				if (packageProductSn != null) {
+					PanoProductModel packageProduct = productDao
+							.getBySn(packageProductSn);
+					if (packageProduct != null) {
 						shopcartDetail.setPackageProduct(packageProduct);
 					}
 				}
 				Long packageTypeSn = shopcartDetail.getPackageTypeSn();
-				if(packageTypeSn != null){
-					PanoProjectPackageTypeModel packageType = packageTypeDao.getBySn(packageTypeSn);
-					if(packageType != null){
+				if (packageTypeSn != null) {
+					PanoProjectPackageTypeModel packageType = packageTypeDao
+							.getBySn(packageTypeSn);
+					if (packageType != null) {
 						shopcartDetail.setPackageType(packageType);
 					}
 				}
@@ -96,39 +134,42 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 		}
 		return shopcarts;
 	}
-	
+
 	@Override
 	public int addOrDelete(long housePackageSn) {
-		int status = 1;//0-从购物车删除 ，1-添加到购物车 
+		int status = 1;// 0-从购物车删除 ，1-添加到购物车
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		PanoOrderShopcartModel shopcart = orderShopCartDao.getByHousePackage(housePackageSn);
-		if(shopcart != null){
-			//从购物车中删除套餐项
-			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
+		PanoOrderShopcartModel shopcart = orderShopCartDao
+				.getByHousePackage(housePackageSn);
+		if (shopcart != null) {
+			// 从购物车中删除套餐项
+			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao
+					.listByShopcart(shopcart.getSn());
 			for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {
 				orderShopcartDetailDao.deleteByKey(shopcartDetail);
 			}
 			orderShopCartDao.deleteByKey(shopcart);
 			status = 0;
 		} else {
-			//添加套餐项到购物车
+			// 添加套餐项到购物车
 			List<PanoOrderShopcartDetailModel> orderShopcartDetails = new ArrayList<PanoOrderShopcartDetailModel>();
 			int housePackageNum = 0;
-			//套餐类别
+			// 套餐类别
 			List<PanoProjectPackageTypeModel> housePackageTypeList = listPackageType(housePackageSn);
 			for (PanoProjectPackageTypeModel housePackageType : housePackageTypeList) {
-				//取类别下第一条产品
-				List<PanoProductModel> products = housePackageType.getProducts();
-				if(ListUtils.isNotEmpty(products)){
+				// 取类别下第一条产品
+				List<PanoProductModel> products = housePackageType
+						.getProducts();
+				if (ListUtils.isNotEmpty(products)) {
 					PanoProductModel product = products.get(0);
 					PanoOrderShopcartDetailModel shopcartDetail = new PanoOrderShopcartDetailModel();
 					shopcartDetail.setPackageTypeSn(housePackageType.getSn());
 					shopcartDetail.setPackageProductSn(product.getSn());
 					orderShopcartDetails.add(shopcartDetail);
-					housePackageNum ++;
+					housePackageNum++;
 				}
 			}
-			if(ListUtils.isNotEmpty(orderShopcartDetails)){
+			if (ListUtils.isNotEmpty(orderShopcartDetails)) {
 				PanoOrderShopcartModel shopcartModel = new PanoOrderShopcartModel();
 				shopcartModel.setUserSn(userSn);
 				shopcartModel.setHousePackageSn(housePackageSn);
@@ -136,7 +177,7 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 				shopcartModel.setPurchaseNum(1);
 				orderShopCartDao.insert(shopcartModel);
 				Long shopcartSn = shopcartModel.getSn();
-				for(PanoOrderShopcartDetailModel shopcartDetail : orderShopcartDetails){
+				for (PanoOrderShopcartDetailModel shopcartDetail : orderShopcartDetails) {
 					shopcartDetail.setShopcartSn(shopcartSn);
 					orderShopcartDetailDao.insert(shopcartDetail);
 				}
@@ -144,21 +185,25 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 		}
 		return status;
 	}
-	
+
 	/**
 	 * 
 	 * *
+	 * 
 	 * @param packageType
 	 */
-	private List<PanoProjectPackageTypeModel> listPackageType(long housePackageSn) {
-		List<PanoProjectPackageTypeModel> housePackageTypeList = packageTypeDao.listByHousePackage(housePackageSn);
+	private List<PanoProjectPackageTypeModel> listPackageType(
+			long housePackageSn) {
+		List<PanoProjectPackageTypeModel> housePackageTypeList = packageTypeDao
+				.listByHousePackage(housePackageSn);
 		for (PanoProjectPackageTypeModel packageType : housePackageTypeList) {
 			Long packageTypeSn = packageType.getSn();
-			List<PanoProjectPackageProductModel> packageProducts = packageProductDao.listByPackageType(packageTypeSn);
+			List<PanoProjectPackageProductModel> packageProducts = packageProductDao
+					.listByPackageType(packageTypeSn);
 			for (PanoProjectPackageProductModel packageProduct : packageProducts) {
 				Long productSn = packageProduct.getProductSn();
 				PanoProductModel product = productDao.getBySn(productSn);
-				if(product != null){
+				if (product != null) {
 					packageType.getProducts().add(product);
 				}
 			}
