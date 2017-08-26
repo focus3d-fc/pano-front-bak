@@ -35,7 +35,6 @@
     var payAmount = $!payAmount;
    
  
-    var a = "</scr" + "ipt>"+"</scr"+"ipt>"
     	var pay_type;
     	function pay(){
     		if(!pay_type){
@@ -67,6 +66,13 @@
             })
     		 
     	}
+    	function choose_paytype(pay_type_param,event){
+    		pay_type=pay_type_param;
+    		$('.pay .row .tick').removeClass('z-choose2');
+    		$('.pay .row .tick').addClass('z-choose');
+    		$('.pay .'+pay_type_param+' .tick').addClass('z-choose2');
+    	}
+    	
     </script>
 </head>
 
@@ -84,14 +90,14 @@
 
                 <h5>选择支付方式</h5>
 
-            <div class="row" onclick="pay_type='ALIPAY'">
-                <p><i class="z-pay"><img src="/images/member/order/z-pay.png" alt="" ></i>支付宝</p><div class="z-choose"></div>
+            <div class="row ALIPAY" onclick="choose_paytype('ALIPAY',event)">
+                <p><i class="z-pay"><img src="/images/member/order/z-pay.png" alt="" ></i>支付宝</p><div class="tick z-choose"></div>
             </div>
-            <div class="row" onclick="pay_type='LIANPAY'">
-                <p><i class="z-pay"><img src="/images/member/order/y-pay.png" alt="" ></i>银行卡支付</p><div class="z-choose"></div>
+            <div class="row LIANPAY" onclick="choose_paytype('LIANPAY',event)">
+                <p><i class="z-pay"><img src="/images/member/order/y-pay.png" alt="" ></i>银行卡支付</p><div class="tick z-choose"></div>
             </div>
-            <div class="row" onclick="pay_type='WXOFFICAL'">
-                <p><i class="z-pay"><img src="/images/member/order/w-pay.png" alt="" ></i>微信支付</p><div class="z-choose2"></div>
+            <div class="row WXOFFICAL" onclick="choose_paytype('WXOFFICAL',event)">
+                <p><i class="z-pay"><img src="/images/member/order/w-pay.png" alt="" ></i>微信支付</p><div class="tick z-choose2"></div>
             </div>
         </div>
 

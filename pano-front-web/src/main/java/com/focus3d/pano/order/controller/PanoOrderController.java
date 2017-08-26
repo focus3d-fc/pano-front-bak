@@ -490,6 +490,26 @@ public class PanoOrderController extends BaseController {
 		return "/member/order/orderAll";
 	}
 
+	@RequestMapping(value = "/orderpage")
+	public String orderPage(HttpServletRequest request,
+			HttpServletResponse response, ModelMap map) throws Exception {
+		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
+		String orderSnParam = StringUtils.trimToNull(request
+				.getParameter("order_sn"));
+		Long orderSn = Long.parseLong(orderSnParam);
+
+		PanoOrderModel order = orderService.getOrderDetail(orderSn);
+
+		for (PanoOrderPackageModel orderPackageModel : order
+				.getOrderPackageModels()) {
+			PanoProjectHousePackageModel housePackage = housePackageService
+					.getDetail(orderPackageModel.getHousePackageSn());
+			orderPackageModel.setHousePackageModel(housePackage);
+		}
+		map.put("order", order);
+		return "/member/order/orderddetail";
+	}
+
 	@RequestMapping(value = "/lianpaynotify")
 	public void lianpayNotify(HttpServletRequest req, HttpServletResponse resp,
 			ModelMap map) throws Exception {

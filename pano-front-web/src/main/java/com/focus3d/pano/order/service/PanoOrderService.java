@@ -16,4 +16,6 @@ import com.focus3d.pano.model.PanoOrderModel;
 public interface PanoOrderService<T> extends CommonService<T> {
 	public List<PanoOrderModel> getUserOrders(Long userSn, Integer status)
 			throws SQLException;
+
+	public PanoOrderModel getOrderDetail(Long orderSn) throws SQLException;
 }

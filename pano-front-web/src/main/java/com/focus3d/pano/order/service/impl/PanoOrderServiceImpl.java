@@ -51,4 +51,13 @@ public class PanoOrderServiceImpl extends CommonServiceImpl<PanoOrderModel>
 		}
 		return orders;
 	}
+
+	@Override
+	public PanoOrderModel getOrderDetail(Long orderSn) throws SQLException {
+		PanoOrderModel order = orderDao.getBySn(orderSn);
+		List<PanoOrderPackageModel> orderPackages = orderPackageDap.list(order
+				.getSn());
+		order.setOrderPackageModels(orderPackages);
+		return order;
+	}
 }
