@@ -32,7 +32,6 @@ import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
 import com.focus3d.pano.model.PanoOrderTransModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
-import com.focus3d.pano.model.PanoUserModel;
 import com.focus3d.pano.model.PanoUserReceiveAddressModel;
 import com.focus3d.pano.model.PanoValidateModel;
 import com.focus3d.pano.model.ibator.PanoPerspectiveViewModel;
@@ -46,7 +45,6 @@ import com.focus3d.pano.project.service.PanoProjectHousePackageService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focus3d.pano.sms.service.SmsValidateService;
 import com.focus3d.pano.user.service.PanoMemUserService;
-import com.focus3d.pano.user.service.PanoUserService;
 import com.focustech.common.codec.encrypter.DefaultEncryptComponentImpl;
 import com.focustech.common.utils.EncryptUtil;
 import com.lianpay.share.security.Md5Algorithm;
@@ -86,7 +84,8 @@ public class PanoOrderController extends BaseController {
 	private SmsValidateService smsValidateService;
 	@Autowired
 	private PanoOrderShopCartService<PanoOrderShopcartModel> shopCartService;
-
+	@Autowired
+	private PanoOrderShopCartDetailService<PanoOrderShopcartDetailModel> orderShopCartDetailService;
 	@RequestMapping("/test")
 	public String QueryInfo(PanoPerspectiveViewModel model, ModelMap map) {
 		logger.debug(EncryptUtil.encode(10167l));
@@ -164,11 +163,11 @@ public class PanoOrderController extends BaseController {
 			String phone = StringUtils
 					.trimToNull(request.getParameter("phone"));
 
-//			if (panoUserService.getByMobile(phone) == null) {
-//				data.put("exist", 0);
-//			} else {
-//				data.put("exist", 1);
-//			}
+			// if (panoUserService.getByMobile(phone) == null) {
+			// data.put("exist", 0);
+			// } else {
+			// data.put("exist", 1);
+			// }
 			data.put("exist", 1);
 			data.put("status", 0);
 		} catch (Exception e) {
@@ -291,7 +290,6 @@ public class PanoOrderController extends BaseController {
 		try {
 			String mobilePhone = request.getParameter("mobile_phone");
 			String verifycode = request.getParameter("verifycode");
-
 
 			// 验证手机号
 			// 验证验证码
@@ -446,7 +444,9 @@ public class PanoOrderController extends BaseController {
 										.getPackageProductSn());
 						panoOrderPackageDetailService
 								.insert(orderPackageDetailModel);
+						orderShopCartDetailService.detailByKey(shopcartPackageDetail);
 					}
+					shopCartService.delete(shopcart);
 				}
 			}
 
@@ -465,6 +465,7 @@ public class PanoOrderController extends BaseController {
 	@RequestMapping(value = "/orderspage")
 	public String ordersPage(HttpServletRequest request,
 			HttpServletResponse response, ModelMap map) throws Exception {
+		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 
 		return "";
 	}
