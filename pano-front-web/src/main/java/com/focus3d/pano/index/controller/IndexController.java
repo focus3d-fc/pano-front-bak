@@ -39,7 +39,7 @@ public class IndexController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public String index(ModelMap model, HttpServletRequest request,HttpSession session){
+	public String index(ModelMap modelMap, HttpServletRequest request){
 		//模拟登陆状态，方便后面代码获取user_sn
 		//根据楼盘信息，查询楼盘sn
 		String province=request.getParameter("province");
@@ -56,14 +56,14 @@ public class IndexController extends BaseController{
 			pano_projectList=usersSideService.list_SelectprojectList2( province, city, area, project_name);
 			project_sn = pano_projectList.get(0).getSN();
 		}
-		model.addAttribute("pano_projectList",pano_projectList);
+		modelMap.addAttribute("pano_projectList",pano_projectList);
 		//查询   楼盘sn(100007)-风格styleList     *project_sn:100012***此事还要关联户型表查询house_sn
 		List<Style> styleList;
 		try {
 			styleList = usersSideService.selectStyleByProject_sn(project_sn);
-			model.addAttribute("styleList",styleList);
+			modelMap.addAttribute("styleList",styleList);
 			List<pano_ad> adList=usersSideService.selectAdImg_sn(project_sn);
-			model.addAttribute("adList",adList);
+			modelMap.addAttribute("adList",adList);
 			//根据每个风格-查询对应的-标签集合
 			Set<Long>  set=new HashSet<Long>();
 			Iterator<Style> style_iterator = styleList.iterator();    

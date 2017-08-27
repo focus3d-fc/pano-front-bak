@@ -39,6 +39,7 @@ under the License.
         <tool class="org.apache.velocity.tools.generic.XmlTool"/>
 		<!--扩展-->
         <tool class="com.focus3d.pano.common.velocity.FsTool"/>
+       
     </toolbox>
     <toolbox scope="request">
         <tool class="org.apache.velocity.tools.generic.ContextTool"/>
