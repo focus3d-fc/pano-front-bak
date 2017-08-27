@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.focus3d.pano.common.controller.BaseController;
+import com.focus3d.pano.filter.LoginFilter;
 import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.member.service.PanoUserReceiveAddressService;
 import com.focus3d.pano.model.OrderRelevance;
@@ -223,8 +224,8 @@ public class PersonalController extends BaseController {
 	 */
 	@RequestMapping("/tocer")
 	public String tocer(HttpServletRequest request) {
-		Long SN = Long.parseLong(request.getParameter("SN"));
-		pano_mem_user memuser = personalService.selUserbySN(SN);
+		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
+		PanoMemUserModel memuser = memUserService.getBySn(userSn);
 		request.setAttribute("memuser", memuser);
 		return "/userside/cer";
 	}
@@ -236,17 +237,16 @@ public class PersonalController extends BaseController {
 	public String upCert(HttpServletRequest request, @RequestParam String SN,
 			@RequestParam String NAME, @RequestParam String SEX,
 			@RequestParam String CERT_NO) {
-		Long USER_SN = Long.parseLong(SN);
+		long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		int USER_SEX = Integer.parseInt(SEX);
 		pano_mem_user memuser = new pano_mem_user();
-		memuser.setSN(USER_SN);
+		memuser.setSN(userSn);
 		memuser.setNAME(NAME);
 		memuser.setSEX(USER_SEX);
 		memuser.setCERT_NO(CERT_NO);
 		personalService.upMemuser(memuser);
-		return redirect("tomy2");
+		return redirect("/member/center");
 	}
-
 	// --------------------------------------------订单--------------------------------------------
 
 	/**
