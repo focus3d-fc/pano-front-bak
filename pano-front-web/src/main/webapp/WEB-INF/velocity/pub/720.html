@@ -109,7 +109,8 @@
     			$(this).attr("status", 0);
     			$(".location3").css('bottom','1.05rem')
     		}
-            $(this).toggleClass('active');
+            $(this).parent().find("a").removeClass("active");
+            $(this).addClass('active');
             getHouse();
         });
         $('#hx').find('a').click(function () {
@@ -134,7 +135,8 @@
     			$(".location3").css('bottom','1.05rem');
     			
     		}
-            $(this).toggleClass('active');
+    		 $(this).parent().find("a").removeClass("active");
+             $(this).addClass('active');
             
             //全景id
         	var panoId = $("#panoId").val();
@@ -163,7 +165,8 @@
     			$(this).attr("status", 0);
     			$(".location3").css('bottom','1.05rem')
     		}
-            $(this).toggleClass('active');
+    		 $(this).parent().find("a").removeClass("active");
+             $(this).addClass('active');
             
             var houseId = $("#houseId").val();
             console.info("户型ID"+houseId);
