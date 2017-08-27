@@ -43,7 +43,7 @@ public class PanoOrderShopCartController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "list", method = RequestMethod.GET)
-	public String list(ModelMap modelMap, HttpServletRequest request) {
+	public String list(String styleId, ModelMap modelMap, HttpServletRequest request) {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
 		for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
@@ -54,6 +54,7 @@ public class PanoOrderShopCartController extends BaseController {
 			}
 		}
 		modelMap.put("shopcartList", shopcartList);
+		modelMap.put("styleId", styleId);
 		return "/member/shopcart/list";
 	}
 

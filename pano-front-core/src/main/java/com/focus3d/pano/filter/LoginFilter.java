@@ -86,14 +86,7 @@ public class LoginFilter extends AbstractFilter {
 		boolean isAuthed = true;
 		
 		if(isWeixinBrowser(request) && SessionDB.get(sessionId) == null){
-			Enumeration parameterNames = request.getParameterNames();
-			StringBuffer urlParameterUrl = new StringBuffer("?1=1");
-			while (parameterNames.hasMoreElements()) {
-				Object object = (Object) parameterNames.nextElement();
-				String parameterKey = TCUtil.sv(object);
-				String parameterValue = request.getParameter(parameterKey);
-				urlParameterUrl.append("&" + parameterKey + "=" + parameterValue);
-			}
+			StringBuffer urlParameterUrl = getRequestParameter(request);
 			String callbackUrl = servletPath + urlParameterUrl.toString();
 			log.info("微信登录后跳转链接：" + callbackUrl);
 			log.info("跳转到微信授权登录");
@@ -117,7 +110,7 @@ public class LoginFilter extends AbstractFilter {
 				 } else {
 					 log.info("跳转到常规页面登录");
 					 response.sendRedirect("/" + LOGIN_PAGE_NAME);
-					 session.setAttribute(SESSION_GOTO, servletPath);
+					 session.setAttribute(SESSION_GOTO, servletPath + getRequestParameter(request));
 				 }
 				 return;
 			} else {
@@ -144,6 +137,24 @@ public class LoginFilter extends AbstractFilter {
 			response.setContentType("text/html;charset=utf-8");
 			response.getOutputStream().print("禁止访问");
 		}
+	}
+
+	/**
+	 * 获取请求参数
+	 * *
+	 * @param request
+	 * @return
+	 */
+	private StringBuffer getRequestParameter(HttpServletRequest request) {
+		Enumeration parameterNames = request.getParameterNames();
+		StringBuffer urlParameterUrl = new StringBuffer("?1=1");
+		while (parameterNames.hasMoreElements()) {
+			Object object = (Object) parameterNames.nextElement();
+			String parameterKey = TCUtil.sv(object);
+			String parameterValue = request.getParameter(parameterKey);
+			urlParameterUrl.append("&" + parameterKey + "=" + parameterValue);
+		}
+		return urlParameterUrl;
 	}
 	
 	/**
