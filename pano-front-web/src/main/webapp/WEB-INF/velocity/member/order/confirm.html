@@ -78,10 +78,10 @@
                 <p>付款方式：</p>
             </div>
             <p>
-                <a href="#" class="paying" onclick="choosePayScheme('FULL')">付全款
+                <a href="#" class="paying paybtn" onclick="choosePayScheme('FULL',this)">付全款
                     <span class="red">95折</span>
                 </a>
-                <a href="#" class="paid" onclick="choosePayScheme('STAGES')">预付2成</a>
+                <a href="#" class="paid paybtn" onclick="choosePayScheme('STAGES',this)">预付2成</a>
             </p>
             <!--new code 20170825 begin-->
             <div class="stages" style="display: none;">
@@ -210,8 +210,12 @@ function calculate(){
 	}
 }
 
-function choosePayScheme(paySchemeParam){
+function choosePayScheme(paySchemeParam,ele){
 	payScheme = paySchemeParam;
+	$('.paybtn').removeClass('paying');
+	$('.paybtn').addClass('paid');
+	$(ele).addClass('paying');
+	$(ele).removeClass('paid');
 	if(payScheme== 'FULL'){
 		$('.stages').hide();
 	}else{
@@ -397,7 +401,7 @@ function choosePayScheme(paySchemeParam){
              		alert(data.statusMsg)
              		return;
              	}else{
-             		window.location.href='/order/topaypage?order_sn='+data.orderSn+'&pay_amount='+payAmount;
+             		window.location.href='/order/topaypage?order_sn='+data.orderSn;
              	}
              },
              error:function(xhr,textStatus){

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import com.focus3d.pano.common.dao.CommonDao;
 import com.focus3d.pano.model.PanoOrderModel;
+import com.focus3d.pano.model.PanoOrderPackageModel;
 import com.focus3d.pano.model.ibator.PanoOrderCriteria;
+import com.focus3d.pano.model.ibator.PanoOrderPackageCriteria;
 
 /**
  * 
@@ -20,6 +22,12 @@ import com.focus3d.pano.model.ibator.PanoOrderCriteria;
  */
 @Repository
 public class PanoOrderDao extends CommonDao<PanoOrderModel> {
+
+	public PanoOrderModel getSonOrder(Long orderSn) {
+		PanoOrderCriteria criteria = new PanoOrderCriteria();
+		criteria.createCriteria().andParentOrderSnEqualTo(orderSn);
+		return selectFirstByExample(criteria, PanoOrderModel.class);
+	}
 
 	public List<PanoOrderModel> myOrders(Long userSn, Integer status)
 			throws SQLException {

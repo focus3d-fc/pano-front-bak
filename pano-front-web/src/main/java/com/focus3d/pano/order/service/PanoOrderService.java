@@ -17,5 +17,7 @@ public interface PanoOrderService<T> extends CommonService<T> {
 	public List<PanoOrderModel> getUserOrders(Long userSn, Integer status)
 			throws SQLException;
 
+	public PanoOrderModel getSonOrder(Long orderSn) throws SQLException;
+
 	public PanoOrderModel getOrderDetail(Long orderSn) throws SQLException;
 }

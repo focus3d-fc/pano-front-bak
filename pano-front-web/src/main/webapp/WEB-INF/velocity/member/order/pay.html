@@ -32,10 +32,10 @@
     }
     
     var orderSn = $!orderSn;
-    var payAmount = $!payAmount;
+    var payAmount = $!order.payMoney;
    
  
-    	var pay_type;
+    	var pay_type="LIANPAY";
     	function pay(){
     		if(!pay_type){
     			alert('请选择支付方式')
@@ -44,16 +44,21 @@
     		$.ajax({
                 type: 'POST',
                 async: false,
-                data: {order_sn:orderSn,pay_type:pay_type},
+                data: {order_sn:orderSn,pay_type:pay_type,card_no:"6222023401074479815",id_no:"32011219900410041X",acct_name:"任新伟"},
                 url: '/order/pay',
                 dataType: 'json',
                 success: function (data) {
                 	if(data.status != 0){
-                		alert(data.statusMsg)
+                		if(!data.unPayedParentOrderSn){
+                			alert(data.statusMsg)
+                		}else{
+                			alert(data.statusMsg)
+                		}
                 		return;
                 	}else{
                 		if(pay_type=='LIANPAY'){
                 			$('#lianpay [name=req_data]').val(data.linkString);
+                			$('#lianpay').attr("action",data.outGateway);
                 			$('#lianpay').submit();
                 		}
                 	}
@@ -77,7 +82,7 @@
 </head>
 
 <body>
-<form id="lianpay" action="https://wap.lianlianpay.com/payment.htm" method="get" hidden>
+<form id="lianpay" action="" method="get" hidden>
 				<ul>
 					<li><input type="hidden" name="req_data" value='' />
 						<button name="next_btn" class="btn" type="submit" id="next_btn">连连支付</button></li>
@@ -87,23 +92,23 @@
     <!--图片-->
     <section class="addr-section">
         <div class="pay">
-
+			<div style="background-color:white;height:50px;font-size:17px;padding:12px 15px;"><span style="">订单总额</span><span style="float:right">¥: $!order.sumMoney</span></div>
                 <h5>选择支付方式</h5>
 
-            <div class="row ALIPAY" onclick="choose_paytype('ALIPAY',event)">
+          <!--   <div class="row ALIPAY" onclick="choose_paytype('ALIPAY',event)">
                 <p><i class="z-pay"><img src="/images/member/order/z-pay.png" alt="" ></i>支付宝</p><div class="tick z-choose"></div>
-            </div>
+            </div> -->
             <div class="row LIANPAY" onclick="choose_paytype('LIANPAY',event)">
-                <p><i class="z-pay"><img src="/images/member/order/y-pay.png" alt="" ></i>银行卡支付</p><div class="tick z-choose"></div>
+                <p><i class="z-pay"><img src="/images/member/order/y-pay.png" alt="" ></i>银行卡支付</p><div class="tick z-choose2"></div>
             </div>
-            <div class="row WXOFFICAL" onclick="choose_paytype('WXOFFICAL',event)">
-                <p><i class="z-pay"><img src="/images/member/order/w-pay.png" alt="" ></i>微信支付</p><div class="tick z-choose2"></div>
+            <div class="row WXOFFICIAL" onclick="choose_paytype('WXOFFICIAL',event)">
+                <p><i class="z-pay"><img src="/images/member/order/w-pay.png" alt="" ></i>微信支付</p><div class="tick z-choose"></div>
             </div>
+          		
         </div>
-
     </section>
     <a class="green-btn bcdz" onclick="pay()">
-        确认支付￥<span class="pay_amount">$!payAmount</span>
+        确认支付￥<span class="pay_amount">$!order.payMoney</span>
     </a>
 
 </div>
