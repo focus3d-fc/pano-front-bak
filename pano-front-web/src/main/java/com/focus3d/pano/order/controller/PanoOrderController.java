@@ -137,7 +137,12 @@ public class PanoOrderController extends BaseController {
 		map.put("address", address);
 		map.put("defaultAddress", defaultAddress);
 		map.put("payAmount", payAmount);
+<<<<<<< HEAD
 		map.put("packageSns", packageSns);
+=======
+		map.put("packageSns", packageSnsParam);
+
+>>>>>>> branch 'master' of https://github.com/focus3d-fc/pano-front
 		return "/member/order/confirm";
 	}
 
@@ -446,8 +451,12 @@ public class PanoOrderController extends BaseController {
 										.getPackageProductSn());
 						panoOrderPackageDetailService
 								.insert(orderPackageDetailModel);
+<<<<<<< HEAD
 						orderShopCartDetailService
 								.delete(shopcartPackageDetail);
+=======
+						orderShopCartDetailService.delete(shopcartPackageDetail);
+>>>>>>> branch 'master' of https://github.com/focus3d-fc/pano-front
 					}
 					shopCartService.delete(shopcart);
 				}
