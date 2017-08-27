@@ -7,7 +7,7 @@
 <div class="container confirm">
 	<!--列表头-->
 	<section class="address">
-		<img src="../image/img/8.png" alt="">
+		<img src="/images/8.png" alt="">
 		<div>
 			<p class="clearfix">
 				<span class="fl">收货人：$!defaultAddress.userName</span> <span
@@ -23,9 +23,10 @@
 		#foreach($!housePackage in $!housePackages)
 		<div class="order-item" id="$!housePackage.sn">
 			<div class="title">
-				<div>
-					<img src="../image/img/30.png" alt=""> 基础套餐
-				</div>
+				<span>
+					<i class="iconfont">&#xe71f;</i>
+					$!housePackage.name
+				</span>
 				<span class="red"> 等待买家付款 </span>
 			</div>
 			<div class="cont">
@@ -94,7 +95,7 @@
             <!--new code 20170825 end-->
             <div class="row2">
                 <p>
-                    <img src="../image/img/choose2.png" alt="">
+                    <img src="/images/choose2.png" alt="">
                     <a onclick="$('.wrap').show();" >我已阅读并同意
                         <span class="red">合同条款</span>
                     </a>
