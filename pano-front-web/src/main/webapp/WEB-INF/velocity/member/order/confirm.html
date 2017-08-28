@@ -4,11 +4,16 @@
 <script type="text/javascript"
 	src="/style/admstatic/js/getVerifyCode.js"></script>
 <script src="/style/admstatic/js/main.js"></script>
+<style>
+.w-pre90{width:90%;}
+.img_b0{width:.68rem !important;
+    height:.68rem !important;margin-bottom:0 !important;}
+</style>
 <div class="container confirm">
 	<!--列表头-->
-	<section class="address">
-		<img src="/images/8.png" alt="">
-		<div>
+	<section class="address add-img">
+		<img class="img_b0" src="/images/8.png" alt="">
+		<div class="w-pre90">
 			<p class="clearfix">
 				<span class="fl">收货人：$!defaultAddress.userName</span> <span
 					class="fr">$!defaultAddress.mobile</span>
@@ -54,17 +59,16 @@
 						onclick="addCount('$!housePackage.sn')">+</span>
 				</p>
 			</div>
-
-
 		</div>
 		#end
 		<div class="yhj-item">
-            <div class="row">
+            <div class="row" >
                 <p>请输入兑换优惠码：</p>
-                <p class="couponCodeSquares"
-				onclick="$('[name=couponCode]').focus();">
+                
+                <p class="couponCodeSquares" 
+                				onclick="$('[name=couponCode]').focus();">
 				<input type="tel"  maxLength="6" oninput="couponcode_input()"
-					style=" outline: medium; color: transparent; border: none; "
+					style=" outline: medium; color: transparent; border: none;width:60px;"
 					name="couponCode" />
                     <span class="square"></span>
                     <span class="square"></span>
@@ -73,6 +77,7 @@
                     <span class="square"></span>
                     <span class="square"></span>
                 </p>
+                
             </div>
             <div class="row noboder">
                 <p>付款方式：</p>
@@ -83,17 +88,19 @@
                 </a>
                 <a href="#" class="paid paybtn" onclick="choosePayScheme('STAGES',this)">预付2成</a>
             </p>
+            
             <!--new code 20170825 begin-->
-            <div class="stages" style="display: none;">
+            <div class="stages" style="display:none;">
 	            <div class="row red top_line" >
 	                <p>阶段1：定金</p><p>优惠券抵扣：¥<span class="couponAmount"></span></p><p>小计：¥<span class="stage1Amount"></span></p>
 	            </div>
 	            <div class="row">
 	                <p>阶段2：尾款</p><p>小计：¥<span class="stage2Amount"></span></p>
 	            </div>
+	            
             </div>
             <!--new code 20170825 end-->
-            <div class="row2">
+            <div class="new-row2">
                 <p>
                     <img src="/images/choose2.png" alt="">
                     <a onclick="$('.wrap').show();" >我已阅读并同意
@@ -101,9 +108,14 @@
                     </a>
                 </p>
             </div>
-            <div class="total">
-                共 <span class="totalCount"></span>件产品 <span class="payAmountDesc">合计</span>￥<span class="red"></span>元
-                <a class="tj" onclick="$('.wrap1').show();">
+            
+        
+             
+            
+            <div class="new-tjdd">
+            <p class="fl tx-center">
+                共 <span class="totalCount"></span>件产品 <span class="payAmountDesc">合计</span>￥<span class="red"></span>元</p>
+                <a class="tj fr" onclick="$('.wrap1').show();">
                     提交订单
                 </a>
             </div>
@@ -191,16 +203,16 @@ function calculate(){
 	payAmount = payAmount - couponAmount;
 	if(payScheme == 'FULL'){
 		payAmount = parseFloat((payAmount*0.95).toFixed(2));
-		$('.total .red').text(payAmount)
-		$('.total .totalCount').text(totalCount)
+		$('.new-tjdd .red').text(payAmount)
+		$('.new-tjdd .totalCount').text(totalCount)
 		$('.payAmountDesc').text('合计')
 	}else{
 		var stage1Amount = payAmount*0.2;
 		stage1Amount= parseFloat(stage1Amount.toFixed(2))
 		var stage2Amount = payAmount - stage1Amount;
 		payAmount=stage1Amount;
-		$('.total .red').text(payAmount)
-		$('.total .totalCount').text(totalCount)
+		$('.new-tjdd .red').text(payAmount)
+		$('.new-tjdd .totalCount').text(totalCount)
 		$('.couponAmount').text(couponAmount)
 		$('.stage1Amount').text(stage1Amount)
 		$('.stage2Amount').text(stage2Amount)
