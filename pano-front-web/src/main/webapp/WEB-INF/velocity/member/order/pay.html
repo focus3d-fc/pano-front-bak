@@ -44,7 +44,7 @@
     		$.ajax({
                 type: 'POST',
                 async: false,
-                data: {order_sn:orderSn,pay_type:pay_type,card_no:"6222023401074479815",id_no:"32011219900410041X",acct_name:"任新伟"},
+                data: {order_sn:orderSn,pay_type:pay_type,card_no:"6222600210024785878",id_no:"321081198410100312",acct_name:"李海俊"},
                 url: '/order/pay',
                 dataType: 'json',
                 success: function (data) {
@@ -60,6 +60,8 @@
                 			$('#lianpay [name=req_data]').val(data.linkString);
                 			$('#lianpay').attr("action",data.outGateway);
                 			$('#lianpay').submit();
+                		}else if(pay_type=='WXOFFICIAL'){
+                			onBridgeReady(data.appId,data.timeStamp,data.nonceStr,data.pack,data.paySign);
                 		}
                 	}
                 },
@@ -73,11 +75,37 @@
     	}
     	function choose_paytype(pay_type_param,event){
     		pay_type=pay_type_param;
+    		if('WX' == pay_type){
+    			if(navigator.userAgent.indexOf("MicroMessenger") !=-1)
+    				pay_type = "WXOFFICIAL";
+    			else{
+        			alert("请在微信内打开该网页");
+        			return;
+        		}
+    		}
     		$('.pay .row .tick').removeClass('z-choose2');
     		$('.pay .row .tick').addClass('z-choose');
     		$('.pay .'+pay_type_param+' .tick').addClass('z-choose2');
     	}
     	
+    	//微信支付JSSDK
+		function onBridgeReady(appId,timeStamp,nonceStr,pack,paySign){
+		    WeixinJSBridge.invoke(
+		        'getBrandWCPayRequest', {
+		            "appId" : appId,     //公众号名称，由商户传入
+		            "timeStamp":timeStamp,         //时间戳，自1970年以来的秒数
+		            "nonceStr" : nonceStr, //随机串
+		            "package" : pack,
+		            "signType" : "MD5",         //微信签名方式：
+		            "paySign" : paySign //微信签名
+		        },
+		        function(res){
+		            if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+		                window.location.href='/order/orderspage';
+		            }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+		        }
+		    );
+		}
     </script>
 </head>
 
@@ -101,7 +129,7 @@
             <div class="row LIANPAY" onclick="choose_paytype('LIANPAY',event)">
                 <p><i class="z-pay"><img src="/images/member/order/y-pay.png" alt="" ></i>银行卡支付</p><div class="tick z-choose2"></div>
             </div>
-            <div class="row WXOFFICIAL" onclick="choose_paytype('WXOFFICIAL',event)">
+            <div class="row WXOFFICIAL" onclick="choose_paytype('WX',event)">
                 <p><i class="z-pay"><img src="/images/member/order/w-pay.png" alt="" ></i>微信支付</p><div class="tick z-choose"></div>
             </div>
           		
