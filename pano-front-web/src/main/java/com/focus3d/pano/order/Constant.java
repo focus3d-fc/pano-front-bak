@@ -14,8 +14,8 @@ public class Constant {
 	public static String lianpay_oid_pri_key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCSS/DiwdCf/aZsxxcacDnooGph3d2JOj5GXWi+q3gznZauZjkNP8SKl3J2liP0O6rU/Y/29+IUe+GTMhMOFJuZm1htAtKiu5ekW0GlBMWxf4FPkYlQkPE0FtaoMP3gYfh+OwI+fIRrpW3ySn3mScnc6Z700nU/VYrRkfcSCbSnRwIDAQAB";
 	
 	
-	public static String wx_officialpay_notifyurl = "http://"+domain+"/wxpaynotify";
-	public static String wx_officialpay_returnurl = "http://"+domain+"/wxpayreturn";
+	public static String wx_officialpay_notifyurl = "http://"+domain+"/order/wxpaynotify";
+	public static String wx_officialpay_returnurl = "http://"+domain+"/order/orderspage";
 	public static String wx_official_appid = "wxed31115f33aab720";
 	public static String wx_official_appsecret = "4bfa05cab2a336a89c48167589717366";
 	public static String wx_official_mchid = "1486464992";

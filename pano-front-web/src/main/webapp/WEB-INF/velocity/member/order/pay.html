@@ -22,6 +22,14 @@
         .z-choose { width:.6rem; height: .6rem; background: url(/images/member/order/paychoose2.png) 0/cover;margin: .1rem;}
         .z-choose2 { width:.6rem; height: .6rem; background: url(/images/member/order/paychoose.png) 0/cover;margin: .1rem;}
         .z-choose img { width: 1.5rem; height: 1.5rem; }
+   
+   /*银行卡信息输入*/
+        .yanz{ width: 100%; background-color: #fff; padding: .3rem; position: fixed; bottom:0;}
+        .yanz .row{ line-height: .8rem; border-bottom: 1px solid #eee; }
+        .yanz .row i{ font-size: 0.4rem; vertical-align: middle; }
+        .yanz button{ margin: .4rem 0; width: 100%; height: .7rem; font-size: .25rem; background: #000; color: #fff; border: .02rem solid #fff; border-radius: .1rem; cursor: pointer; }
+        .yanz input[type=text], #confirm input[type=text] { width: 50%; }
+        
     </style>
     <script type="text/javascript">
     function get_querystring(name)
@@ -44,7 +52,7 @@
     		$.ajax({
                 type: 'POST',
                 async: false,
-                data: {order_sn:orderSn,pay_type:pay_type,card_no:"6222600210024785878",id_no:"321081198410100312",acct_name:"李海俊"},
+                data: {order_sn:orderSn,pay_type:pay_type,card_no:$('#user_bankcard_cartno').val(),id_no:$('#user_bankcard_certno').val(),acct_name:$('#user_bankcard_username').val(),user_bankcard_sn:$('#user_bankcard_sn').val()},
                 url: '/order/pay',
                 dataType: 'json',
                 success: function (data) {
@@ -61,7 +69,7 @@
                 			$('#lianpay').attr("action",data.outGateway);
                 			$('#lianpay').submit();
                 		}else if(pay_type=='WXOFFICIAL'){
-                			onBridgeReady(data.appId,data.timeStamp,data.nonceStr,data.pack,data.paySign);
+                			onBridgeReady(data.appId,data.timeStamp,data.nonceStr,data.pack,data.paySign,data.returnUrl);
                 		}
                 	}
                 },
@@ -73,15 +81,21 @@
             })
     		 
     	}
+    	$('.yanz').hide();
+    	choose_paytype('LIANPAY')
     	function choose_paytype(pay_type_param,event){
-    		pay_type=pay_type_param;
-    		if('WX' == pay_type){
-    			if(navigator.userAgent.indexOf("MicroMessenger") !=-1)
-    				pay_type = "WXOFFICIAL";
-    			else{
-        			alert("请在微信内打开该网页");
-        			return;
-        		}
+    		var targetClass;
+    		if('LIANPAY' == pay_type_param){
+    			pay_type = "LIANPAY";
+    			$('.yanz').show();
+    		}else if('WX' == pay_type_param){
+	    			if(navigator.userAgent.indexOf("MicroMessenger") !=-1){
+	    				pay_type = "WXOFFICIAL";
+	    				$('.yanz').hide();
+	    			}else{
+	        			alert("请在微信内打开该网页");
+	        			return;
+	        		}
     		}
     		$('.pay .row .tick').removeClass('z-choose2');
     		$('.pay .row .tick').addClass('z-choose');
@@ -89,7 +103,7 @@
     	}
     	
     	//微信支付JSSDK
-		function onBridgeReady(appId,timeStamp,nonceStr,pack,paySign){
+		function onBridgeReady(appId,timeStamp,nonceStr,pack,paySign,returnUrl){
 		    WeixinJSBridge.invoke(
 		        'getBrandWCPayRequest', {
 		            "appId" : appId,     //公众号名称，由商户传入
@@ -101,7 +115,7 @@
 		        },
 		        function(res){
 		            if(res.err_msg == "get_brand_wcpay_request:ok" ) {
-		                window.location.href='/order/orderspage';
+		                window.location.href=returnUrl;
 		            }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
 		        }
 		    );
@@ -110,6 +124,7 @@
 </head>
 
 <body>
+
 <form id="lianpay" action="" method="get" hidden>
 				<ul>
 					<li><input type="hidden" name="req_data" value='' />
@@ -129,17 +144,33 @@
             <div class="row LIANPAY" onclick="choose_paytype('LIANPAY',event)">
                 <p><i class="z-pay"><img src="/images/member/order/y-pay.png" alt="" ></i>银行卡支付</p><div class="tick z-choose2"></div>
             </div>
-            <div class="row WXOFFICIAL" onclick="choose_paytype('WX',event)">
+            <div class="row WX" onclick="choose_paytype('WX',event)">
                 <p><i class="z-pay"><img src="/images/member/order/w-pay.png" alt="" ></i>微信支付</p><div class="tick z-choose"></div>
             </div>
           		
         </div>
     </section>
-    <a class="green-btn bcdz" onclick="pay()">
+    <a class="green-btn bcdz" onclick="pay()" style="z-index:1">
         确认支付￥<span class="pay_amount">$!order.payMoney</span>
     </a>
 
 </div>
-</body>
+
+ <div class="yanz" >
+            <form action="">
+            <input hidden id="user_bankcard_sn" value="$!userBankcard.sn" /> 
+                <div class="row">
+                    <input  type="name" placeholder="请输入姓名" id="user_bankcard_username" value="$!userBankcard.userName">
+                </div>
+                <div class="row">
+                    <input  type="sfz" placeholder="请输入身份证号" id="user_bankcard_certno" value="$!userBankcard.certNo">
+                </div>
+                <div class="row">
+                    <input  type="yhk" placeholder="请输入银行卡号" id="user_bankcard_cartno" value="$!userBankcard.cardNo">
+                </div>
+            </form>
+            <div style="height:50px;z-index:0"></div>
+        </div>
+
 </body>
 </html>

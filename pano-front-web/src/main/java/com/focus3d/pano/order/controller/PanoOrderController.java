@@ -114,7 +114,14 @@ public class PanoOrderController extends BaseController {
 		logger.debug(EncryptUtil.encode(10167l));
 		return "/test.html";
 	}
-
+/**
+ * 跳转到支付页面
+ * @param request
+ * @param map
+ * @return
+ * @throws NumberFormatException
+ * @throws SQLException
+ */
 	@RequestMapping(value = "/topaypage")
 	public String toPayPage(HttpServletRequest request, ModelMap map)
 			throws NumberFormatException, SQLException {
@@ -137,6 +144,13 @@ public class PanoOrderController extends BaseController {
 		return "/member/order/pay";
 	}
 
+	/**
+	 * 跳转到订单确认页面
+	 * @param request
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/confirmpage")
 	public String orderConfirmPage(HttpServletRequest request, ModelMap map)
 			throws Exception {
@@ -177,6 +191,12 @@ public class PanoOrderController extends BaseController {
 		return "/member/order/confirm";
 	}
 
+	/**
+	 * 获取优惠券信息
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/coupon")
 	public void coupon(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -217,6 +237,13 @@ public class PanoOrderController extends BaseController {
 		ajaxOutput(response, data.toString());
 	}
 
+	/**
+	 * 支付
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/pay")
 	public void pay(HttpServletRequest request, HttpServletResponse response,
 			ModelMap map) throws Exception {
@@ -293,6 +320,7 @@ public class PanoOrderController extends BaseController {
 					userBankcardService.insert(userBankcard);
 				}
 
+				//组装连连支付报文
 				StringBuffer strBuf = new StringBuffer();
 				PaymentInfo payInfo = new PaymentInfo();
 
@@ -371,14 +399,15 @@ public class PanoOrderController extends BaseController {
 						"https://wap.lianlianpay.com/authpay.htm");
 
 			} else if ("WXOFFICIAL".equals(payType)) {
+				//验证微信登录 获取微信openid
 				PanoMemLoginModel memLogin = panoMemLoginService
-						.getBySn(userSn);
+						.getBySn(LoginThreadLocal.getLoginInfo().getSn());
 				if (memLogin.getType() != 1 || memLogin.getStatus() != 1) {
 					throw new RuntimeException("请用微信公众号登录");
 				}
 				String out_trade_no = orderModel.getSn() + "";
 				String notify_url = Constant.wx_officialpay_notifyurl;
-
+//组装微信公众号支付报文
 				Configure configure = new Configure();
 				configure.setAppID(Constant.wx_official_appid);
 				configure.setMchID(Constant.wx_official_mchid);
@@ -408,6 +437,7 @@ public class PanoOrderController extends BaseController {
 				data.put("paySign", sign);
 				data.remove("package");
 				data.put("pack", "prepay_id=" + resData.getPrepay_id());
+				data.put("returnUrl", Constant.wx_officialpay_returnurl);
 			} else {
 				throw new RuntimeException("不支持的支付方式");
 			}
@@ -420,6 +450,13 @@ public class PanoOrderController extends BaseController {
 		ajaxOutput(response, data.toString());
 	}
 
+	/**
+	 * 下单
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/create")
 	public void createOrder(HttpServletRequest request,
 			HttpServletResponse response, ModelMap map) throws Exception {
@@ -605,6 +642,14 @@ public class PanoOrderController extends BaseController {
 		ajaxOutput(response, data.toString());
 	}
 
+	/**
+	 * 订单列表页
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/orderspage")
 	public String ordersPage(HttpServletRequest request,
 			HttpServletResponse response, ModelMap map) throws Exception {
@@ -622,6 +667,14 @@ public class PanoOrderController extends BaseController {
 		return "/member/order/orderAll";
 	}
 
+	/**
+	 * 订单页面
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/orderpage")
 	public String orderPage(HttpServletRequest request,
 			HttpServletResponse response, ModelMap map) throws Exception {
@@ -638,6 +691,13 @@ public class PanoOrderController extends BaseController {
 		return "/member/order/order_detail";
 	}
 
+	/**
+	 * 连连支付异步通知
+	 * @param req
+	 * @param resp
+	 * @param map
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/lianpaynotify")
 	public void lianpayNotify(HttpServletRequest req, HttpServletResponse resp,
 			ModelMap map) throws Exception {
@@ -723,6 +783,13 @@ public class PanoOrderController extends BaseController {
 		return;
 	}
 
+	/**
+	 * 连连支付同步回调
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/lianpayreturn")
 	public void lianpayReturn(HttpServletRequest request,
 			HttpServletResponse response, ModelMap map) throws Exception {
@@ -764,8 +831,15 @@ public class PanoOrderController extends BaseController {
 		response.sendRedirect("/order/orderspage");
 	}
 
+	/**
+	 * 微信异步通知
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/wxpaynotify")
-	public void wxpayReturn(HttpServletRequest request,
+	public void wxpayNotify(HttpServletRequest request,
 			HttpServletResponse response, ModelMap map) throws Exception {
 		try {
 			String responseString = IOUtils.toString(request.getInputStream(),
