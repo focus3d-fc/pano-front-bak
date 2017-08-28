@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -277,8 +278,11 @@ public class PanoOrderController extends BaseController {
 
 			PanoMemUserModel panoMemUserModel = panoMemUserService
 					.getBySn(orderModel.getUserSn());
+			
 			// 根据支付类型组装相应参数
+			
 			if ("LIANPAY".equals(payType)) {
+				//连连认证支付
 				String acctName = StringUtils.trimToNull(request
 						.getParameter("acct_name"));
 				String cardNo = StringUtils.trimToNull(request
@@ -355,7 +359,7 @@ public class PanoOrderController extends BaseController {
 				strBuf.append("&name_goods=").append(payInfo.getName_goods());
 				// payInfo.setNo_agree(request.getParameter("no_agree"));签约协议号
 				// 商户唯一订单号
-				payInfo.setNo_order(orderModel.getSn() + "");
+				payInfo.setNo_order(orderModel.getOrderNum() + "");
 				strBuf.append("&no_order=").append(payInfo.getNo_order());
 				payInfo.setNotify_url(Constant.lianpay_notify_url);
 				strBuf.append("&notify_url=").append(payInfo.getNotify_url());
@@ -399,15 +403,16 @@ public class PanoOrderController extends BaseController {
 						"https://wap.lianlianpay.com/authpay.htm");
 
 			} else if ("WXOFFICIAL".equals(payType)) {
+				//微信公众号支付
 				//验证微信登录 获取微信openid
 				PanoMemLoginModel memLogin = panoMemLoginService
 						.getBySn(LoginThreadLocal.getLoginInfo().getSn());
 				if (memLogin.getType() != 1 || memLogin.getStatus() != 1) {
 					throw new RuntimeException("请用微信公众号登录");
 				}
-				String out_trade_no = orderModel.getSn() + "";
+				String out_trade_no = orderModel.getOrderNum() + "";
 				String notify_url = Constant.wx_officialpay_notifyurl;
-//组装微信公众号支付报文
+				//组装微信公众号支付报文
 				Configure configure = new Configure();
 				configure.setAppID(Constant.wx_official_appid);
 				configure.setMchID(Constant.wx_official_mchid);
@@ -535,7 +540,7 @@ public class PanoOrderController extends BaseController {
 				payAmount = dueAmount * 0.95f;
 
 				orderModel = new PanoOrderModel();
-				orderModel.setOrderNum(RandomStringUtils.randomNumeric(8));
+				orderModel.setOrderNum(generateOrderNum());
 				orderModel.setOrderTime(new Date());
 				orderModel.setStatus(1);
 				orderModel.setAddressSn(addressSn);
@@ -557,7 +562,7 @@ public class PanoOrderController extends BaseController {
 				payAmount = stage1Amount;
 
 				orderModel = new PanoOrderModel();
-				orderModel.setOrderNum(RandomStringUtils.randomNumeric(8));
+				orderModel.setOrderNum(generateOrderNum());
 				orderModel.setOrderTime(new Date());
 				orderModel.setStatus(1);
 				orderModel.setAddressSn(addressSn);
@@ -571,9 +576,10 @@ public class PanoOrderController extends BaseController {
 				orderModel.setParentOrderSn(-1l);
 				orderService.insert(orderModel);
 
+				//子订单
 				PanoOrderModel stage2OrderModel = new PanoOrderModel();
 				stage2OrderModel
-						.setOrderNum(RandomStringUtils.randomNumeric(8));
+						.setOrderNum(generateOrderNum());
 				stage2OrderModel.setOrderTime(new Date());
 				stage2OrderModel.setStatus(1);
 				stage2OrderModel.setAddressSn(addressSn);
@@ -741,8 +747,8 @@ public class PanoOrderController extends BaseController {
 				BigDecimal payAmount = new BigDecimal(
 						payDataBean.getMoney_order());
 				long orderSn = Long.parseLong(payDataBean.getNo_order());
-				String outPayId = payDataBean.getOid_paybill();
-				PanoOrderModel orderModel = orderService.getBySn(orderSn);
+				String orderNum = payDataBean.getOid_paybill();
+				PanoOrderModel orderModel = orderService.getOrderByNum(orderNum);
 				if (payAmount.compareTo(orderModel.getPayMoney()) != 0) {
 					throw new RuntimeException("支付金额不对");
 				}
@@ -762,7 +768,7 @@ public class PanoOrderController extends BaseController {
 				orderTransModel.setTransType("001");
 				orderTransModel.setTransPlatformType(1);
 				orderTransModel.setTransMoney(payAmount);
-				orderTransModel.setTransId(outPayId);
+				orderTransModel.setTransId(orderNum);
 				orderTransModel.setTransStatus("SUCCESS");
 				panoOrderTransService.insert(orderTransModel);
 			}
@@ -806,9 +812,8 @@ public class PanoOrderController extends BaseController {
 
 		if ("SUCCESS".equals(resultPay)) {
 			BigDecimal payAmount = new BigDecimal(moneyOrder);
-			long orderSn = Long.parseLong(noOrder);
 			String outPayId = oidPaybill;
-			PanoOrderModel orderModel = orderService.getBySn(orderSn);
+			PanoOrderModel orderModel = orderService.getOrderByNum(noOrder);
 			if (payAmount.compareTo(orderModel.getPayMoney()) != 0) {
 				throw new RuntimeException("支付金额不对");
 			} else {
@@ -817,7 +822,7 @@ public class PanoOrderController extends BaseController {
 					orderService.update(orderModel);
 
 					PanoOrderTransModel orderTransModel = new PanoOrderTransModel();
-					orderTransModel.setOrderId(orderSn + "");
+					orderTransModel.setOrderId(noOrder);
 					orderTransModel.setTransDate(new Date());
 					orderTransModel.setTransType("001");
 					orderTransModel.setTransPlatformType(1);
@@ -864,11 +869,10 @@ public class PanoOrderController extends BaseController {
 			if (!resData.getIsSuccess())
 				throw new RuntimeException(resData.getWorkedMsg());
 
-			Long orderSn = Long.parseLong(resData.getOut_trade_no());
 			BigDecimal payAmount = new BigDecimal(Integer.parseInt(resData
 					.getTotal_fee()) / 100d).setScale(2, RoundingMode.DOWN);
 
-			PanoOrderModel orderModel = orderService.getBySn(orderSn);
+			PanoOrderModel orderModel = orderService.getOrderByNum(resData.getOut_trade_no());
 			if (payAmount.compareTo(orderModel.getPayMoney()) != 0) {
 				throw new RuntimeException("支付金额不对");
 			}
@@ -879,7 +883,7 @@ public class PanoOrderController extends BaseController {
 			orderService.update(orderModel);
 
 			PanoOrderTransModel orderTransModel = new PanoOrderTransModel();
-			orderTransModel.setOrderId(orderSn + "");
+			orderTransModel.setOrderId(resData.getOut_trade_no());
 			orderTransModel.setTransDate(new Date());
 			orderTransModel.setTransType("001");
 			orderTransModel.setTransPlatformType(1);
@@ -900,14 +904,16 @@ public class PanoOrderController extends BaseController {
 	}
 
 	public static void main(String[] args) throws Exception {
-		DefaultEncryptComponentImpl co = new DefaultEncryptComponentImpl();
-		co.setEncryptHandlerClass("com.focustech.utils.encrypt.BlankEncryptHandler");
 
-		co.initialize();
 
-		System.out.println(co.encode(10124l));
+		System.out.println(generateOrderNum());
 	}
 
+	/**
+	 * 获取远程客户端IP
+	 * @param httpRequest
+	 * @return
+	 */
 	public static String getRemoteIp(HttpServletRequest httpRequest) {
 		String remoteAddr = null;
 		String xForwardedFor = httpRequest.getHeader("x-forwarded-for");
@@ -918,5 +924,9 @@ public class PanoOrderController extends BaseController {
 			remoteAddr = StringUtils.trim(xForwardedFor.split(",")[0]);
 		}
 		return remoteAddr;
+	}
+	
+	public static String generateOrderNum() {
+		return new SimpleDateFormat("yyyyMMDDHHmmss").format(new Date())+RandomStringUtils.randomNumeric(4);
 	}
 }

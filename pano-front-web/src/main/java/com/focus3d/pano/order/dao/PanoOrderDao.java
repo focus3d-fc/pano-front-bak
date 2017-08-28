@@ -22,7 +22,11 @@ import com.focus3d.pano.model.ibator.PanoOrderPackageCriteria;
  */
 @Repository
 public class PanoOrderDao extends CommonDao<PanoOrderModel> {
-
+	public PanoOrderModel getOrderByNum(String orderNum) {
+		PanoOrderCriteria criteria = new PanoOrderCriteria();
+		criteria.createCriteria().andOrderNumEqualTo(orderNum);
+		return selectFirstByExample(criteria, PanoOrderModel.class);
+	}
 	public PanoOrderModel getSonOrder(Long orderSn) {
 		PanoOrderCriteria criteria = new PanoOrderCriteria();
 		criteria.createCriteria().andParentOrderSnEqualTo(orderSn);

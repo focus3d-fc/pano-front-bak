@@ -37,7 +37,7 @@
 o.user_sn=#userSn# AND ((
 o.status='2' AND o.parent_order_sn=-1)
 and  
-(SELECT STATUS  FROM `pano_order`  WHERE  parent_order_sn = o.sn ) = 2 
+IFNULL((SELECT STATUS  FROM `pano_order`  WHERE  parent_order_sn = o.sn ),2) != 1 
 
 )
   

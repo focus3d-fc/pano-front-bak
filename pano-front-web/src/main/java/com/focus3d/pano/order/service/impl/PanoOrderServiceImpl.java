@@ -68,6 +68,10 @@ public class PanoOrderServiceImpl extends CommonServiceImpl<PanoOrderModel>
 	public PanoOrderModel getSonOrder(Long orderSn) throws SQLException {
 		return orderDao.getSonOrder(orderSn);
 	}
+	@Override
+	public PanoOrderModel getOrderByNum(String orderNum) throws SQLException {
+		return orderDao.getOrderByNum(orderNum);
+	}
 
 	@Override
 	public List<PanoOrderModel> getUserOrders(Long userSn, Integer status)
