@@ -1,5 +1,6 @@
 package com.focus3d.pano.login.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import net.sf.json.JSONObject;
@@ -16,6 +17,7 @@ import com.focus3d.pano.login.service.PanoMemLoginService;
 import com.focus3d.pano.model.PanoMemLoginModel;
 import com.focus3d.pano.model.PanoMemUserModel;
 import com.focus3d.pano.user.dao.PanoMemUserDao;
+import com.focus3d.pano.utils.EmojiFilterUtils;
 import com.focustech.common.utils.MD5Util;
 /**
  * 
@@ -75,7 +77,9 @@ public class PanoMemLoginServiceImpl extends CommonServiceImpl<PanoMemLoginModel
 		String province = jo.getString("province");
 		String country = jo.getString("country");
 		String headImgUrl = jo.getString("headimgurl");
-		
+		if(EmojiFilterUtils.containsEmoji(nickName)){
+			nickName = EmojiFilterUtils.filterEmoji(nickName);
+		}
 		PanoMemUserModel userModel = new PanoMemUserModel();
 		userModel.setNickName(nickName);
 		userModel.setSex(sex);
