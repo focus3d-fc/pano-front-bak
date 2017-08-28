@@ -48,7 +48,7 @@
 				</a>
 			</div>
 			<div class="my-order">
-				<a href="/contact"> <img src="/style/h5static/image/img/40.png" alt="">
+				<a href="#" id="contactUs"> <img src="/style/h5static/image/img/40.png" alt="">
 					<p>联系我们</p> <img src="/style/h5static/image/img/28.png" alt="">
 				</a>
 			</div>
@@ -62,9 +62,16 @@
 		<section class="operation" style="margin-top: -50px;">
 			<a href="/member/login/exist">退出登录</a>
 		</section>
- 
 
 	</div>
-
+	<script>
+		$(function(){
+			$("#contactUs").click(function(){
+				window.open("tel:" + $("#phone").val(), "_self");
+				window.close();
+			});
+		});
+	</script>
+	<input type="hidden" id="phone" value="021-58783137-5003"/>
 </body>
 </html>
