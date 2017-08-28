@@ -78,13 +78,17 @@ public class MemberLoginController extends BaseController {
 	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/wx/addsession", method = RequestMethod.POST)
-	public void addSession(String sessionId, String userInfo, String gotoPage, HttpServletResponse response) throws IOException{
+	public void addSession(String sessionId, String userInfo, HttpServletResponse response) throws IOException{
 		log.debug(sessionId);
 		log.debug(userInfo);
 		if(StringUtils.isNotEmpty(sessionId) && StringUtils.isNotEmpty(userInfo)){
+			PanoMemLoginModel loginInfo = SessionDB.get(sessionId);
+			String gotoPage = loginInfo.getGotoPage();
+			SessionDB.remove(sessionId);
+			//重新加入session
 			JSONObject jo = JSONObject.fromObject(userInfo);
 			String openId = jo.getString("openid");
-			PanoMemLoginModel loginInfo = memLoginService.getByName(openId, LoginTypeEnum.WX);
+			loginInfo = memLoginService.getByName(openId, LoginTypeEnum.WX);
 			if(loginInfo == null){
 				memLoginService.insertOrUpdate(jo, LoginTypeEnum.WX);
 			} 
