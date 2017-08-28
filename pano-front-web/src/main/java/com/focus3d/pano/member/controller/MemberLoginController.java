@@ -135,10 +135,10 @@ public class MemberLoginController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "exist", method = RequestMethod.POST)
+	@RequestMapping(value = "exist", method = RequestMethod.GET)
 	public String exist(ModelMap modelMap, HttpServletRequest request){
 		removeLoginFromSession(request);
-		return redirect("/userside/tologin");
+		return redirect("/index");
 	}
 	/**
 	 * 
