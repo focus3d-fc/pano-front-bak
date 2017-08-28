@@ -16,15 +16,24 @@ public class PanoOrderModel extends
 	private static final long serialVersionUID = 1L;
 
 	private List<PanoOrderPackageModel> orderPackageModels;
-	@Column
-	private Integer isPayed;
+	private PanoUserReceiveAddressModel address;
+	private PanoOrderCouponItemModel couponItem;
+	private PanoOrderModel sonOrder;
 
-	public Integer getIsPayed() {
-		return isPayed;
+	public PanoOrderModel getSonOrder() {
+		return sonOrder;
 	}
 
-	public void setIsPayed(Integer isPayed) {
-		this.isPayed = isPayed;
+	public void setSonOrder(PanoOrderModel sonOrder) {
+		this.sonOrder = sonOrder;
+	}
+
+	public PanoOrderCouponItemModel getCouponItem() {
+		return couponItem;
+	}
+
+	public void setCouponItem(PanoOrderCouponItemModel couponItem) {
+		this.couponItem = couponItem;
 	}
 
 	public List<PanoOrderPackageModel> getOrderPackageModels() {
@@ -34,6 +43,14 @@ public class PanoOrderModel extends
 	public void setOrderPackageModels(
 			List<PanoOrderPackageModel> orderPackageModels) {
 		this.orderPackageModels = orderPackageModels;
+	}
+
+	public PanoUserReceiveAddressModel getAddress() {
+		return address;
+	}
+
+	public void setAddress(PanoUserReceiveAddressModel address) {
+		this.address = address;
 	}
 
 }

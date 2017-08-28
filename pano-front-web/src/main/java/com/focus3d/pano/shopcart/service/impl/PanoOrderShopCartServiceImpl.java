@@ -53,8 +53,14 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 	public PanoOrderShopcartModel getUserShopcartPackage(long userSn, long packageSn) {
 		PanoOrderShopcartModel shopcart = orderShopCartDao
 				.getUserShopcartPackage(userSn, packageSn);
+		if(shopcart == null) {
+			return null;
+		}
 		List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao
 				.listByShopcart(shopcart.getSn());
+		if(shopcartDetails == null ){
+			return shopcart;
+		}
 		// 设置购物车明细信息
 		for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {
 			Long packageProductSn = shopcartDetail.getPackageProductSn();
