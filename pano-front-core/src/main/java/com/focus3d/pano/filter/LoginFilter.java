@@ -61,6 +61,8 @@ public class LoginFilter extends AbstractFilter {
 		, "/fp/*"
 		, "/out/*"
 		,"/member/login/*"
+		,"/order/lianpaynotify"
+		,"/order/wxpaynotify"
 	};
 	public static Auth auth = new Auth();
 	
@@ -90,7 +92,10 @@ public class LoginFilter extends AbstractFilter {
 			String callbackUrl = servletPath + urlParameterUrl.toString();
 			log.info("微信登录后跳转链接：" + callbackUrl);
 			log.info("跳转到微信授权登录");
-			response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxed31115f33aab720&redirect_uri=" + WECHAT_SERVER_AUTH + "&response_type=code&scope=snsapi_userinfo&state=proj720ANDloginAND" + sessionId + "AND" + HttpUtil.encodeUrl(siteDomain) + "AND" + HttpUtil.encodeUrl(callbackUrl) + "#wechat_redirect");
+			PanoMemLoginModel loginModel = new PanoMemLoginModel();
+			loginModel.setGotoPage(callbackUrl);
+			SessionDB.addSession(sessionId, loginModel);
+			response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxed31115f33aab720&redirect_uri=" + WECHAT_SERVER_AUTH + "&response_type=code&scope=snsapi_userinfo&state=proj720ANDloginAND" + sessionId + "AND" + HttpUtil.encodeUrl(siteDomain) + "#wechat_redirect");
 			return;
 		} 
 		if(isNotNeedAuthCheckUrl(servletPath, request)){
