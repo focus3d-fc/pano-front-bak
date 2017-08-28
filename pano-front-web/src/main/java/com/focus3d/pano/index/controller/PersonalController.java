@@ -12,10 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.focus3d.pano.common.controller.BaseController;
-import com.focus3d.pano.filter.LoginFilter;
 import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.member.service.PanoUserReceiveAddressService;
 import com.focus3d.pano.model.OrderRelevance;
@@ -27,6 +25,7 @@ import com.focus3d.pano.model.pano_user_receive_address;
 import com.focus3d.pano.user.service.PanoMemUserService;
 import com.focus3d.pano.usersside.service.PersonalService;
 import com.focustech.common.utils.HttpUtil;
+import com.focustech.common.utils.ListUtils;
 import com.focustech.common.utils.StringUtils;
 import com.focustech.common.utils.TCUtil;
 
@@ -128,22 +127,20 @@ public class PersonalController extends BaseController {
 			@RequestParam String USER_NAME, @RequestParam String MOBILE,
 			@RequestParam String cityResult3, @RequestParam String STREET) {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		pano_user_receive_address site = new pano_user_receive_address();
-		site.setUSER_NAME(USER_NAME);
-		site.setMOBILE(MOBILE);
 		String[] arr = cityResult3.split("\\s+");
-		site.setPROVINCE(arr[0]);
-		site.setCITY(arr[1]);
-		site.setAREA(arr[2]);
-		site.setSTREET(STREET);
-		site.setUSER_SN(userSn);
+		PanoUserReceiveAddressModel receiveAddressModel = new PanoUserReceiveAddressModel();
+		receiveAddressModel.setUserName(USER_NAME);
+		receiveAddressModel.setMobile(MOBILE);
+		receiveAddressModel.setProvince(arr[0]);
+		receiveAddressModel.setCity(arr[1]);
+		receiveAddressModel.setArea(arr[2]);
+		receiveAddressModel.setStreet(STREET);
+		receiveAddressModel.setUserSn(userSn);
 		PanoMemUserModel memuser = memUserService.getBySn(userSn);
-		site.setSEX(TCUtil.iv(memuser.getSex()));
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String add_time = sdf.format(date);
-		site.setADD_TIME(add_time);
-		personalService.addAddress(site);
+		receiveAddressModel.setSex(TCUtil.iv(memuser.getSex()));
+		List<PanoUserReceiveAddressModel> receiveAddressList = receiveAddressService.listByUser(userSn);
+		receiveAddressModel.setDefaultFirst(ListUtils.isEmpty(receiveAddressList) ? 1 : 0);
+		receiveAddressService.insert(receiveAddressModel);
 		String packageSns = HttpUtil.sv(request, "packageSns");
 		return redirect("toaddress2" + (StringUtils.isEmpty(packageSns) ? "" :  "?packageSns=" + packageSns));
 	}
