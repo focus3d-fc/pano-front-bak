@@ -32,7 +32,7 @@ public class Generate {
 	 */
 	public static void main(String[] args) throws Exception{
 		//String projectPath = System.getProperty("user.dir");
-		String projectPath = "E:\\workspace_qwj\\pano-front\\pano-front-web\\src\\main\\resources\\context\\datasource\\sqlmap\\";
+		String projectPath = "F:\\workspace_qwjfront\\pano-front\\pano-front-web\\src\\main\\resources\\context\\datasource\\sqlmap\\";
 		generate(projectPath);
 	}
 	
