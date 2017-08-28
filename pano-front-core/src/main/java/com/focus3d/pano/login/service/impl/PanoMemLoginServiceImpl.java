@@ -1,6 +1,5 @@
 package com.focus3d.pano.login.service.impl;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import net.sf.json.JSONObject;
