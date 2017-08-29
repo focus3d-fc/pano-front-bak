@@ -241,7 +241,6 @@
     font-size: .28rem;
     line-height: 1rem;
 
-<<<<<<< HEAD
 .order-items .order-item .cont p.detail-tlt { font-size: .22rem; padding-bottom: 0; }
 .order-items .order-item .cont .detail-con { font-size: .14rem; }
 .order-items .order-item .cont .price { align-self: flex-start; }
@@ -253,7 +252,6 @@
 .order-items  .paying { padding: .1rem .3rem; /*border: .01rem solid #fff;*/
 border-radius: .05rem; background-color: #000; color: #fff; }
 .order-items  .paid, #agree .paid { padding: .1rem .3rem; border: .01rem solid #000; border-radius: .05rem; background-color: #fff; color: #000; }
-=======
 }
 .login-title i{
     font-size: .28rem;

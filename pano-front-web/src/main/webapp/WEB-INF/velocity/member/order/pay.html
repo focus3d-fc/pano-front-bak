@@ -23,12 +23,7 @@
         .z-choose2 { width:.6rem; height: .6rem; background: url(/images/member/order/paychoose.png) 0/cover;margin: .1rem;}
         .z-choose img { width: 1.5rem; height: 1.5rem; }
    
-   /*银行卡信息输入*/
-        .yanz{ width: 100%; background-color: #fff; padding: .3rem; position: fixed; bottom:0;}
-        .yanz .row{ line-height: .8rem; border-bottom: 1px solid #eee; }
-        .yanz .row i{ font-size: 0.4rem; vertical-align: middle; }
-        .yanz button{ margin: .4rem 0; width: 100%; height: .7rem; font-size: .25rem; background: #000; color: #fff; border: .02rem solid #fff; border-radius: .1rem; cursor: pointer; }
-        .yanz input[type=text], #confirm input[type=text] { width: 50%; }
+  
         
     </style>
     <script type="text/javascript">
@@ -156,17 +151,30 @@
 
 </div>
 
+<style>
+ /*银行卡信息输入*/
+        .yanz{ width: 100%; background-color: #fff; padding: .3rem; position: fixed; bottom:0; height:3.2rem;}
+        .yanz .row{ line-height: .4rem; border-bottom: 1px solid #eee; }
+        .yanz .row img{width:.6rem;    height:.6rem; margin-right:.2rem;}
+        .yanz .row i{ font-size: 0.4rem; vertical-align: middle; }
+        .yanz button{ margin: .4rem 0; width: 100%; height: .7rem; font-size: .2rem; background: #000; color: #fff; border: .02rem solid #fff; border-radius: .1rem; cursor: pointer; }
+        .yanz input[type=text], #confirm input[type=text] { width: 50%;}
+        .new_row{border:none;border-style:none !important;font-size:.2rem;outline:medium;line-height: .6rem;}
+</style>
  <div class="yanz" >
-            <form action="">
+            <form action="" >
             <input hidden id="user_bankcard_sn" value="$!userBankcard.sn" /> 
                 <div class="row">
-                    <input  type="name" placeholder="请输入姓名" id="user_bankcard_username" value="$!userBankcard.userName">
+                <img src="/images/1.png" alt="">
+                    <input class="new_row"  type="name" placeholder="请输入姓名" id="user_bankcard_username" value="$!userBankcard.userName">
                 </div>
                 <div class="row">
-                    <input  type="sfz" placeholder="请输入身份证号" id="user_bankcard_certno" value="$!userBankcard.certNo">
+                <img src="/images/38.png" alt="">
+                    <input class="new_row" type="sfz" placeholder="请输入身份证号" id="user_bankcard_certno" value="$!userBankcard.certNo">
                 </div>
                 <div class="row">
-                    <input  type="yhk" placeholder="请输入银行卡号" id="user_bankcard_cartno" value="$!userBankcard.cardNo">
+                <img src="/images/34.png" alt="">
+                    <input class="new_row" type="yhk" placeholder="请输入银行卡号" id="user_bankcard_cartno" value="$!userBankcard.cardNo">
                 </div>
             </form>
             <div style="height:50px;z-index:0"></div>
