@@ -747,6 +747,9 @@ public class PanoOrderController extends BaseController {
 				long orderSn = Long.parseLong(payDataBean.getNo_order());
 				String orderNum = payDataBean.getOid_paybill();
 				PanoOrderModel orderModel = orderService.getOrderByNum(orderNum);
+				if(orderModel == null){
+					return;
+				}
 				if (payAmount.compareTo(orderModel.getPayMoney()) != 0) {
 					throw new RuntimeException("支付金额不对");
 				}
