@@ -2,7 +2,8 @@ package com.focus3d.pano.order;
 
 public class Constant {
 	//项目域名
-	public static String domain = "app-wx.3d-focus.com";
+	//public static String domain = "app-wx.3d-focus.com";
+	public static String domain = "gwzj.joy-homeplus.com";
 	//连连认证支付参数
 	//商户号
 	public static String lianpay_oid_partner = "201708250000836329";
