@@ -19,6 +19,9 @@
 	<!-- 模态框引入start -->
  	<link href="/style/admstatic/lib/bootstrap/css/bootstrap.min.css"
 	rel="stylesheet">
+		<style>
+		.letter-spc{letter-spacing:.08rem;}
+		</style>
 	<!-- 模态框end -->
 	<!-- 联动引入-->
 	<script type="text/javascript" src="/style/admstatic/js/jsAddresss.js"></script>
@@ -65,7 +68,7 @@
             #set($_len = $styleName.length() - 1)
             #set($styleName = $styleName.substring(0,$_len))
             
-            <span>$styleName</span>
+            <span class="letter-spc">$styleName</span>
         </div>
         <a href="/fp/720?style_id=$!{style.id}">
         <img id="dtli" src="$!fs.url($!{style.img_sn})" alt="" class="img-rounded img-responsive">
