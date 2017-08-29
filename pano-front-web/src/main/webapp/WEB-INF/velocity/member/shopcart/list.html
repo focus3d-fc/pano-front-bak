@@ -1,15 +1,11 @@
 
-#set($layout = "layout/member/layout.html")
+#set($layout = "layout/member/layout_shopcart.html")
 
 <link rel="stylesheet" href="/style/admstatic/css/bass.css">
 <link rel="stylesheet" href="/style/admstatic/css/index.css">
 <script src="/style/admstatic/js/main.js"></script>
 
 <div class="container car se720">
-    <!--头-->
-    <header class="header">
-        <p class="title">购物车</p>
-    </header>
     <!--订单-->
     <section class="order-items">
     	#foreach($!shopcart in $!shopcartList)
@@ -89,9 +85,11 @@
     </section>
     
     <div class="car-total">
+        #if($!shopcartList.size() > 0)
         <div class="choose">
             <input id="selectAll" type="radio">全选
         </div>
+        #end
         <p>合计：<span id="totalPrice" class="red">0</span></p>
         <div class="button">
         	<form action="/order/confirmpage" method="get">
