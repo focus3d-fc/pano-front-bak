@@ -22,8 +22,14 @@
         </dependency>
         
   		<dependency>
-            <groupId>com.focustech.focus3d.pay.lianlian</groupId>
-            <artifactId>lianpay</artifactId>
+            <groupId>com.focustech.focus3d.pay</groupId>
+            <artifactId>lianlian-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        
+  		<dependency>
+            <groupId>com.focustech.focus3d.pay</groupId>
+            <artifactId>wxdev-api</artifactId>
             <version>1.0.0</version>
         </dependency>
   </dependencies>
