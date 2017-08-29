@@ -725,7 +725,7 @@ public class PanoOrderController extends BaseController {
 				BigDecimal payAmount = new BigDecimal(
 						payDataBean.getMoney_order());
 				long orderSn = Long.parseLong(payDataBean.getNo_order());
-				String orderNum = payDataBean.getOid_paybill();
+				String orderNum = payDataBean.getNo_order();
 				PanoOrderModel orderModel = orderService.getOrderByNum(orderNum);
 				if(orderModel == null){
 					return;
