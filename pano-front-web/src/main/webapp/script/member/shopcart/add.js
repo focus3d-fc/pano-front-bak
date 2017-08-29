@@ -60,10 +60,6 @@ $(function(){
 			$(this).attr("checked", false);
 			$("input[id^='selectItem_']").prop('checked', false);
 			$("input[id^='selectItem_']").attr("status", 0);
-			$("input[id^='selectItem_']").each(function(){
-				var price = parseFloat($(this).attr("price"));
-				totalPrice -= price;
-			});
 		}
 		$("#totalPrice").text(totalPrice);
 	});

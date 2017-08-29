@@ -119,7 +119,7 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 	public int addOrDelete(long housePackageSn) {
 		int status = 1;// 0-从购物车删除 ，1-添加到购物车
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		PanoOrderShopcartModel shopcart = orderShopCartDao.getByHousePackage(housePackageSn);
+		PanoOrderShopcartModel shopcart = orderShopCartDao.getByHousePackage(userSn, housePackageSn);
 		if (shopcart != null) {
 			// 从购物车中删除套餐项
 			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
