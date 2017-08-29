@@ -32,7 +32,7 @@ public class SmsSendClient {
 		System.out.println("before request string is: " + requestJson);
 		
 		String response = ChuangLanSmsUtil.sendSmsByPost(smsSingleRequestServerUrl, requestJson);
-		
+		System.out.println(response);
 		return JSON.parseObject(response, SmsSendResponse.class);
 	}
 

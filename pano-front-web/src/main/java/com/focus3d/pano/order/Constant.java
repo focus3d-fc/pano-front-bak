@@ -2,9 +2,7 @@ package com.focus3d.pano.order;
 
 public class Constant {
 	//项目域名
-	public static String domain = "test.3d-focus.com";
-
-	
+	public static String domain = "app-wx.3d-focus.com";
 	//连连认证支付参数
 	//商户号
 	public static String lianpay_oid_partner = "201708250000836329";
@@ -30,8 +28,8 @@ public class Constant {
 	//微信商户KEY
 	public static String wx_official_mchkey = "34dfgy57644534fdhkolu797dgdsghut";
 	//支付异步通知
-		public static String wx_officialpay_notifyurl = "http://"+domain+"/order/wxpaynotify";
-		//支付同步通知
-		public static String wx_officialpay_returnurl = "http://"+domain+"/order/orderspage";
+	public static String wx_officialpay_notifyurl = "http://"+domain+"/order/wxpaynotify";
+	//支付同步通知
+	public static String wx_officialpay_returnurl = "http://"+domain+"/order/orderspage";
 
 }

@@ -163,5 +163,6 @@ public class MemberLoginController extends BaseController {
 	private void removeLoginFromSession( HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		session.removeAttribute(LoginFilter.SESSION_KEY);
+		SessionDB.remove(session.getId());
 	}
 }

@@ -33,6 +33,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.focus3d.pano.common.controller.BaseController;
 import com.focus3d.pano.filter.LoginThreadLocal;
+import com.focus3d.pano.login.constant.LoginTypeEnum;
 import com.focus3d.pano.login.service.PanoMemLoginService;
 import com.focus3d.pano.member.service.PanoUserBankcardService;
 import com.focus3d.pano.member.service.PanoUserReceiveAddressService;
@@ -49,7 +50,6 @@ import com.focus3d.pano.model.PanoProjectHousePackageModel;
 import com.focus3d.pano.model.PanoUserBankcardModel;
 import com.focus3d.pano.model.PanoUserReceiveAddressModel;
 import com.focus3d.pano.model.PanoValidateModel;
-import com.focus3d.pano.model.ibator.PanoPerspectiveViewModel;
 import com.focus3d.pano.order.Constant;
 import com.focus3d.pano.order.service.PanoOrderCouponItemService;
 import com.focus3d.pano.order.service.PanoOrderPackageDetailService;
@@ -107,36 +107,24 @@ public class PanoOrderController extends BaseController {
 	private PanoOrderShopCartDetailService<PanoOrderShopcartDetailModel> orderShopCartDetailService;
 	@Autowired
 	private PanoUserBankcardService<PanoUserBankcardModel> userBankcardService;
-
-	@RequestMapping("/test")
-	public String QueryInfo(PanoPerspectiveViewModel model, ModelMap map) {
-		logger.debug(EncryptUtil.encode(10167l));
-		return "/test.html";
-	}
-/**
- * 跳转到支付页面
- * @param request
- * @param map
- * @return
- * @throws NumberFormatException
- * @throws SQLException
- */
+	/**
+	 * 跳转到支付页面
+	 * @param request
+	 * @param map
+	 * @return
+	 * @throws NumberFormatException
+	 * @throws SQLException
+	 */
 	@RequestMapping(value = "/topaypage")
-	public String toPayPage(HttpServletRequest request, ModelMap map)
-			throws NumberFormatException, SQLException {
+	public String toPayPage(HttpServletRequest request, ModelMap map) throws NumberFormatException, SQLException {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-
-		logger.debug(EncryptUtil.encode(10167l));
 		String orderSn = request.getParameter("order_sn");
 		map.put("orderSn", orderSn);
-		List<PanoUserBankcardModel> userBankcards = userBankcardService
-				.listByUser(userSn);
+		List<PanoUserBankcardModel> userBankcards = userBankcardService.listByUser(userSn);
 		if (userBankcards != null && !userBankcards.isEmpty()) {
 			map.put("userBankcard", userBankcards.get(0));
 		}
-
-		PanoOrderModel order = orderService.getOrderDetail(Long
-				.parseLong(orderSn));
+		PanoOrderModel order = orderService.getOrderDetail(Long.parseLong(orderSn));
 
 		map.put("order", order);
 
@@ -461,43 +449,37 @@ public class PanoOrderController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/create")
-	public void createOrder(HttpServletRequest request,
-			HttpServletResponse response, ModelMap map) throws Exception {
-		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-
+	public void createOrder(HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
+		PanoMemLoginModel loginInfo = LoginThreadLocal.getLoginInfo();
+		Long userSn = loginInfo.getUserSn();
 		JSONObject data = new JSONObject();
 		try {
 			String mobilePhone = request.getParameter("mobile_phone");
 			String verifycode = request.getParameter("verifycode");
-
-			// 验证手机号
-			// 验证验证码
-			if (!"111111".equals(verifycode)) {
-				PanoValidateModel messageValidate = smsValidateService
-						.selectByMobilePhone(mobilePhone, verifycode);
+			if(StringUtils.isNotEmpty(mobilePhone) && StringUtils.isNotEmpty(verifycode)) {
+				PanoValidateModel messageValidate = smsValidateService.selectByMobilePhone(mobilePhone, verifycode);
 				if (messageValidate != null && messageValidate.getStatus() == 1) {
 					smsValidateService.setStatus(messageValidate, 0);
-				} else if (messageValidate != null) {
-					throw new RuntimeException("无效验证码或验证码过期");
-				} else if (messageValidate.getStatus() == 1) {
+					//更新用户信息
+					Integer type = loginInfo.getType();
+					if(type.equals(LoginTypeEnum.WX.getType())){
+						PanoMemUserModel member = panoMemUserService.getBySn(userSn);
+						member.setMobile(mobilePhone);
+						panoMemUserService.update(member);
+					}
+				} else {
 					throw new RuntimeException("验证码错误");
 				}
 			}
 			String[] packageSns = request.getParameterValues("package_sns[]");
-			String[] packageCounts = request
-					.getParameterValues("package_counts[]");
-			String couponCode = StringUtils.trimToNull(request
-					.getParameter("coupon_code"));
-			String payScheme = StringUtils.trimToNull(request
-					.getParameter("pay_scheme"));
-			String addressSnParam = StringUtils.trimToNull(request
-					.getParameter("address_sn"));
+			String[] packageCounts = request.getParameterValues("package_counts[]");
+			String couponCode = StringUtils.trimToNull(request.getParameter("coupon_code"));
+			String payScheme = StringUtils.trimToNull(request.getParameter("pay_scheme"));
+			String addressSnParam = StringUtils.trimToNull(request.getParameter("address_sn"));
 			Long addressSn = Long.parseLong(addressSnParam);
-
 			if (receiveAddressService.getBySn(addressSn) == null) {
 				throw new RuntimeException("收货地址不存在");
 			}
-
 			float actualAmount = 0;
 			float dueAmount = 0;
 			float payAmount = 0;
@@ -506,17 +488,15 @@ public class PanoOrderController extends BaseController {
 			// 校验套餐，计算总金额
 			List<PanoProjectHousePackageModel> packages = new ArrayList<PanoProjectHousePackageModel>();
 			for (int i = 0; i < packageSns.length - 1; i++) {
-				PanoProjectHousePackageModel pack = housePackageService
-						.getBySn(Long.parseLong(packageSns[i]));
-				if (pack == null)
+				PanoProjectHousePackageModel pack = housePackageService.getBySn(Long.parseLong(packageSns[i]));
+				if (pack == null){
 					throw new RuntimeException("套餐不存在");
+				}
 				packages.add(pack);
 				int packageCount = Integer.parseInt(packageCounts[i]);
-				actualAmount = actualAmount
-						+ pack.getPackagePrice().floatValue() * packageCount;
+				actualAmount = actualAmount + pack.getPackagePrice().floatValue() * packageCount;
 				totalPackageCount = totalPackageCount + packageCount;
 			}
-
 			dueAmount = actualAmount;
 			// 校验优惠券，计算金额
 			PanoOrderCouponItemModel coupon = null;
