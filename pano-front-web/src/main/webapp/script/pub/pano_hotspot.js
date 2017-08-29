@@ -194,6 +194,7 @@ function getTcshow(houseId){
 	    dataType: "jsonp",
 	    jsonp: "jsoncallback", 
 	    success:function(data){
+	    	$("#scrollArea").children().remove();
 	    	for(var i in data){
 	    		var sn = data[i].sn;
 	    		var name = data[i].name;

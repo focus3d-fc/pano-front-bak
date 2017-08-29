@@ -6,7 +6,7 @@
 			<div class="container se720">
 		    <!--场景-->
 		    <section class="hide">
-		        <p class="location location3">客厅</p>
+		        <p class="location location3" style="display: none;">客厅</p>
 		         <div class="re-box">
 		            <div class="rd-show">
 		                <div class="swiper-container swiper4">
@@ -99,6 +99,7 @@
         $("a[id='hxshow']").click(function () {
         	var status = $(this).attr("status");
 	        $(this).parent().find("a").removeClass("active");
+	        $(this).parent().find("a").attr("status", 0);
     		if(!status || status == 0){
     			$('#hx').show();
     			$(this).attr("status", 1);
@@ -123,6 +124,7 @@
         $("a[id='fjshow']").click(function () {
         	var status = $(this).attr("status");
     		$(this).parent().find("a").removeClass("active");
+    		$(this).parent().find("a").attr("status", 0);
     		if(!status || status == 0){
     			$('#hx').show();
     			$(this).attr("status", 1);
@@ -150,6 +152,7 @@
         $("a[id='tcshow']").click(function () {
         	var status = $(this).attr("status");
     		$(this).parent().find("a").removeClass("active");
+    		$(this).parent().find("a").attr("status", 0);
     		if(!status || status == 0){
     			$('#tc').show();
     			$(this).attr("status", 1);
