@@ -62,7 +62,9 @@ public class LoginFilter extends AbstractFilter {
 		, "/out/*"
 		,"/member/login/*"
 		,"/order/lianpaynotify"
+		,"/order/lianpayreturn"
 		,"/order/wxpaynotify"
+		,"/order/orderspage"
 	};
 	public static Auth auth = new Auth();
 	
