@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport"
-	content="width=device-width, user-scalable=no, initial-scale=1.0">
-<title>实名认证</title>
+#set($layout = "layout/member/layout_cert.html")
 <link rel="stylesheet" href="/style/admstatic/css/bass.css">
 <link rel="stylesheet" href="/style/admstatic/css/index.css">
 <script src="/style/admstatic/js/main.js"></script>
@@ -23,14 +16,8 @@
 	 }
 	 }); */
 </script>
-</head>
-<body>
+
 	<div class="container add">
-		<!--头-->
-		<header class="header">
-			<p class="title">实名认证</p>
-			</a>
-		</header>
 		<!--图片-->
 		<section class="addr-section">
 			<form method="post" action="/personal/upCert">
@@ -41,7 +28,8 @@
 						value="$!{memuser.name}">
 				</div>
 				<div class="add-item">
-					<label class="label">性别:</label> <select name="SEX" id="SEX">
+					<label class="label">性别:</label>
+					<select name="SEX" id="SEX">
 						<option value="2">男</option>
 						<option value="1">女</option>
 					</select>
@@ -57,6 +45,3 @@
 			</form>
 		</section>
 	</div>
-</body>
-</body>
-</html>

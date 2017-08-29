@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport"
-	content="width=device-width, user-scalable=no, initial-scale=1.0">
-<title>收货地址</title>
+#set($layout = "layout/member/layout_address.html")
 <link rel="stylesheet" href="/style/h5static/css/bass.css">
 <link rel="stylesheet" href="/style/h5static/css/index.css">
 <script src="/style/h5static/js/main.js"></script>
@@ -21,8 +14,7 @@
 .w-per90{width:90%;}
 .col_new2 {padding-left:0px !important;}
 </style>
-</head>
-<body>
+
 	<div class="container addr">
 		<input type="hidden" id="packageSns" value="$!packageSns"/>
 		<!--图片-->
@@ -48,6 +40,3 @@
 		<a href="/personal/toaddaddress?packageSns=$!packageSns" class="button bcdz"> 添加地址 </a>
 
 	</div>
-</body>
-</body>
-</html>
