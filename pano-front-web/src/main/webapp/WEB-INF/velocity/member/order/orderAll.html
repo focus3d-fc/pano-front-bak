@@ -6,14 +6,19 @@
 <div class="container">
     <!--列表头-->
     <section class="order-title">
-        <a href="/order/orderspage">全部列表</a>
+        <a href="/order/orderspage">全部</a>
         <a href="/order/orderspage?status=1">待付款</a>
         <a href="/order/orderspage?status=2">已付款</a>
     </section>
     <!--订单-->
     <section class="order-items">
     #if($!orders.size() == 0)
-    	<p style="margin:auto;width:60px">无数据</p>
+    	<p style="margin:auto;width:100%; text-align:center; height:8.7rem;font-size:.3rem;color:#999;">
+    	
+    	<img style="width:4rem;height:2.57rem;display:block;margin:0 auto; margin-top:2rem; margin-bottom:.5rem;" src="../images/kong-dd.png">
+    	
+    	
+    	<small>您还没有相关定单</small></p>
     #end
     #foreach($!order in $!orders)
     #if($!order.status == 1 or ($!order.status==2 and $!order.sonOrder.status == 1) )
