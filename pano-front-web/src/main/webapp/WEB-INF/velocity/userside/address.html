@@ -24,8 +24,7 @@
 				<img src="#if($!address.defaultFirst == 1) /style/h5static/image/img/27.png #else /style/h5static/image/img/27_blank.png #end" alt=""> 
 				<div class="w-per90">
 					<p class="clearfix">
-						<span class="fl">$!address.userName/
-							#if($!address.sex == 1) 女士 #end #if($!address.sex == 2) 先生 #end
+						<span class="fl">$!address.userName
 						</span> <span class="fr">$!address.mobile</span>
 					</p>
 					<p>收货地址：$!address.province $!address.city $!address.area $!address.street</p>
