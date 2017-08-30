@@ -33,6 +33,7 @@ import com.focustech.common.utils.TCUtil;
  *
  */
 public class LoginFilter extends AbstractFilter {
+	
 	private static final Logger log = LoggerFactory.getLogger(LoginFilter.class);
 	public static final String SESSION_KEY = "login";
 	public static final String SESSION_GOTO = "goto";
@@ -85,6 +86,12 @@ public class LoginFilter extends AbstractFilter {
 		String sessionId = session.getId();
 		String servletPath = request.getServletPath();
 		Object sessionObj = session.getAttribute(SESSION_KEY);
+		if(sessionObj == null){
+			if(SessionDB.get(sessionId) != null){
+				request.getSession().setAttribute(SESSION_KEY, SessionDB.get(sessionId));
+				sessionObj = session.getAttribute(SESSION_KEY);
+			}
+		}
 		boolean isLogin = sessionObj != null;
 		
 		boolean isAuthed = true;
@@ -99,7 +106,7 @@ public class LoginFilter extends AbstractFilter {
 			SessionDB.addSession(sessionId, loginModel);
 			response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxed31115f33aab720&redirect_uri=" + WECHAT_SERVER_AUTH + "&response_type=code&scope=snsapi_userinfo&state=proj720ANDloginAND" + sessionId + "AND" + HttpUtil.encodeUrl(siteDomain) + "#wechat_redirect");
 			return;
-		} 
+		}
 		if(isNotNeedAuthCheckUrl(servletPath, request)){
 			if("/home/index".equals(servletPath)){
 				//首页会话设置用户信息

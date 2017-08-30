@@ -126,6 +126,7 @@ public class MemberLoginController extends BaseController {
 			addLoginToSession(loginInfo, request);
 			view = redirect(getSiteDomain() + loginInfo.getGotoPage());
 		} else {
+			removeLoginFromSession(request);
 			msg = "登录失败";
 		}
 		log.info(msg);
