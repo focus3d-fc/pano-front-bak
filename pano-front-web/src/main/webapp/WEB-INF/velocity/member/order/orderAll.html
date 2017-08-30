@@ -6,7 +6,7 @@
 <div class="container">
     <!--列表头-->
     <section class="order-title">
-        <a href="/order/orderspage" class="on">全部列表</a>
+        <a href="/order/orderspage">全部列表</a>
         <a href="/order/orderspage?status=1">待付款</a>
         <a href="/order/orderspage?status=2">已付款</a>
     </section>
@@ -75,3 +75,12 @@
           #end
     </section>
 </div>
+<input type="hidden" id="status" value="$!status"/>
+<script>
+
+$(function(){
+	var status = parseInt($!("#status").val());
+	$(".order-title").children().removeClass("on");
+	$(".order-title").find("a:eq(" +　status　+　")").addClass("on");
+});
+</script>

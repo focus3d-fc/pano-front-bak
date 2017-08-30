@@ -648,6 +648,7 @@ public class PanoOrderController extends BaseController {
 				.getUserOrders(userSn, status);
 
 		map.put("orders", orders);
+		map.put("status", StringUtils.isEmpty(statusParam) ? "0" : statusParam);
 		return "/member/order/orderAll";
 	}
 
