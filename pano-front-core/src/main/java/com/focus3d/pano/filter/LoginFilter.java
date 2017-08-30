@@ -118,7 +118,7 @@ public class LoginFilter extends AbstractFilter {
 			}
 		} else {
 			if(!isLogin) {
-				 if(request.getHeader("x-requested-with") != null && request.getHeader("x-requested-with").equals("XMLHttpRequest")) {
+				 if(request.getHeader("X-Requested-With") != null && request.getHeader("X-Requested-With").equals("XMLHttpRequest")) {
 					 log.info("ajax 请求未登录，需要登录");
 					 response.setHeader("sessionstatus", "timeout"); 
 				 } else {
