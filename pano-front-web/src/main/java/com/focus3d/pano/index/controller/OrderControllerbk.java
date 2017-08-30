@@ -24,7 +24,7 @@ import com.focus3d.pano.model.pano_project;
  */
 @Controller
 @RequestMapping("/order")
-public class OrderController extends BaseController {
+public class OrderControllerbk extends BaseController {
 
 	@Autowired
 	private OrderService orderService;

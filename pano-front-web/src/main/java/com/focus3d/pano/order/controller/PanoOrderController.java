@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import wxdev.pay.WXPay;
 import wxdev.pay.common.Configure;
@@ -882,13 +883,17 @@ public class PanoOrderController extends BaseController {
 		} finally {
 
 		}
-
 	}
-
-	public static void main(String[] args) throws Exception {
-
-
-		System.out.println(generateOrderNum());
+	
+	/**
+	 * 
+	 * *
+	 * @return
+	 */
+	@RequestMapping(value = "pay/complete", method = RequestMethod.GET)
+	public String payComplete(String orderSn){
+		
+		return "/member/order/pay_complete";
 	}
 
 	/**
