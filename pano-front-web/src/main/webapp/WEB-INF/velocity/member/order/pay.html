@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
-    <title>在线支付</title>
+#set($layout = "layout/member/order/layout_pay.html")
     <link rel="stylesheet" href="/style/admstatic/css/bass.css">
     <link rel="stylesheet" href="/style/admstatic/css/index.css">
     <script src="/style/admstatic/js/main.js"></script>
     <style>
-        /*在线支付-new20170826*/
         .addr .green-btn { position: fixed; bottom: 0; width: 100%; }
         .green-btn { display: block; height: 1rem; line-height: 1rem; text-align: center; background-color: #4dda65; color: #fff; font-size: .21rem; }
 
@@ -116,9 +109,7 @@
 		    );
 		}
     </script>
-</head>
 
-<body>
 
 <form id="lianpay" action="" method="get" hidden>
 				<ul>
@@ -180,5 +171,3 @@
             <div style="height:50px;z-index:0"></div>
         </div>
 
-</body>
-</html>

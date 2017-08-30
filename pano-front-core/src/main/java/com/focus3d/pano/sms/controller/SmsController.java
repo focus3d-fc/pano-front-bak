@@ -41,7 +41,7 @@ public class SmsController extends BaseController {
 
 	private Lock lock = new ReentrantLock();
 
-	private static final int SMS_SEND_LIMIT_PER_DAY = 100;
+	private static final int SMS_SEND_LIMIT_PER_DAY = 50;
 	/**
 	 * 发送短信
 	 * *
@@ -51,7 +51,7 @@ public class SmsController extends BaseController {
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
 	public void sendSms(String mobilePhone, HttpServletRequest req, HttpServletResponse resp){
 		String status = "";
-		try {
+		try {                                                                      
 			if(StringUtils.isNotEmpty(mobilePhone) && mobilePhone.length() == 11){
 
 				String millis = TCUtil.sv(System.currentTimeMillis());

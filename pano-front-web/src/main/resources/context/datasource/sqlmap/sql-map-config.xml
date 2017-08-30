@@ -61,6 +61,7 @@
 	<sqlMap resource="context/datasource/sqlmap/pano_project_house_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/pano_project_style_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/pano_project_base_style_SqlMap.xml" />
+	<sqlMap resource="context/datasource/sqlmap/pano_project_SqlMap.xml" />
 	
 	<sqlMap resource="context/datasource/sqlmap/pano_order_coupon_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/pano_order_coupon_item_SqlMap.xml" />

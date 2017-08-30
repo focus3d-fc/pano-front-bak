@@ -82,13 +82,12 @@ public class MemberLoginController extends BaseController {
 		log.debug(sessionId);
 		log.debug(userInfo);
 		if(StringUtils.isNotEmpty(sessionId) && StringUtils.isNotEmpty(userInfo)){
-			PanoMemLoginModel loginInfo = SessionDB.get(sessionId);
-			String gotoPage = loginInfo.getGotoPage();
-			SessionDB.remove(sessionId);
-			//重新加入session
+			String gotoPage = TCUtil.sv(SessionDB.getTemp(sessionId));
+			SessionDB.removeTemp(sessionId);
+			//加入session
 			JSONObject jo = JSONObject.fromObject(userInfo);
 			String openId = jo.getString("openid");
-			loginInfo = memLoginService.getByName(openId, LoginTypeEnum.WX);
+			PanoMemLoginModel loginInfo = memLoginService.getByName(openId, LoginTypeEnum.WX);
 			if(loginInfo == null){
 				memLoginService.insertOrUpdate(jo, LoginTypeEnum.WX);
 			} 
@@ -126,6 +125,7 @@ public class MemberLoginController extends BaseController {
 			addLoginToSession(loginInfo, request);
 			view = redirect(getSiteDomain() + loginInfo.getGotoPage());
 		} else {
+			removeLoginFromSession(request);
 			msg = "登录失败";
 		}
 		log.info(msg);
@@ -163,5 +163,6 @@ public class MemberLoginController extends BaseController {
 	private void removeLoginFromSession( HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		session.removeAttribute(LoginFilter.SESSION_KEY);
+		SessionDB.remove(session.getId());
 	}
 }
