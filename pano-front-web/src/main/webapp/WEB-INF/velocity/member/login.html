@@ -60,27 +60,25 @@
 </div>
 <!--注册弹窗-->
 <div class="wrap">
-    <div id="login" style="padding-top:.01rem;height:60%;">
+    <div id="login">
         <form action="/member/login/nomal" method="post">
-            <div class="login-title" style="font-size: .3rem;margin-bottom:.2rem;">
+            <div class="login-title">
                 登录
                 <i class=" iconfont fr"  onclick="$('.wrap').hide();">&#xe64e;</i>
             </div>
             <div class="row">
-                
-               <img style="width:.5rem;height:.5rem;" src="/images/29.png">
+                <i class=" iconfont">&#xe61b;</i>
                 <input type="tel" placeholder="请输入手机号" id="j_phone" name="loginName"/>
             </div>
             <div class="row">
-                <img style="width:.5rem;height:.5rem;" src="/images/31.png">
-                <input type="text" style="width:52%;" placeholder="验证码" id="phoneCode_in" name="smsCode"/>
-                <small style="height:.1rem;color:#c8c8c8; margin-right:.2rem;">|</small>
-                <span id="j_getVerifyCode">发送验证码</span>
+                <i class=" iconfont">&#xe66f;</i>
+                <input type="text" placeholder="验证码" id="phoneCode_in" name="smsCode"/>
+                <span id="j_getVerifyCode">获取验证码</span>
             </div>
-            <button type="button" id="surelogin" style="margin-top:.8rem;margin-bottom:.8rem;">立即登录</button>
-            <div class="line" >
+            <button type="button" id="surelogin">立即登录</button>
+            <div class="line">
                 <span>其他方式登录</span>
-                    <a href="/wechat/oauth" style="margin-top:.3rem;">
+                    <a href="/wechat/oauth">
                         <i class=" iconfont">&#xe81d;</i>
                     </a>
             </div>
