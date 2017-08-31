@@ -25,16 +25,16 @@
     	<small>支付已成功!</small></p>
     <div class="zfcg-new" style="margin-top:.2rem;">
 	    <div class="zfcg-dd">
-	    <p><small>收货人：MR.J </small>  <samll> 15611815111</samll></p>
-	    <p>收货地址：上海上海浦东新区花木街道芳甸路1155号浦东嘉里城42F</p>
+	    <p><small>收货人：$!address.userName </small>  <samll> $!address.mobile</samll></p>
+	    <p>收货地址：$!address.province $!address.city $!address.area $!address.street</p>
 	    </div>
     </div>
     <div class="zfcg-new">    
                 <div class="zfcg-dd">
-                <p style="font-size:.3rem;color:#e31515;">总价：¥468.80</p>
+                <p style="font-size:.3rem;color:#e31515;">总价：¥$!order.payMoney</p>
                <p style="margin-top:.4rem ;margin-bottom:.3rem;">
-                <a href="#" class="paying">查看订单</a>
-                <a href="#" style="margin-left:.6rem;" class="paying">返回首页</a>
+                <a href="/order/orderpage?order_sn=$!order.sn" class="paying">查看订单</a>
+                <a href="http://$!panoDomain" style="margin-left:.6rem;" class="paying">返回首页</a>
             </p>
     
     </div>

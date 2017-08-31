@@ -789,7 +789,7 @@ public class PanoOrderController extends BaseController {
 		String moneyOrder = resData.getString("money_order");
 		String noOrder = resData.getString("no_order");
 		String oidPaybill = resData.getString("oid_paybill ");
-
+		String orderSn = "";
 		if ("SUCCESS".equals(resultPay)) {
 			BigDecimal payAmount = new BigDecimal(moneyOrder);
 			String outPayId = oidPaybill;
@@ -812,8 +812,11 @@ public class PanoOrderController extends BaseController {
 					panoOrderTransService.insert(orderTransModel);
 				}
 			}
+			if(orderModel != null){
+				orderSn = EncryptUtil.encode(orderModel.getSn());
+			}
 		}
-		response.sendRedirect("/order/orderspage");
+		response.sendRedirect("/order/pay/complete?orderSn=" + orderSn);
 	}
 
 	/**
@@ -883,13 +886,82 @@ public class PanoOrderController extends BaseController {
 	}
 	
 	/**
+	 * 微信异步通知
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/wxpayreturn")
+	public void wxpayReturn(HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
+		try {
+			String responseString = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
+			XStream xstream = new XStream(new DomDriver());
+			xstream.processAnnotations(ScanPayResData.class);
+			ScanPayResData resData = (ScanPayResData) xstream.fromXML(responseString);
+			String payType = resData.getAttach().split(",")[0];
+			Configure configure = new Configure();
+			if ("WXOFFICIAL".equals(payType)) {
+				configure.setAppID(Constant.wx_official_appid);
+				configure.setMchID(Constant.wx_official_mchid);
+				configure.setKey(Constant.wx_official_mchkey);
+			} else {
+				throw new RuntimeException("未知支付类型");
+			}
+			resData = WXPay.payAsyncNotify(responseString, configure);
+			if (!resData.getIsSuccess())
+				throw new RuntimeException(resData.getWorkedMsg());
+			BigDecimal payAmount = new BigDecimal(Integer.parseInt(resData.getTotal_fee()) / 100d).setScale(2, RoundingMode.DOWN);
+
+			PanoOrderModel orderModel = orderService.getOrderByNum(resData.getOut_trade_no());
+			if (payAmount.compareTo(orderModel.getPayMoney()) != 0) {
+				throw new RuntimeException("支付金额不对");
+			}
+			if (orderModel.getStatus().compareTo(2) == 0) {
+				throw new RuntimeException("订单已经支付");
+			}
+			orderModel.setStatus(2);
+			orderService.update(orderModel);
+			PanoOrderTransModel orderTransModel = new PanoOrderTransModel();
+			orderTransModel.setOrderId(resData.getOut_trade_no());
+			orderTransModel.setTransDate(new Date());
+			orderTransModel.setTransType("001");
+			orderTransModel.setTransPlatformType(1);
+			orderTransModel.setTransMoney(payAmount);
+			orderTransModel.setTransId(resData.getTransaction_id());
+			orderTransModel.setTransStatus("SUCCESS");
+			panoOrderTransService.insert(orderTransModel);
+			response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>");
+		} catch (Exception e) {
+			logger.debug(ExceptionUtils.getStackTrace(e));
+			response.getWriter().write("failure");
+			return;
+		} finally {
+
+		}
+	}
+	
+	/**
 	 * 
 	 * *
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "pay/complete", method = RequestMethod.GET)
-	public String payComplete(String orderSn){
-		
+	public String payComplete(String orderSn, ModelMap modelMap) throws Exception{
+		if(StringUtils.isNotEmpty(orderSn)){
+			long orderSnD = EncryptUtil.decode(orderSn);
+			PanoOrderModel order = orderService.getBySn(orderSnD);
+			if(order != null){
+				modelMap.put("order", order);
+			}
+			Long addressSn = order.getAddressSn();
+			PanoUserReceiveAddressModel address = receiveAddressService.getBySn(addressSn);
+			if(address != null){
+				modelMap.put("address", address);
+
+			}
+		}
 		return "/member/order/pay_complete";
 	}
 
