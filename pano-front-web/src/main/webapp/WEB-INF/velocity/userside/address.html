@@ -13,6 +13,18 @@
 <style>
 .w-per90{width:90%;}
 .col_new2 {padding-left:0px !important;}
+.addr .addr-item p {
+    margin: .1rem 0 !important;
+}
+
+.button {
+
+    height: .8rem;
+    line-height:.8rem;
+    font-size:.24rem;
+
+
+
 </style>
 
 	<div class="container addr">
@@ -22,7 +34,7 @@
 			#foreach ($!address in $!addressList) 
 			<div class="addr-item #if($!address.defaultFirst == 0) col col_new2 #end" sn="$!address.sn">
 				<img src="#if($!address.defaultFirst == 1) /style/h5static/image/img/27.png #else /style/h5static/image/img/27_blank.png #end" alt=""> 
-				<div class="w-per90">
+				<div class="w-per90"  style="font-size:.22rem;">
 					<p class="clearfix">
 						<span class="fl">$!address.userName
 						</span> <span class="fr">$!address.mobile</span>
