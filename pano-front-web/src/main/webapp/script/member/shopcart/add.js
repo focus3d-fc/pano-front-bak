@@ -39,7 +39,7 @@ $(function(){
 			$(this).addClass("imgChoose");
 		} else {
 			$(this).attr("status", 0);
-			$(this).attr("checked", false);
+			$(this).removeClass("imgChoose");
 			$("#selectAll").attr("checked", false);
 			$("#selectAll").attr("status", 0);
 			totalPrice -= price;
@@ -52,17 +52,18 @@ $(function(){
 		var status = $(this).attr("status");
 		if(!status || status == 0){
 			$(this).attr("status", 1);
-			$("input[id^='selectItem_']").prop('checked', true);
-			$("input[id^='selectItem_']").attr("status", 1);
-			$("input[id^='selectItem_']").each(function(){
+			$(this).addClass("imgChoose");
+			$("div[id^='choose_']").attr("status", 1);
+			$("div[id^='choose_']").addClass("imgChoose");
+			$("div[id^='choose_']").each(function(){
 				var price = parseFloat($(this).attr("price"));
 				totalPrice += price;
 			});
 		} else {
 			$(this).attr("status", 0);
-			$(this).attr("checked", false);
-			$("input[id^='selectItem_']").prop('checked', false);
-			$("input[id^='selectItem_']").attr("status", 0);
+			$(this).removeClass("imgChoose");
+			$("div[id^='choose_']").attr("status", 0);
+			$("div[id^='choose_']").removeClass("imgChoose");
 		}
 		$("#totalPrice").text(totalPrice);
 	});
@@ -82,11 +83,13 @@ $(function(){
 		}
 	});
 	
-	
+	//结算
 	$("#addToOrder").click(function(){
 		var packageSns = "";
-		$("input[id^='selectItem']:checked").each(function(){
-			packageSns += $(this).val() + ",";
+		$("div[id^='choose_']").each(function(){
+			if($(this).attr("Status") == 1){
+				packageSns += $(this).attr("sn") + ",";
+			}
 		});
 		if(!packageSns){
 			alert("请选择一个套餐");

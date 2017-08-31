@@ -323,7 +323,7 @@ public class PanoOrderController extends BaseController {
 				strBuf.append("&app_request=").append(payInfo.getApp_request());
 				// payInfo.setBg_color(request.getParameter("bg_color"));
 				// 商户业务类型 虚拟商品销售：101001实物商品销售：109001
-				payInfo.setBusi_partner("101001");
+				payInfo.setBusi_partner(Constant.LIANPAY_AUTH_PAY_BUSI_PARTNER);
 				strBuf.append("&busi_partner=").append(
 						payInfo.getBusi_partner());
 
@@ -348,10 +348,10 @@ public class PanoOrderController extends BaseController {
 				// 商户唯一订单号
 				payInfo.setNo_order(orderModel.getOrderNum() + "");
 				strBuf.append("&no_order=").append(payInfo.getNo_order());
-				payInfo.setNotify_url(Constant.lianpay_notify_url);
+				payInfo.setNotify_url(Constant.LIANPAY_NOTIFY_URL);
 				strBuf.append("&notify_url=").append(payInfo.getNotify_url());
 				// 商户编号
-				payInfo.setOid_partner(Constant.lianpay_oid_partner);
+				payInfo.setOid_partner(Constant.LIANPAY_OID_PARTNER);
 				strBuf.append("&oid_partner=").append(payInfo.getOid_partner());
 				// payInfo.setAcct_name(request.getParameter("acct_name"));
 				// 风险控制参数
@@ -367,7 +367,7 @@ public class PanoOrderController extends BaseController {
 				payInfo.setSign_type("MD5");
 				strBuf.append("&sign_type=").append(payInfo.getSign_type());
 
-				payInfo.setUrl_return(Constant.lianpay_return_url);
+				payInfo.setUrl_return(Constant.LIANPAY_RETURN_URL);
 				strBuf.append("&url_return=").append(payInfo.getUrl_return());
 
 				payInfo.setUser_id(orderModel.getUserSn() + "");
@@ -378,16 +378,13 @@ public class PanoOrderController extends BaseController {
 				if (sign_src.startsWith("&")) {
 					sign_src = sign_src.substring(1);
 				}
-				sign_src += "&key=" + Constant.lianpay_md5_key;
-				String sign = Md5Algorithm.getInstance().md5Digest(
-						sign_src.getBytes("utf-8"));
-
+				sign_src += "&key=" + Constant.LIANPAY_MD5_KEY;
+				String sign = Md5Algorithm.getInstance().md5Digest(sign_src.getBytes("utf-8"));
 				payInfo.setSign(sign);
 				String req_data = JSON.toJSONString(payInfo);
 				logger.debug(req_data);
 				data.put("linkString", req_data);
-				data.put("outGateway",
-						"https://wap.lianlianpay.com/authpay.htm");
+				data.put("outGateway", Constant.LIANPAY_AUTH_PAY_URL);
 
 			} else if ("WXOFFICIAL".equals(payType)) {
 				//微信公众号支付
@@ -701,8 +698,8 @@ public class PanoOrderController extends BaseController {
 		}
 		System.out.println("接收支付异步通知数据：【" + reqStr + "】");
 		try {
-			if (!YinTongUtil.checkSign(reqStr, Constant.lianpay_yt_pub_key,
-					Constant.lianpay_md5_key)) {
+			if (!YinTongUtil.checkSign(reqStr, Constant.LIANPAY_YT_PUB_KEY,
+					Constant.LIANPAY_MD5_KEY)) {
 				retBean.setRet_code("9999");
 				retBean.setRet_msg("交易失败");
 				resp.getWriter().write(JSON.toJSONString(retBean));
@@ -783,8 +780,8 @@ public class PanoOrderController extends BaseController {
 	public void lianpayReturn(HttpServletRequest request,
 			HttpServletResponse response, ModelMap map) throws Exception {
 		String resDataStr = request.getParameter("res_data");
-		if (!YinTongUtil.checkSign(resDataStr, Constant.lianpay_yt_pub_key,
-				Constant.lianpay_md5_key)) {
+		if (!YinTongUtil.checkSign(resDataStr, Constant.LIANPAY_YT_PUB_KEY,
+				Constant.LIANPAY_MD5_KEY)) {
 
 		}
 		JSONObject resData = JSON.parseObject(resDataStr);
