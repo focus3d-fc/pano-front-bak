@@ -7,14 +7,14 @@
 <style>
 .w-pre90{width:90%;}
 .noline{border:none;border-style:none !important;font-size:.26rem;outline:medium;background:none;}
-.img_b0{width:.68rem !important;height:.68rem !important;margin-bottom:0 !important;}
+.img_b0{width:.3rem !important;height:.3rem !important;margin-bottom:.16rem !important;}
 .new_yzm{font-size:.26rem;}
 </style>
 <div class="container confirm">
 	<!--列表头-->
-	<section class="address add-img">
-		<img class="img_b0" src="/images/8.png" alt="">
-		<div class="w-pre90">
+	<section class="address add-img" >
+		<img  class="img_b0"  src="/images/8.png" alt="" >
+		<div class="w-pre90" style="width:100%;">
 			<p class="clearfix">
 				<span class="fl">收货人：$!defaultAddress.userName</span> <span
 					class="fr">$!defaultAddress.mobile</span>
@@ -22,15 +22,15 @@
 			<p>收货地址：$!defaultAddress.province $!defaultAddress.province.city
 				$!defaultAddress.province.area $!defaultAddress.province.street</p>
 		</div>
-		<a href="/personal/toaddress?packageSns=$!packageSns" class="right"><i class="iconfont">&#xe6c7;</i></a>
+		<a href="/personal/toaddress?packageSns=$!packageSns" class="right"><i style="font-size:.36rem;" class="iconfont">&#xe6c7;</i></a>
 	</section>
 	<!--订单-->
 	<section class="order-items">
 		#foreach($!housePackage in $!housePackages)
 		<div class="order-item" id="$!housePackage.sn">
 			<div class="title">
-				<span>
-					<i class="iconfont">&#xe71f;</i>
+				<span style="font-size:.23rem;">
+					<i style="font-size:.28rem;" class="iconfont">&#xe71f;</i>
 					$!housePackage.name
 				</span>
 				<span class="red"> 等待买家付款 </span>
@@ -53,18 +53,18 @@
 				</div>
 			</div>
 			<div class="row">
-				<p>购买数量</p>
-				<p>
-					<span class="square" onclick="subCount('$!housePackage.sn')">-</span>
-					<span class="buyCount">1</span> <span class="square"
-						onclick="addCount('$!housePackage.sn')">+</span>
+				<p style="font-size:.23rem;">购买数量</p>
+				<p >
+					<span class="square"  onclick="subCount('$!housePackage.sn')" style="font-size:.28rem;">-</span>
+					<span class="buyCount" style="padding:0 .2rem;"> 1 </span> <span class="square"
+						onclick="addCount('$!housePackage.sn')" style="font-size:.26rem;">+</span>
 				</p>
 			</div>
 		</div>
 		#end
-		<div class="yhj-item">
+		<div class="yhj-item" style="margin-top:0;">
             <div class="row" >
-                <p>请输入兑换优惠码：</p>
+                <p style="font-size:.23rem;">请输入兑换优惠码：</p>
                 
                 <p class="couponCodeSquares" 
                 				onclick="$('[name=couponCode]').focus();">
@@ -81,7 +81,7 @@
                 
             </div>
             <div class="row noboder">
-                <p>付款方式：</p>
+                <p style="font-size:.23rem;">付款方式：</p>
             </div>
             <p>
                 <a href="#" class="paying paybtn" onclick="choosePayScheme('FULL',this)">付全款
@@ -102,8 +102,8 @@
             </div>
             <!--new code 20170825 end-->
             <div class="new-row2">
-                <p>
-                    <img src="/images/choose2.png" alt="">
+                <p style="font-size:.23rem;">
+                    <img src="/images/choose3.png" style="width:.4rem;height:.4rem;" alt="">
                     <a onclick="$('.wrap').show();" >我已阅读并同意
                         <span class="red">合同条款</span>
                     </a>
