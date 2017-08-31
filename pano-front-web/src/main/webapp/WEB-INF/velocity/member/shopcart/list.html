@@ -3,8 +3,18 @@
 
 <link rel="stylesheet" href="/style/admstatic/css/bass.css">
 <link rel="stylesheet" href="/style/admstatic/css/index.css">
-<script src="/style/admstatic/js/main.js"></script>
+<style>
+.imgChoose{
+    background: url("/images/choose2.png") 0/cover !important;
+}
 
+.choose{
+    width: .28rem;
+    height: .28rem;
+    background: url("/images/choose.png") 0/cover;
+}
+</style>
+<script src="/style/admstatic/js/main.js"></script>
 <div class="container car se720">
     <!--订单-->
     <section class="order-items">
@@ -12,14 +22,13 @@
     	<div>
 	        <div class="order-item">
 	            <div class="title">
-	              <span>
-	                  <i class="iconfont">&#xe71f;</i>
+	              <span style="font-size:.24rem;">
+	                  <i class="iconfont" style="font-size:.26rem;">&#xe71f;</i>
 	                  	$!shopcart.housePackage.name
 	              </span>
 	            </div>
 	            <div class="cont">
-	                <div class="choose">
-	                    <input id="selectItem_$!velocityCount" price="$!shopcart.housePackage.packagePrice" value="$!shopcart.housePackage.encryptSn" type="radio" >
+	                <div class="choose" id="choose_$!velocityCount" price="$!shopcart.housePackage.packagePrice" value="$!shopcart.housePackage.encryptSn">
 	                </div>
 	                <a href="#"><img src="$!fs.url($!shopcart.housePackage.imgSn)" ></a>
 	                <div class="detail">
@@ -51,7 +60,7 @@
 			</div>
 			
 			<div class="total show">
-				<a id="closeOrOpen_$!velocityCount" href="#"> 点击展开 <i class="iconfont">&#xe612;</i></a>
+				<a id="closeOrOpen_$!velocityCount" href="#" style="color:#aaa;"> 点击展开 <i class="iconfont">&#xe612;</i></a>
 			</div>
 			<!-- 
 			<div class="total show">
@@ -64,7 +73,7 @@
     	</div>
 		#end
  
-        <nav class="nav">
+        <nav class="nav" style="padding: 0 .1rem;">
             <a href="/fp/720?style_id=$!styleId"  id="tcshow">
                 <i class="iconfont ">&#xe71f;</i>
                 <p>套餐</p>
@@ -84,17 +93,16 @@
         </nav>
     </section>
     
-    <div class="car-total">
+    <div class="car-total" style="border-top:1px solid #bdbdbd;">
         #if($!shopcartList.size() > 0)
-        <div class="choose">
-            <input id="selectAll" type="radio">全选
-        </div>
+        <div class="choose" style="margin-left:.2rem;"  id="selectAll">            
+        </div><span style="margin-left:.14rem;font-size:.24rem;">全选</span>
         #end
         <p>合计：<span id="totalPrice" class="red">0</span></p>
         <div class="button">
         	<form action="/order/confirmpage" method="get">
         		<input id="packageSns" name="packageSns" type="hidden"/>
-            	<a href="#" id="addToOrder">结算</a>
+            	<a href="#" id="addToOrder" style="font-size:.2rem;">结算</a>
         	</form>
         </div>
     </div>

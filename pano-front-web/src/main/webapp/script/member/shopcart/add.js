@@ -30,12 +30,13 @@ function addToShopcar(packageSn){
 
 var totalPrice = 0.0;
 $(function(){
-	$("input[id^='selectItem_']").click(function(){
+	$("div[id^='choose_']").click(function(){
 		var status = $(this).attr("status");
 		var price = parseFloat($(this).attr("price"));
 		if(!status || status == 0){
 			$(this).attr("status", 1);
 			totalPrice += price;
+			$(this).addClass("imgChoose");
 		} else {
 			$(this).attr("status", 0);
 			$(this).attr("checked", false);

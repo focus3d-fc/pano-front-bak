@@ -1129,7 +1129,7 @@
     height: .65rem;
 }
 .car .choose.imgChoose{
-    background: url("../image/img/choose2.png") 0/cover !important;
+    background: url("/images/choose2.png") 0/cover !important;
 }
 .car .car-total{
     position: fixed;
@@ -1159,7 +1159,7 @@
     width: .32rem;
     height: .32rem;
     margin: 0 .1rem 0 .2rem;
-    background: url("../image/img/choose.png") 0/cover;
+    background: url("/images/choose.png") 0/cover;
 }
 .car .car-total p{
     text-align: right;
