@@ -57,7 +57,7 @@
                 			$('#lianpay').attr("action",data.outGateway);
                 			$('#lianpay').submit();
                 		}else if(pay_type=='WXOFFICIAL'){
-                			onBridgeReady(data.appId,data.timeStamp,data.nonceStr,data.pack,data.paySign,data.returnUrl);
+                			onBridgeReady(data.appId,data.timeStamp,data.nonceStr,data.pack,data.paySign,data.returnUrl, data.orderSn);
                 		}
                 	}
                 },
@@ -91,7 +91,7 @@
     	}
     	
     	//微信支付JSSDK
-		function onBridgeReady(appId,timeStamp,nonceStr,pack,paySign,returnUrl){
+		function onBridgeReady(appId,timeStamp,nonceStr,pack,paySign,returnUrl, orderSn){
 		    WeixinJSBridge.invoke(
 		        'getBrandWCPayRequest', {
 		            "appId" : appId,     //公众号名称，由商户传入
@@ -103,7 +103,7 @@
 		        },
 		        function(res){
 		            if(res.err_msg == "get_brand_wcpay_request:ok" ) {
-		                window.location.href=returnUrl;
+		                window.location.href=returnUrl + "?orderSn=" + orderSn;
 		            }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
 		        }
 		    );

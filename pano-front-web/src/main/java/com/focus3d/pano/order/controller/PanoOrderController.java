@@ -427,6 +427,7 @@ public class PanoOrderController extends BaseController {
 				data.remove("package");
 				data.put("pack", "prepay_id=" + resData.getPrepay_id());
 				data.put("returnUrl", Constant.wx_officialpay_returnurl);
+				data.put("orderSn", orderModel.getEncryptSn());
 			} else {
 				throw new RuntimeException("不支持的支付方式");
 			}
@@ -893,52 +894,8 @@ public class PanoOrderController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/wxpayreturn")
-	public void wxpayReturn(HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
-		try {
-			String responseString = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
-			XStream xstream = new XStream(new DomDriver());
-			xstream.processAnnotations(ScanPayResData.class);
-			ScanPayResData resData = (ScanPayResData) xstream.fromXML(responseString);
-			String payType = resData.getAttach().split(",")[0];
-			Configure configure = new Configure();
-			if ("WXOFFICIAL".equals(payType)) {
-				configure.setAppID(Constant.wx_official_appid);
-				configure.setMchID(Constant.wx_official_mchid);
-				configure.setKey(Constant.wx_official_mchkey);
-			} else {
-				throw new RuntimeException("未知支付类型");
-			}
-			resData = WXPay.payAsyncNotify(responseString, configure);
-			if (!resData.getIsSuccess())
-				throw new RuntimeException(resData.getWorkedMsg());
-			BigDecimal payAmount = new BigDecimal(Integer.parseInt(resData.getTotal_fee()) / 100d).setScale(2, RoundingMode.DOWN);
-
-			PanoOrderModel orderModel = orderService.getOrderByNum(resData.getOut_trade_no());
-			if (payAmount.compareTo(orderModel.getPayMoney()) != 0) {
-				throw new RuntimeException("支付金额不对");
-			}
-			if (orderModel.getStatus().compareTo(2) == 0) {
-				throw new RuntimeException("订单已经支付");
-			}
-			orderModel.setStatus(2);
-			orderService.update(orderModel);
-			PanoOrderTransModel orderTransModel = new PanoOrderTransModel();
-			orderTransModel.setOrderId(resData.getOut_trade_no());
-			orderTransModel.setTransDate(new Date());
-			orderTransModel.setTransType("001");
-			orderTransModel.setTransPlatformType(1);
-			orderTransModel.setTransMoney(payAmount);
-			orderTransModel.setTransId(resData.getTransaction_id());
-			orderTransModel.setTransStatus("SUCCESS");
-			panoOrderTransService.insert(orderTransModel);
-			response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>");
-		} catch (Exception e) {
-			logger.debug(ExceptionUtils.getStackTrace(e));
-			response.getWriter().write("failure");
-			return;
-		} finally {
-
-		}
+	public String wxpayReturn(String orderSn, HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
+		return redirect("/order/pay/complete?orderSn=" + orderSn);
 	}
 	
 	/**
