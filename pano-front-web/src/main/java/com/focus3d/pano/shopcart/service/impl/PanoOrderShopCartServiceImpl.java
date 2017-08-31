@@ -86,25 +86,21 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 
 	@Override
 	public List<PanoOrderShopcartModel> listByUser(long userSn) {
-		List<PanoOrderShopcartModel> shopcarts = orderShopCartDao
-				.listByUser(userSn);
+		List<PanoOrderShopcartModel> shopcarts = orderShopCartDao.listByUser(userSn);
 		for (PanoOrderShopcartModel shopcart : shopcarts) {
-			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao
-					.listByShopcart(shopcart.getSn());
+			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
 			// 设置购物车明细信息
 			for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {
 				Long packageProductSn = shopcartDetail.getPackageProductSn();
 				if (packageProductSn != null) {
-					PanoProductModel packageProduct = productDao
-							.getBySn(packageProductSn);
+					PanoProductModel packageProduct = productDao.getBySn(packageProductSn);
 					if (packageProduct != null) {
 						shopcartDetail.setPackageProduct(packageProduct);
 					}
 				}
 				Long packageTypeSn = shopcartDetail.getPackageTypeSn();
 				if (packageTypeSn != null) {
-					PanoProjectPackageTypeModel packageType = packageTypeDao
-							.getBySn(packageTypeSn);
+					PanoProjectPackageTypeModel packageType = packageTypeDao.getBySn(packageTypeSn);
 					if (packageType != null) {
 						shopcartDetail.setPackageType(packageType);
 					}
