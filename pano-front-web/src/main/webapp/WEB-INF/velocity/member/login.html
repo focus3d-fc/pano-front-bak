@@ -1,22 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
-    <title>登录</title>
+#set($layout="layout/member/layout_center.html")
     <link rel="stylesheet" href="/style/admstatic/css/bass.css">
     <link rel="stylesheet" href="/style/admstatic/css/index.css">
     <script type="text/javascript" src="/style/admstatic/lib/jQuery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/style/admstatic/js/getVerifyCode.js"></script>
     <script type="text/javascript" src="/style/admstatic/js/main.js"></script>
-</head>
-<body>
+
 <div class="container">
-    <!--头-->
-    <header class="header">
-        <p class="title">个人中心</p>
-    </header>
     <!--头像-->
     <section class="my-bg login-bg">
         <img src="/style/admstatic/image/img/tx.png" alt="">
@@ -26,7 +15,7 @@
     </section>
     <!--订单-->
     <section class="order">
-        <p class="title">我的订单</p>
+        <p class="title" style="padding-top:.1rem;">我的订单</p>
         <div class="order-statu">
             <a href="#">
                 <i class="iconfont">&#xe64d;</i>
@@ -73,7 +62,7 @@
             </div>
             <div class="row">
                 <img style="width:.5rem;height:.5rem;" src="/images/31.png">
-                <input type="text" style="width:52%;" placeholder="验证码" id="phoneCode_in" name="smsCode"/>
+                <input type="text" style="width:45%;" placeholder="验证码" id="phoneCode_in" name="smsCode"/>
                 <small style="height:.1rem;color:#c8c8c8; margin-right:.2rem;">|</small>
                 <span id="j_getVerifyCode">发送验证码</span>
             </div>
@@ -165,6 +154,3 @@ $(function(){
         unabledClass: "unlabed"//按钮不能用的样式，即点击按钮后的样式
     }));
 </script>
-
-</body>
-</html>
