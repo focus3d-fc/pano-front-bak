@@ -62,7 +62,6 @@ public class PerspectiveQuery extends BaseController {
 			map.put("house_style_sn", model.getHouseStyleSn());
 			map.put("space", data);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "/perspective/Perspective";
