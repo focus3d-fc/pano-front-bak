@@ -37,8 +37,6 @@ import com.focus3d.pano.model.pano_project_space;
 import com.focus3d.pano.model.pano_user_receive_address;
 import com.focus3d.pano.usersside.service.PersonalService;
 import com.focus3d.pano.usersside.service.UsersSideService;
-import com.focus3d.pano.wechat.utils.Constants;
-import com.focus3d.pano.wechat.utils.UserInfo;
 import com.focustech.common.utils.EncryptUtil;
 import com.focustech.common.utils.JsonUtils;
 @Controller
@@ -51,9 +49,6 @@ public class UsersSideController extends BaseController{
 	
 	@RequestMapping("/toIndex")
 	public String toIndex(ModelMap map,String province,String city,String area,String project_name,HttpSession session) throws Exception{
-		//微信用户对象信息
-		UserInfo userInfo = (UserInfo)session.getAttribute(Constants.SESSION_WX_USER);
-		//模拟登陆状态，方便后面代码获取user_sn
 		long user_sn=1;
 		session.setAttribute("user_sn",user_sn);
 	

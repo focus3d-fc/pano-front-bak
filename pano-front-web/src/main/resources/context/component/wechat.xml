@@ -14,15 +14,5 @@
 			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 			
 	<import resource="classpath:/com/focustech/cief/filemanage/conf/filemanage-client.xml" />
-	
-	<bean id="wx" class="com.focus3d.pano.wechat.utils.WeChatConfig">
-		<property name="appId" value="${wx.appId}" />
-		<property name="appSecret" value="${wx.appSecret}" />
-		<property name="mchId" value="${wx.mchId}" />
-		<property name="mchKey" value="${wx.mchKey}" />
-		<property name="keyPath" value="${wx.keyPath}" />
-		<property name="notifyUrl" value="${wx.notifyUrl}" />
-	</bean>
-	
 
 </beans>

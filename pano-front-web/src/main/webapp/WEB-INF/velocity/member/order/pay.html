@@ -15,100 +15,96 @@
         .z-choose { width:.6rem; height: .6rem; background: url(/images/member/order/paychoose2.png) 0/cover;margin: .1rem;}
         .z-choose2 { width:.6rem; height: .6rem; background: url(/images/member/order/paychoose.png) 0/cover;margin: .1rem;}
         .z-choose img { width: 1.5rem; height: 1.5rem; }
-   
-  
-        
     </style>
     <script type="text/javascript">
-    function get_querystring(name)
-    {
-         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-         var r = window.location.search.substr(1).match(reg);
-         if(r!=null)return  unescape(r[2]); return null;
-    }
-    
-    var orderSn = $!orderSn;
-    var payAmount = $!order.payMoney;
-   
- 
-    	var pay_type="LIANPAY";
-    	function pay(){
-    		if(!pay_type){
-    			alert('请选择支付方式')
-    			return;
-    		}
-    		$.ajax({
-                type: 'POST',
-                async: false,
-                data: {order_sn:orderSn,pay_type:pay_type,card_no:$('#user_bankcard_cartno').val(),id_no:$('#user_bankcard_certno').val(),acct_name:$('#user_bankcard_username').val(),user_bankcard_sn:$('#user_bankcard_sn').val()},
-                url: '/order/pay',
-                dataType: 'json',
-                success: function (data) {
-                	if(data.status != 0){
-                		if(!data.unPayedParentOrderSn){
-                			alert(data.statusMsg)
-                		}else{
-                			alert(data.statusMsg)
-                		}
-                		return;
-                	}else{
-                		if(pay_type=='LIANPAY'){
-                			$('#lianpay [name=req_data]').val(data.linkString);
-                			$('#lianpay').attr("action",data.outGateway);
-                			$('#lianpay').submit();
-                		}else if(pay_type=='WXOFFICIAL'){
-                			onBridgeReady(data.appId,data.timeStamp,data.nonceStr,data.pack,data.paySign,data.returnUrl);
-                		}
-                	}
-                },
-                error:function(xhr,textStatus){
-        	    	if(xhr.getResponseHeader('sessionstatus') === "timeout"){
-        	    		window.location.href = "/member/login/nomal";
-        	    	}
-        	    }
-            })
-    		 
-    	}
-    	$('.yanz').hide();
-    	choose_paytype('LIANPAY')
-    	function choose_paytype(pay_type_param,event){
-    		var targetClass;
-    		if('LIANPAY' == pay_type_param){
-    			pay_type = "LIANPAY";
-    			$('.yanz').show();
-    		}else if('WX' == pay_type_param){
-	    			if(navigator.userAgent.indexOf("MicroMessenger") !=-1){
-	    				pay_type = "WXOFFICIAL";
-	    				$('.yanz').hide();
-	    			}else{
-	        			alert("请在微信内打开该网页");
-	        			return;
-	        		}
-    		}
-    		$('.pay .row .tick').removeClass('z-choose2');
-    		$('.pay .row .tick').addClass('z-choose');
-    		$('.pay .'+pay_type_param+' .tick').addClass('z-choose2');
-    	}
+    $(function(){
+    	$('.yanz').show();
+    	$("#payment").click(function(){
+	    	//订单
+	    	var orderSn = $("#orderSn").val();
+	    	//支付类型
+		   	var payType = $("#payType").val();
+	    	
+    		if(!payType){
+       			alert('请选择支付方式')
+       			return;
+       		}
+       		$.ajax({
+                  type: 'POST',
+                  async: false,
+                  data: {
+                	  order_sn : orderSn,
+                	  pay_type : payType,
+                	  card_no : $('#user_bankcard_cartno').val(),
+                	  id_no : $('#user_bankcard_certno').val(),
+                	  acct_name : $('#user_bankcard_username').val(),
+                	  user_bankcard_sn : $('#user_bankcard_sn').val()
+            	  },
+                  url: '/order/pay',
+                  dataType: 'json',
+                  success: function (data) {
+						if(data.status != 0){
+	                   		if(!data.unPayedParentOrderSn){
+	                   			alert(data.statusMsg)
+	                   		}else{
+	                   			alert(data.statusMsg)
+	                   		}
+	                  		return;
+	                   	}else{
+	                   		if(data.payType == 'LIANPAY_AUTH'){
+	                   			$('#lianpay input[name=req_data]').val(data.linkString);
+	                   			$('#lianpay').attr("action",data.outGateway);
+	                   			$('#lianpay').submit();
+	                   		} else if (data.payType == 'WX_H5'){
+	                   			onBridgeReady(data.appId,data.timeStamp,data.nonceStr,data.pack,data.paySign,data.returnUrl, data.orderSn);
+	                   		}
+	                   	}
+					},
+                  	error:function(xhr,textStatus){
+	           	    	if(xhr.getResponseHeader('sessionstatus') === "timeout"){
+	           	    		window.location.href = "/member/login/nomal";
+	           	    	}
+          	    	}
+			});
+    	});
     	
-    	//微信支付JSSDK
-		function onBridgeReady(appId,timeStamp,nonceStr,pack,paySign,returnUrl){
-		    WeixinJSBridge.invoke(
-		        'getBrandWCPayRequest', {
-		            "appId" : appId,     //公众号名称，由商户传入
-		            "timeStamp":timeStamp,         //时间戳，自1970年以来的秒数
-		            "nonceStr" : nonceStr, //随机串
-		            "package" : pack,
-		            "signType" : "MD5",         //微信签名方式：
-		            "paySign" : paySign //微信签名
-		        },
-		        function(res){
-		            if(res.err_msg == "get_brand_wcpay_request:ok" ) {
-		                window.location.href=returnUrl;
-		            }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-		        }
-		    );
-		}
-    </script>
+    	//选择支付方式
+    	$(".tick").click(function(){
+    		$(".tick").removeClass("z-choose2");
+    		$(".tick").addClass("z-choose");
+    		$(this).addClass("z-choose2");
+    		var payType = $(this).attr("pay_type");
+    		if(payType != "WX_H5"){
+    			$('.yanz').show();
+    		} else {
+    			$('.yanz').hide();
+    			if(navigator.userAgent.indexOf("MicroMessenger") ==-1){
+        			alert("请在微信内打开该网页");
+        			return;
+    			}
+    		}
+    		$("#payType").val(payType);
+    	});
+    });
+   	//微信支付JSSDK
+	function onBridgeReady(appId,timeStamp,nonceStr,pack,paySign,returnUrl, orderSn){
+	    WeixinJSBridge.invoke(
+	        'getBrandWCPayRequest', {
+	            "appId" : appId,     //公众号名称，由商户传入
+	            "timeStamp":timeStamp,         //时间戳，自1970年以来的秒数
+	            "nonceStr" : nonceStr, //随机串
+	            "package" : pack,
+	            "signType" : "MD5",         //微信签名方式：
+	            "paySign" : paySign //微信签名
+	        },
+	        function(res){
+	            if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+	                window.location.href=returnUrl + "?orderSn=" + orderSn;
+	            }     // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+	        }
+	    );
+	}
+</script>
 
 
 <form id="lianpay" action="" method="get" hidden>
@@ -122,21 +118,20 @@
     <section class="addr-section">
         <div class="pay">
 			<div style="background-color:white;height:50px;font-size:17px;padding:12px 15px;"><span style="">订单总额</span><span style="float:right">¥: $!order.sumMoney</span></div>
-                <h5>选择支付方式</h5>
-
-          <!--   <div class="row ALIPAY" onclick="choose_paytype('ALIPAY',event)">
-                <p><i class="z-pay"><img src="/images/member/order/z-pay.png" alt="" ></i>支付宝</p><div class="tick z-choose"></div>
-            </div> -->
-            <div class="row LIANPAY" onclick="choose_paytype('LIANPAY',event)">
-                <p><i class="z-pay"><img src="/images/member/order/y-pay.png" alt="" ></i>银行卡支付</p><div class="tick z-choose2"></div>
+            <h5>选择支付方式</h5>
+            <div class="row">
+                <p><i class="z-pay"><img src="/images/member/order/y-pay.png" alt="" ></i>银行卡</p><div pay_type="LIANPAY_AUTH" class="tick z-choose2"></div>
             </div>
-            <div class="row WX" onclick="choose_paytype('WX',event)">
-                <p><i class="z-pay"><img src="/images/member/order/w-pay.png" alt="" ></i>微信支付</p><div class="tick z-choose"></div>
+            <div class="row" style="display: none;">
+                <p><i class="z-pay"><img src="/images/member/order/quick.png" alt="" ></i>快捷支付</p><div pay_type="LIANPAY_QUICK" class="tick z-choose"></div>
+            </div>
+            <div class="row">
+                <p><i class="z-pay"><img src="/images/member/order/w-pay.png" alt="" ></i>微信支付</p><div pay_type="WX_H5" class="tick z-choose"></div>
             </div>
           		
         </div>
     </section>
-    <a class="green-btn bcdz" onclick="pay()" style="z-index:1">
+    <a class="green-btn bcdz" id="payment" style="z-index:1">
         确认支付￥<span class="pay_amount">$!order.payMoney</span>
     </a>
 
@@ -170,4 +165,6 @@
             </form>
             <div style="height:50px;z-index:0"></div>
         </div>
-
+    <input type="hidden" id="orderSn" value="$!order.sn"/>
+    <input type="hidden" id="payMoney" value="$!order.payMoney"/>
+    <input type="hidden" id="payType" value="LIANPAY_AUTH"/>
