@@ -17,6 +17,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -171,12 +172,15 @@ public class PanoOrderController extends BaseController {
 			if (defaultAddress == null)
 				defaultAddress = address.get(0);
 		}
+		
 		map.put("housePackages", housePackages);
 		map.put("address", address);
 		map.put("defaultAddress", defaultAddress);
 		map.put("payAmount", payAmount);
 		map.put("packageSns", packageSns);
 		map.put("packageSns", packageSnsParam);
+		PanoMemUserModel memUser = panoMemUserService.getBySn(userSn);
+		map.put("regMobile", com.focustech.common.utils.StringUtils.isNotEmpty(memUser.getMobile()));
 		return "/member/order/confirm";
 	}
 
@@ -436,22 +440,23 @@ public class PanoOrderController extends BaseController {
 		PanoMemLoginModel loginInfo = LoginThreadLocal.getLoginInfo();
 		Long userSn = loginInfo.getUserSn();
 		JSONObject data = new JSONObject();
+		PanoMemUserModel member = panoMemUserService.getBySn(userSn);
 		try {
-			String mobilePhone = request.getParameter("mobile_phone");
-			String verifycode = request.getParameter("verifycode");
-			if(StringUtils.isNotEmpty(mobilePhone) && StringUtils.isNotEmpty(verifycode)) {
-				PanoValidateModel messageValidate = smsValidateService.selectByMobilePhone(mobilePhone, verifycode);
-				if (messageValidate != null && messageValidate.getStatus() == 1) {
-					smsValidateService.setStatus(messageValidate, 0);
-					//更新用户信息
-					Integer type = TCUtil.iv(loginInfo.getType());
-					if(type.equals(LoginTypeEnum.WX.getType())){
-						PanoMemUserModel member = panoMemUserService.getBySn(userSn);
+			if(StringUtils.isEmpty(member.getMobile())){
+				String mobilePhone = request.getParameter("mobile_phone");
+				String verifycode = request.getParameter("verifycode");
+				if(StringUtils.isNotEmpty(mobilePhone) && StringUtils.isNotEmpty(verifycode)) {
+					PanoValidateModel messageValidate = smsValidateService.selectByMobilePhone(mobilePhone, verifycode);
+					if (messageValidate != null && messageValidate.getStatus() == 1) {
+						smsValidateService.setStatus(messageValidate, 0);
+						//更新用户信息
 						member.setMobile(mobilePhone);
 						panoMemUserService.update(member);
+					} else {
+						throw new RuntimeException("验证码错误");
 					}
 				} else {
-					throw new RuntimeException("验证码错误");
+					throw new RuntimeException("请输入手机号和短信验证码");
 				}
 			}
 			String[] packageSns = request.getParameterValues("package_sns[]");

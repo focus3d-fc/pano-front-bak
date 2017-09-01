@@ -5,7 +5,7 @@ package com.focus3d.pano.order.pay.config;
  * @author lihaijun
  *
  */
-public class LianQuickPayConfig extends CommonConfig{
+public class LianQuickPayConfig extends CommonPayConfig{
 	//商户号
 	public static String OID_PARTNER = "201708290000844705";
 	//MD5 KEY

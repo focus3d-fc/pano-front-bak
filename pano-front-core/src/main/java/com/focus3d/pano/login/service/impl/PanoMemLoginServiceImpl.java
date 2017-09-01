@@ -52,6 +52,7 @@ public class PanoMemLoginServiceImpl extends CommonServiceImpl<PanoMemLoginModel
 			memLoginModel.setUserSn(userModel.getSn());
 		} else {
 			PanoMemUserModel userModel = new PanoMemUserModel();
+			userModel.setMobile(loginName);
 			memUserDao.insertBySystem(userModel);
 			Long userSn = userModel.getSn();
 			if(userSn != null){
