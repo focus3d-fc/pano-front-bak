@@ -5,7 +5,7 @@ package com.focus3d.pano.order.pay.config;
  * @author lihaijun
  *
  */
-public class WxPayConfig extends CommonConfig{
+public class WxPayConfig extends CommonPayConfig{
 	//公众号APP ID
 	public static String APPID = "wxed31115f33aab720";
 	//公众号appsecret

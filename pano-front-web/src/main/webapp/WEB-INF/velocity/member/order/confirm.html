@@ -103,8 +103,8 @@
             <!--new code 20170825 end-->
             <div class="new-row2">
                 <p style="font-size:.23rem;">
-                    <img src="/images/choose3.png" style="width:.4rem;height:.4rem;" alt="">
-                   <!-- <img src="/images/choose4.png" style="width:.4rem;height:.4rem;" alt="">-->
+                    <img id="readContractTick" src="/images/choose4.png" style="width:.4rem;height:.4rem;" alt="">
+                   <!-- <img src="/images/choose3.png" style="width:.4rem;height:.4rem;" alt="">-->
                     <a onclick="$('.wrap').show();" >我已阅读并同意
                         <span class="red">合同条款</span>
                     </a>
@@ -117,7 +117,7 @@
             <div class="new-tjdd">
             <p class="fl tx-center">
                 共 <span class="totalCount"></span>件产品 <span class="payAmountDesc">合计</span>￥<span class="red"></span>元</p>
-                <a class="tj fr" onclick="$('.wrap1').show();">
+                <a id="submitOrder" class="tj fr">
                     提交订单
                 </a>
             </div>
@@ -151,6 +151,7 @@
 		</form>
 	</div>
 </div>
+<input type="hidden" id="regMobile" value="$!regMobile"/>
 <!--注册验证-->
 <script>
 var payScheme='FULL'; // FULL全款 STAGES分期
@@ -378,18 +379,22 @@ function choosePayScheme(paySchemeParam,ele){
     		alert('请选择收货地址');
     		return ;
     	}
-    	if(!mobile_phone){
-    		alert('请输入手机号');
-    		return ;
-    	}
-    	if(!verifycode){
-    		alert('请输入验证码');
-    		return ;
+    	if(!$("#regMobile").val()){
+	    	if(!mobile_phone){
+	    		alert('请输入手机号');
+	    		return ;
+	    	}
+	    	if(!verifycode){
+	    		alert('请输入验证码');
+	    		return ;
+	    	}
     	}
     	 $.ajax({
              type: 'POST',
              async: false,
-             data: {mobile_phone:mobile_phone,verifycode:verifycode,
+             data: {
+            	 mobile_phone:mobile_phone,
+            	 verifycode:verifycode,
             	 coupon_code:couponCode,
             	 pay_scheme:payScheme,
             	 address_sn:addressSn,
@@ -416,3 +421,4 @@ function choosePayScheme(paySchemeParam,ele){
         
     }
 </script>
+<script src="/script/member/order/confirm.js"></script>
