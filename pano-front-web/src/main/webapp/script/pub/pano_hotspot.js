@@ -119,8 +119,8 @@ function getHouse(){
 	    			//clickHouse(houseSn);
 	    			//alert("户型sn:"+houseSn);
 	    			//设置当前选中的户型sn
-	    			$("#hx-swiper-wrapper").find("a").removeClass("active");
-	    			$(this).parent().addClass("active");
+	    			$("#hx-swiper-wrapper").find("img").removeClass("hxfj_border");
+	    			$(this).addClass("hxfj_border");
 	    			$("#houseId").val(houseSn);
 	    			var panoId = $(this).attr("pano_id");
 	    			$("#panoId").val(panoId);
@@ -173,8 +173,8 @@ function getFjshow(panoId){
 	    		
 	    		//点击房间图片，切换场景
 	    		img.bind("click", function(){
-	    			$("#hx-swiper-wrapper").find("a").removeClass("active");
-	    			$(this).parent().addClass("active");
+	    			$("#hx-swiper-wrapper").find("img").removeClass("hxfj_border");
+	    			$(this).addClass("hxfj_border");
 	    			editorKrpano().call("loadscene(" + $(this).attr("scene_id") + ",null, MERGE, OPENBLEND(0.5, 0.0, 0.75, 0.05, linear))");
 	    		});
 	    	}
@@ -204,8 +204,10 @@ function getTcshow(houseId){
 	    		var name = data[i].name;
 	    		var imgUrl = data[i].imgUrl;
 	    		var img = $("<img/>").attr("src", imgUrl).attr("package_sn",sn);
-	    		$("<div/>").addClass("bd-r1").addClass("swiper-slide" + (i == 0 ? " bd-r " : "")).append($("<div/>").append(img).append($("<p/>").text(name))).appendTo($("#tc-swiper-wrapper"));
+	    		$("<div/>").addClass("bd-r1").addClass("swiper-slide" + (i == 0 ? " bd-r " : "")).append($("<div/>").append($("<a/>").append(img).append($("<p/>").text(name)))).appendTo($("#tc-swiper-wrapper"));
 	    		img.bind("click", function(){
+	    			$("#tc-swiper-wrapper").find("a").removeClass("active");
+	    			$(this).parent().addClass("active");
 	    			//显示热点
 	    			//全景id
 	    			var panoId = $("#panoId").val();

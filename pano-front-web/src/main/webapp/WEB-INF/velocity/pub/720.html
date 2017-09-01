@@ -1,5 +1,79 @@
 #set($layout="layout/pub/layout_pano.html")
 	<link rel="stylesheet" href="/script/mui/mui.min.css">
+	<style>
+ body {
+    line-height: 18px !important;
+}
+
+p {
+    color: #fff;
+    font-size: .1rem !important;
+}
+
+.swiper-container2 {
+    background-color: rgba(0, 0, 0, .3) !important;
+}
+
+.bd-r1 {
+    width: 20% !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+}
+
+#tc .swiper-slide p {
+    width: 103% !important;
+    top: 60% !important;
+    
+}
+
+.se720 .nav a p {
+    padding-top: 0 !important;
+}
+
+#tc .swiper-container {
+    height: 1rem !important;
+}
+
+#tc {
+    bottom: 1rem !important;
+}
+
+.se720 .nav {
+    height: 1rem !important;
+}
+
+#fj, #hx {
+
+    bottom: 1.7rem!important;
+
+}
+
+#fj .swiper-slide p, #hx .swiper-slide p {
+    background-color: rgba(0, 0, 0, .3) !important;
+    top: -.5rem;
+    position: relative;
+}
+
+#fj .swiper-slide img, #hx .swiper-slide img {
+    border-radius: .1rem !important;
+}
+
+#fj .swiper-container, #hx .swiper-container {
+    height: 1.7rem !important;
+    position: relative !important;
+}
+
+#fj .swiper-container a, #hx .swiper-container a {
+    margin-top: .1rem;
+    margin-left: .1rem;
+}   
+
+.hxfj_border{border:2px solid #000;}  
+
+
+	</style>
+	
+	
 		<div id="pano" style="width:100%;height:100%;">
 			<!-- 这里是全景显示区域 -->
 		</div>
@@ -108,10 +182,12 @@
     			$(".location3").css('bottom','3.05rem');
     			$("#tc").hide();
 	            $(this).addClass('active');
+	            $(".swiper-container").addClass("swiper-container2");
     		} else {
     			$('#hx').hide();
     			$(this).attr("status", 0);
     			$(".location3").css('bottom','1.05rem');
+    			$(".swiper-container").removeClass("swiper-container2");
     		}
             getHouse();
         });
@@ -133,10 +209,12 @@
     			$(".location3").css('bottom','3.05rem')
     			$("#tc").hide();
 	            $(this).addClass('active');
+	            $(".swiper-container").addClass("swiper-container2");
     		} else {
     			$('#hx').hide();
     			$(this).attr("status", 0);
     			$(".location3").css('bottom','1.05rem');
+    			$(".swiper-container").removeClass("swiper-container2");
     		}
             //全景id
         	var panoId = $("#panoId").val();
@@ -162,10 +240,12 @@
     			$('#hx').hide();
     			$('#fj')
              	$(this).addClass('active');
+    			$(".swiper-container").addClass("swiper-container2");
     		} else {
     			$('#tc').hide();
     			$(this).attr("status", 0);
-    			$(".location3").css('bottom','1.05rem')
+    			$(".location3").css('bottom','1.05rem');
+    			$(".swiper-container").removeClass("swiper-container2");
     		}
             var houseId = $("#houseId").val();
             console.info("户型ID"+houseId);
