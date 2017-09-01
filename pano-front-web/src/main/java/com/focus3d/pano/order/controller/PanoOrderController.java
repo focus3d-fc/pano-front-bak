@@ -51,7 +51,8 @@ import com.focus3d.pano.model.PanoProjectHousePackageModel;
 import com.focus3d.pano.model.PanoUserBankcardModel;
 import com.focus3d.pano.model.PanoUserReceiveAddressModel;
 import com.focus3d.pano.model.PanoValidateModel;
-import com.focus3d.pano.order.Constant;
+import com.focus3d.pano.order.pay.config.LianAuthPayConfig;
+import com.focus3d.pano.order.pay.config.WxPayConfig;
 import com.focus3d.pano.order.service.PanoOrderCouponItemService;
 import com.focus3d.pano.order.service.PanoOrderPackageDetailService;
 import com.focus3d.pano.order.service.PanoOrderPackageService;
@@ -120,7 +121,6 @@ public class PanoOrderController extends BaseController {
 	public String toPayPage(HttpServletRequest request, ModelMap map) throws NumberFormatException, SQLException {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		String orderSn = request.getParameter("order_sn");
-		map.put("orderSn", orderSn);
 		List<PanoUserBankcardModel> userBankcards = userBankcardService.listByUser(userSn);
 		if (userBankcards != null && !userBankcards.isEmpty()) {
 			map.put("userBankcard", userBankcards.get(0));
@@ -233,70 +233,58 @@ public class PanoOrderController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/pay")
-	public void pay(HttpServletRequest request, HttpServletResponse response,
-			ModelMap map) throws Exception {
+	public void pay(HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		String orderSn = StringUtils.trimToNull(request
-				.getParameter("order_sn"));
-		String payType = StringUtils.trimToNull(request
-				.getParameter("pay_type"));
+		String orderSn = StringUtils.trimToNull(request.getParameter("order_sn"));
+		String payType = StringUtils.trimToNull(request.getParameter("pay_type"));
 		JSONObject data = new JSONObject();
-
 		try {
-			PanoOrderModel orderModel = orderService.getBySn(Long
-					.parseLong(orderSn));
-			if (orderModel == null)
+			PanoOrderModel orderModel = orderService.getBySn(Long.parseLong(orderSn));
+			if (orderModel == null){
 				throw new RuntimeException("订单不存在");
-			if (userSn.compareTo(orderModel.getUserSn()) != 0)
+			}
+			if (userSn.compareTo(orderModel.getUserSn()) != 0){
 				throw new RuntimeException("不是您的订单");
-			if (orderModel.getStatus() == 2)
+			}
+			if (orderModel.getStatus() == 2){
 				throw new RuntimeException("订单已经支付");
-			if (orderModel.getPayMoney().compareTo(BigDecimal.ZERO) != 1)
+			}
+			if (orderModel.getPayMoney().compareTo(BigDecimal.ZERO) != 1){
 				throw new RuntimeException("订单金额有误");
-
-			if (orderModel.getParentOrderSn() != null
-					&& orderModel.getParentOrderSn() != -1) {
-				PanoOrderModel parentOrder = orderService.getBySn(orderModel
-						.getParentOrderSn());
-				if (parentOrder.getStatus() != 2)
+			}
+			if (orderModel.getParentOrderSn() != null && orderModel.getParentOrderSn() != -1) {
+				PanoOrderModel parentOrder = orderService.getBySn(orderModel.getParentOrderSn());
+				if (parentOrder.getStatus() != 2){
 					throw new RuntimeException("必须先完成定金支付，再支付尾款");
+				}
 				data.put("unPayedParentOrderSn", orderModel.getParentOrderSn());
 			}
-
-			PanoMemUserModel panoMemUserModel = panoMemUserService
-					.getBySn(orderModel.getUserSn());
-			
+			PanoMemUserModel panoMemUserModel = panoMemUserService.getBySn(orderModel.getUserSn());
 			// 根据支付类型组装相应参数
-			
-			if ("LIANPAY".equals(payType)) {
+			if ("LIANPAY_AUTH".equals(payType)) {
 				//连连认证支付
-				String acctName = StringUtils.trimToNull(request
-						.getParameter("acct_name"));
-				String cardNo = StringUtils.trimToNull(request
-						.getParameter("card_no"));
-				String idNo = StringUtils.trimToNull(request
-						.getParameter("id_no"));
-				String userBankcardSnParam = StringUtils.trimToNull(request
-						.getParameter("user_bankcard_sn"));
-				Long userBankcardSn = userBankcardSnParam == null ? null : Long
-						.parseLong(userBankcardSnParam);
-				if (acctName == null)
+				String acctName = StringUtils.trimToNull(request.getParameter("acct_name"));
+				String cardNo = StringUtils.trimToNull(request.getParameter("card_no"));
+				String idNo = StringUtils.trimToNull(request.getParameter("id_no"));
+				String userBankcardSnParam = StringUtils.trimToNull(request.getParameter("user_bankcard_sn"));
+				Long userBankcardSn = userBankcardSnParam == null ? null : Long.parseLong(userBankcardSnParam);
+				if (acctName == null){
 					throw new RuntimeException("请输入姓名");
-				if (cardNo == null)
+				}
+				if (cardNo == null){
 					throw new RuntimeException("请输入卡号");
-				if (idNo == null)
+				}
+				if (idNo == null){
 					throw new RuntimeException("请输入身份证");
-
+				}
 				// 保存银行卡信息
 				PanoUserBankcardModel userBankcard = null;
 				if (userBankcardSn != null) {
 					userBankcard = userBankcardService.getBySn(userBankcardSn);
 				}
 				if (userBankcard == null) {
-					userBankcard = userBankcardService.getByCardNo(userSn,
-							cardNo);
+					userBankcard = userBankcardService.getByCardNo(userSn, cardNo);
 				}
-
 				if (userBankcard != null) {
 					userBankcard.setCardNo(cardNo);
 					userBankcard.setUserName(acctName);
@@ -310,22 +298,18 @@ public class PanoOrderController extends BaseController {
 					userBankcard.setCertNo(idNo);
 					userBankcardService.insert(userBankcard);
 				}
-
 				//组装连连支付报文
 				StringBuffer strBuf = new StringBuffer();
 				PaymentInfo payInfo = new PaymentInfo();
-
 				payInfo.setAcct_name(acctName);
 				strBuf.append("&acct_name=").append(payInfo.getAcct_name());
-
 				// 请求应用标识 1-Android 2-ios 3-WAP
 				payInfo.setApp_request("3");
 				strBuf.append("&app_request=").append(payInfo.getApp_request());
 				// payInfo.setBg_color(request.getParameter("bg_color"));
 				// 商户业务类型 虚拟商品销售：101001实物商品销售：109001
-				payInfo.setBusi_partner(Constant.LIANPAY_AUTH_PAY_BUSI_PARTNER);
-				strBuf.append("&busi_partner=").append(
-						payInfo.getBusi_partner());
+				payInfo.setBusi_partner(LianAuthPayConfig.BUSI_PARTNER);
+				strBuf.append("&busi_partner=").append(payInfo.getBusi_partner());
 
 				payInfo.setCard_no(cardNo);
 				strBuf.append("&card_no=").append(payInfo.getCard_no());
@@ -348,26 +332,24 @@ public class PanoOrderController extends BaseController {
 				// 商户唯一订单号
 				payInfo.setNo_order(orderModel.getOrderNum() + "");
 				strBuf.append("&no_order=").append(payInfo.getNo_order());
-				payInfo.setNotify_url(Constant.LIANPAY_NOTIFY_URL);
+				payInfo.setNotify_url(LianAuthPayConfig.NOTIFY_URL);
 				strBuf.append("&notify_url=").append(payInfo.getNotify_url());
 				// 商户编号
-				payInfo.setOid_partner(Constant.LIANPAY_OID_PARTNER);
+				payInfo.setOid_partner(LianAuthPayConfig.OID_PARTNER);
 				strBuf.append("&oid_partner=").append(payInfo.getOid_partner());
 				// payInfo.setAcct_name(request.getParameter("acct_name"));
 				// 风险控制参数
 				JSONObject riskItem = new JSONObject();
 				riskItem.put("frms_ware_category", "4001");
-				riskItem.put("user_info_mercht_userno", orderModel.getUserSn()
-						+ "");
-				riskItem.put("user_info_dt_register", DateUtil
-						.getCurrentDateTimeStr1(panoMemUserModel.getAddTime()));
+				riskItem.put("user_info_mercht_userno", orderModel.getUserSn() + "");
+				riskItem.put("user_info_dt_register", DateUtil.getCurrentDateTimeStr1(panoMemUserModel.getAddTime()));
 				payInfo.setRisk_item(riskItem.toJSONString());
 				strBuf.append("&risk_item=").append(payInfo.getRisk_item());
 
 				payInfo.setSign_type("MD5");
 				strBuf.append("&sign_type=").append(payInfo.getSign_type());
 
-				payInfo.setUrl_return(Constant.LIANPAY_RETURN_URL);
+				payInfo.setUrl_return(LianAuthPayConfig.RETURN_URL);
 				strBuf.append("&url_return=").append(payInfo.getUrl_return());
 
 				payInfo.setUser_id(orderModel.getUserSn() + "");
@@ -378,15 +360,15 @@ public class PanoOrderController extends BaseController {
 				if (sign_src.startsWith("&")) {
 					sign_src = sign_src.substring(1);
 				}
-				sign_src += "&key=" + Constant.LIANPAY_MD5_KEY;
+				sign_src += "&key=" + LianAuthPayConfig.MD5_KEY;
 				String sign = Md5Algorithm.getInstance().md5Digest(sign_src.getBytes("utf-8"));
 				payInfo.setSign(sign);
 				String req_data = JSON.toJSONString(payInfo);
 				logger.debug(req_data);
 				data.put("linkString", req_data);
-				data.put("outGateway", Constant.LIANPAY_AUTH_PAY_URL);
+				data.put("outGateway", LianAuthPayConfig.PAY_URL);
 
-			} else if ("WXOFFICIAL".equals(payType)) {
+			} else if ("WX_H5".equals(payType)) {
 				//微信公众号支付
 				//验证微信登录 获取微信openid
 				PanoMemLoginModel memLogin = panoMemLoginService
@@ -395,12 +377,12 @@ public class PanoOrderController extends BaseController {
 					throw new RuntimeException("请用微信公众号登录");
 				}
 				String out_trade_no = orderModel.getOrderNum() + "";
-				String notify_url = Constant.wx_officialpay_notifyurl;
+				String notify_url = WxPayConfig.NOTIFY_URL;
 				//组装微信公众号支付报文
 				Configure configure = new Configure();
-				configure.setAppID(Constant.wx_official_appid);
-				configure.setMchID(Constant.wx_official_mchid);
-				configure.setKey(Constant.wx_official_mchkey);
+				configure.setAppID(WxPayConfig.APPID);
+				configure.setMchID(WxPayConfig.MCHID);
+				configure.setKey(WxPayConfig.MCHKEY);
 				String attach = payType;
 				String openId = memLogin.getLoginName();
 				UnifiedOrderResData resData = WXPay
@@ -426,12 +408,13 @@ public class PanoOrderController extends BaseController {
 				data.put("paySign", sign);
 				data.remove("package");
 				data.put("pack", "prepay_id=" + resData.getPrepay_id());
-				data.put("returnUrl", Constant.wx_officialpay_returnurl);
+				data.put("returnUrl", WxPayConfig.RETURN_URL);
 				data.put("orderSn", orderModel.getEncryptSn());
 			} else {
 				throw new RuntimeException("不支持的支付方式");
 			}
 			data.put("status", 0);
+			data.put("payType", payType);
 		} catch (Exception e) {
 			logger.debug(ExceptionUtils.getStackTrace(e));
 			data.put("statusMsg", e.getMessage());
@@ -699,8 +682,8 @@ public class PanoOrderController extends BaseController {
 		}
 		System.out.println("接收支付异步通知数据：【" + reqStr + "】");
 		try {
-			if (!YinTongUtil.checkSign(reqStr, Constant.LIANPAY_YT_PUB_KEY,
-					Constant.LIANPAY_MD5_KEY)) {
+			if (!YinTongUtil.checkSign(reqStr, LianAuthPayConfig.PUB_KEY,
+					LianAuthPayConfig.MD5_KEY)) {
 				retBean.setRet_code("9999");
 				retBean.setRet_msg("交易失败");
 				resp.getWriter().write(JSON.toJSONString(retBean));
@@ -781,8 +764,8 @@ public class PanoOrderController extends BaseController {
 	public void lianpayReturn(HttpServletRequest request,
 			HttpServletResponse response, ModelMap map) throws Exception {
 		String resDataStr = request.getParameter("res_data");
-		if (!YinTongUtil.checkSign(resDataStr, Constant.LIANPAY_YT_PUB_KEY,
-				Constant.LIANPAY_MD5_KEY)) {
+		if (!YinTongUtil.checkSign(resDataStr, LianAuthPayConfig.PUB_KEY,
+				LianAuthPayConfig.MD5_KEY)) {
 
 		}
 		JSONObject resData = JSON.parseObject(resDataStr);
@@ -841,9 +824,9 @@ public class PanoOrderController extends BaseController {
 			String payType = resData.getAttach().split(",")[0];
 			Configure configure = new Configure();
 			if ("WXOFFICIAL".equals(payType)) {
-				configure.setAppID(Constant.wx_official_appid);
-				configure.setMchID(Constant.wx_official_mchid);
-				configure.setKey(Constant.wx_official_mchkey);
+				configure.setAppID(WxPayConfig.APPID);
+				configure.setMchID(WxPayConfig.MCHID);
+				configure.setKey(WxPayConfig.MCHKEY);
 			} else {
 				throw new RuntimeException("未知支付类型");
 			}
