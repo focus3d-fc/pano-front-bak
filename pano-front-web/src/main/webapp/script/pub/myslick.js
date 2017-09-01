@@ -3,12 +3,11 @@
 $(function(){
 	$('.regular').slick({
 		  dots: false,
-		  infinite: true,
-		  speed: 500,
-		  fade: true,
-		  autoplay: true,
-	      autoplaySpeed: 3000,
-		  cssEase: 'linear'
+		  infinite: false,
+		  speed: 10,
+		  fade: false,
+		  autoplay: false,
+	      autoplaySpeed: 10
 	});
 	resizeSlider();
 });
