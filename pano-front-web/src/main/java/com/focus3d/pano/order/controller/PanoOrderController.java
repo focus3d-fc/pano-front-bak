@@ -64,6 +64,7 @@ import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focus3d.pano.sms.service.SmsValidateService;
 import com.focus3d.pano.user.service.PanoMemUserService;
 import com.focustech.common.utils.EncryptUtil;
+import com.focustech.common.utils.TCUtil;
 import com.lianpay.share.security.Md5Algorithm;
 import com.lianpay.share.util.DateUtil;
 import com.llpay.client.vo.PayDataBean;
@@ -459,7 +460,7 @@ public class PanoOrderController extends BaseController {
 				if (messageValidate != null && messageValidate.getStatus() == 1) {
 					smsValidateService.setStatus(messageValidate, 0);
 					//更新用户信息
-					Integer type = loginInfo.getType();
+					Integer type = TCUtil.iv(loginInfo.getType());
 					if(type.equals(LoginTypeEnum.WX.getType())){
 						PanoMemUserModel member = panoMemUserService.getBySn(userSn);
 						member.setMobile(mobilePhone);
