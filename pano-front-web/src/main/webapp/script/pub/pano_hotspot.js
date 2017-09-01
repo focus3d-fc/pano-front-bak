@@ -273,6 +273,9 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    	var packageSn = data.packageSn;//户型风格套餐sn
 	    	var packageTypeSn = data.packageTypeSn;//套餐类别sn
 	    	var productAry = data.products;
+	    	for(var i = 0; i < 5; i ++){
+	    		$('.regular').slick('slickRemove', i, false);
+	    	}
 	    	for(var i in productAry){
 	    		var product = productAry[i];
 	    		//名称
@@ -298,12 +301,16 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    			var aHt = $("<a/>").addClass("shopDetail").on("click", function () {
 						ValidatePerspective(houseStyleSn,packageTypeSn,product.sn);
                     }).text("查看详情");
-	    			//$("<div/>").append(nameP).append(materialNameP).append(materialColorP).append(modelP).append(imgHt).append(aHt).appendTo($(".regular"));
+	    			//$('.regular').slick('slickAdd',"<div><img src='" + imgUrl + "'/></div>");
+	    			//$("<div/>").append($("<img/>").attr("src", imgUrl)).appendTo($("#prodSlider"));;
+	    			$("<div/>").append(nameP).append(materialNameP).append(materialColorP).append(modelP).append(imgHt).append(aHt).appendTo($("#product-swiper-wrapper"));
 	    			
 	    		}catch (e) {
 					// TODO: handle exception
 				}
 	    	}
+	    	/*$('.regular').slick('slickGoTo', 0);
+	    	$("#moreProd").show();*/
 	    	$(".rd-show").show();
 	    },
 	    error:function(xhr,textStatus){
