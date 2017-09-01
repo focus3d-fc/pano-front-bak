@@ -298,7 +298,7 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    			var aHt = $("<a/>").addClass("shopDetail").on("click", function () {
 						ValidatePerspective(houseStyleSn,packageTypeSn,product.sn);
                     }).text("查看详情");
-	    			$("<div/>").addClass("swiper-slide").append(nameP).append(materialNameP).append(materialColorP).append(modelP).append(imgHt).append(aHt).appendTo($("#product-swiper-wrapper"));
+	    			$("<div/>").addClass("swiper-slide prod_hotspot").append(nameP).append(materialNameP).append(materialColorP).append(modelP).append(imgHt).append(aHt).appendTo($("#product-swiper-wrapper"));
 	    			
 	    		}catch (e) {
 					// TODO: handle exception
