@@ -6,9 +6,18 @@ $(function(){
 		  infinite: true,
 		  speed: 500,
 		  fade: true,
-		  autoplay: true,
+		  autoplay: false,
 	      autoplaySpeed: 3000,
 		  cssEase: 'linear'
+	});
+	$('.regular2').slick({
+		dots: false,
+		infinite: true,
+		speed: 500,
+		fade: true,
+		autoplay: true,
+		autoplaySpeed: 3000,
+		cssEase: 'linear'
 	});
 	resizeSlider();
 });
