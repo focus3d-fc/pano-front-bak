@@ -13,11 +13,11 @@ function addToShopcar(packageSn){
 	    success:function(data){
 	    	var status = data.status;
 	    	if(status == 1){
-	    		//alert("添加至购物车");
-	    		mui.alert('', '添加至购物车');
+	    		alert("添加至购物车");
+	    		//mui.alert('', '添加至购物车');
 	    	} else {
-	    		//alert("从购物车删除");
-	    		mui.alert('', '从购物车删除');
+	    		alert("从购物车删除");
+	    		//mui.alert('', '从购物车删除');
 	    	}
 	    },
 	    error:function(xhr,textStatus){
