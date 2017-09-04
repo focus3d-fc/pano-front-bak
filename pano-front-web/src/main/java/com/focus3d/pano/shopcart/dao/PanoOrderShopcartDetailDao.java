@@ -26,4 +26,17 @@ public class PanoOrderShopcartDetailDao extends CommonDao<PanoOrderShopcartDetai
 		criteria.createCriteria().andShopcartSnEqualTo(shopcartSn);
 		return selectByCriteria(criteria, PanoOrderShopcartDetailModel.class);
 	}
+	/**
+	 * 
+	 * *
+	 * @param shopcartSn
+	 * @param packageTypeSn
+	 * @param packageProductSn
+	 * @return
+	 */
+	public PanoOrderShopcartDetailModel getByAttribute(long shopcartSn, long packageTypeSn) {
+		PanoOrderShopcartDetailCriteria criteria = new PanoOrderShopcartDetailCriteria();
+		criteria.createCriteria().andShopcartSnEqualTo(shopcartSn).andPackageTypeSnEqualTo(packageTypeSn);
+		return selectFirstByExample(criteria, PanoOrderShopcartDetailModel.class);
+	}
 }

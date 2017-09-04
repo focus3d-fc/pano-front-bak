@@ -33,7 +33,6 @@ import com.focustech.cief.filemanage.client.api.IFileReadClient;
 import com.focustech.cief.filemanage.client.constant.FileAttributeEnum;
 import com.focustech.common.utils.EncryptUtil;
 import com.focustech.common.utils.JsonUtils;
-import com.focustech.common.utils.TCUtil;
 
 @Controller
 @RequestMapping("/perspective")
@@ -728,15 +727,14 @@ public class PerspectiveQuery extends BaseController {
 	}
 	
 	@RequestMapping("QueryPerspective")
-	public String QueryPerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String packageTypeSn,String productSn,ModelMap map) {
+	public String QueryPerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String packageTypeSn,String productSn, ModelMap map) {
 		// 验证有没有透视图
 		List<Map<String, Object>> list = QueryPerspectiveByProductSn(houseStyleSn,packageTypeSn,productSn);
 		Product product = product_service.getProductBySn(productSn);
 		map.put("viewlist",JsonUtils.arrayToJson(list.toArray()));
 		map.put("product", JsonUtils.objectToJson(product));
-		PanoProjectHouseStyleModel houseStyleModel = houseStyleService.getBySn(TCUtil.lv(houseStyleSn));
-		map.put("styleSn", houseStyleModel.getStyleSn());
-		map.put("packageTypeSn", houseStyleModel.getStyleSn());
+		map.put("packageTypeSn", packageTypeSn);
+		map.put("houseStyleSn", houseStyleSn);
 		return "perspective/pro";
 	}
 	

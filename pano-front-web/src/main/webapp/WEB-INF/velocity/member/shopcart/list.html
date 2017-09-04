@@ -42,7 +42,7 @@
        		<div class="pro-show" style="display: none;">
         			#foreach($!detail in $!shopcart.details)
 					<div class="left">
-						<a id="productType_$!velocityCount" house_style="$!common.encrypt($!shopcart.housePackage.houseStyleSn)" package_type="$!common.encrypt($!detail.packageType.sn)" product_sn="$!common.encrypt($!detail.packageProduct.sn)" href="#"> 
+						<a id="productType_$!velocityCount" shopcart_sn="$!shopcart.encryptSn" house_style="$!common.encrypt($!shopcart.housePackage.houseStyleSn)" package_type="$!common.encrypt($!detail.packageType.sn)" product_sn="$!common.encrypt($!detail.packageProduct.sn)" href="#"> 
 							<img style="width:1.2rem;height:.86rem; padding:0;" src="$!fs.url($!detail.packageProduct.fullImgSn)" alt="">
 							<div class="de">
 								<p>$!detail.packageProduct.name</p>
@@ -60,7 +60,7 @@
 			</div>
 			
 			<div class="total show">
-				<a id="closeOrOpen_$!velocityCount" href="#" style="color:#aaa;"> 点击展开 <i class="iconfont">&#xe612;</i></a>
+				<a id="closeOrOpen_$!velocityCount" package_sn="$!shopcart.housePackage.sn" href="#" style="color:#aaa;"> 点击展开 <i class="iconfont">&#xe612;</i></a>
 			</div>
 			<!-- 
 			<div class="total show">
@@ -109,4 +109,5 @@
     
    </div>
 <input type="hidden" id="styleId" value="$!styleId"/>
+<input type="hidden" id="rememberStatus" value='$!rememberStatus'/>
 <script src="/script/member/shopcart/add.js"></script>

@@ -56,7 +56,7 @@
 			$("#exchange_view").hide();
 			WebGL_Container = $("#WebGl-OutPut");
 			$("#Confirm_Select").on("click", function(){
-				window.location.href = "/shopcart/list?styleId=" + $("#styleSn").val() + "&productSn=" + productSn + "&packageTypeSn=" + $("#packageTypeSn").val();
+				window.location.href = "/shopcart/list?productSn=" + productSn + "&packageTypeSn=" + $("#packageTypeSn").val() + "&houseStyleSn=" + $("#houseStyleSn").val();
 			});
 			var rate = 4 / 3;
 			var width = WebGL_Container.width();
@@ -72,7 +72,7 @@
 			ProdunctInfoFill(productInfo);
 		});
 	</script>
-	<input type="hidden" id="styleSn" value="$!styleSn"/>
 	<input type="hidden" id="packageTypeSn" value="$!packageTypeSn"/>
+	<input type="hidden" id="houseStyleSn" value="$!houseStyleSn"/>
 </body>
 </html>

@@ -30,6 +30,23 @@ function addToShopcar(packageSn){
 
 var totalPrice = 0.0;
 $(function(){
+	
+	//默认记忆状态
+	var rememberStatus = $("#rememberStatus").val();
+	if(rememberStatus){
+		var rememberStatusJo = JSON.parse(rememberStatus);
+		var housePackageSn = rememberStatusJo.housePackageSn;
+		//点击展开收起
+		$("a[id^='closeOrOpen_']").each(function(){
+			if(housePackageSn == $(this).attr("package_sn")){
+				$(this).parent().prev().show(200);
+				$(this).text("");
+				$(this).append("点击收起 <i class='iconfont'>&#xe60c;</i>");
+				$(this).attr("status", 1);
+			}
+		});
+	}
+	
 	$("div[id^='choose_']").click(function(){
 		var status = $(this).attr("status");
 		var price = parseFloat($(this).attr("price"));
@@ -67,7 +84,7 @@ $(function(){
 		}
 		$("#totalPrice").text(totalPrice);
 	});
-	
+	//点击展开收起
 	$("a[id^='closeOrOpen_']").click(function(){
 		var status = $(this).attr("status");
 		if(!status || status == 0){
@@ -103,16 +120,18 @@ $(function(){
 		var houseStyleSn = $(this).attr("house_style");
 		var packageTypeSn = $(this).attr("package_type");
 		var productSn = $(this).attr("product_sn");
-		ValidatePerspective(houseStyleSn, packageTypeSn, productSn);
+		var shopcartSn = $(this).attr("shopcart_sn");
+		ValidatePerspective(houseStyleSn, packageTypeSn, productSn, shopcartSn);
 	});
 });
 
 //产品透视图
-function ValidatePerspective(houseStyleSn, packageTypeSn, productSn){
+function ValidatePerspective(houseStyleSn, packageTypeSn, productSn, shopcartSn){
 	var param = new Object();
 	param.houseStyleSn = houseStyleSn;
 	param.packageTypeSn = packageTypeSn;
 	param.productSn = productSn;
+	param.shopcartSn = shopcartSn;
     $.ajax({
         url:"/perspective/ValidatePerspective",
         type: "POST",
@@ -130,5 +149,6 @@ function ValidatePerspective(houseStyleSn, packageTypeSn, productSn){
 }
 //产品透视图
 function QueryPerspectiveInfo(param) {
+	
     window.location.href = "/perspective/QueryPerspective?houseStyleSn="+param.houseStyleSn+"&packageTypeSn="+param.packageTypeSn+"&productSn="+param.productSn;
 }
