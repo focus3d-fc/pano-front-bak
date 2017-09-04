@@ -3,22 +3,13 @@
     <link rel="stylesheet" href="/style/h5static/lib/swiper/swiper.min.css">
     <link rel="stylesheet" href="/style/h5static/css/bass.css">
     <link rel="stylesheet" href="/style/h5static/css/index.css">
-    <script src="/style/h5static/lib/mui/js/mui.min.js"></script>
-    <script src="/style/h5static/lib/mui/js/mui.picker.min.js"></script>
-    <script src="/style/h5static/js/city.data-3.js"></script>
-    <script src="/style/h5static/js/main.js"></script>
-    <!--  -->
-    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<!-- 模态框引入start -->
  	<link href="/style/admstatic/lib/bootstrap/css/bootstrap.min.css"
 	rel="stylesheet">
 		<style>
 		.letter-spc{letter-spacing:.08rem;}
 		</style>
-	<!-- 模态框end -->
-	<!-- 联动引入-->
-	<script type="text/javascript" src="/style/admstatic/js/jsAddresss.js"></script>
+	
 	<!--  -->
 <div class="container index">
     <!--广告-->
@@ -27,7 +18,10 @@
             <p href="javascrpt:;" id='showCityPicker3'>
                 <!-- <span id="cityResult3"> 上海保利 铃兰公园 </span> -->
                 <span data-toggle="modal" data-target="#add" style="margin-left:30px">$!{pano_projectList[0].NAME}</span>
-                <i></i>
+                <i id="showProjectPicker"></i>
+                <form action="/index" method="get">
+	                <input type="hidden" id="projectResultValue" name="checkProjectSn" value="$!checkProjectSn">
+                </form>
             </p>
             <a style="width: 0.52rem;height: .52rem;top:.03rem;" href="/member/center" class="my">
             </a>
@@ -83,15 +77,6 @@
 
 </div>
 
-<script src="/style/h5static/lib/jQuery/jquery-3.2.1.min.js"></script>
-<script src="/style/h5static/lib/swiper/swiper.jquery.min.js"></script>
-<script>
-    var mySwiper = new Swiper ('.swiper-container', {
-        autoplay: 5000,//可选选项，自动滑动
-        loop: true,
-        pagination: '.swiper-pagination',
-    })
-</script>
 <!--添加楼盘弹窗-->
 	<div class="modal fade " id="add" tabindex="-1" role="dialog"
 		aria-labelledby="选择楼盘">
@@ -104,6 +89,7 @@
 					</button>
 					<h4 class="modal-title">选择楼盘</h4>
 				</div>
+				<!-- 
 				<div class="modal-body clearfix">
 					<form class="form-horizontal" id="formadd"
 						action="/usersSide/toIndex">
@@ -130,7 +116,7 @@
 							<div class="col-sm-9">
 							    <select class="form-control" id="asname" name="project_name"></select>
 								<!-- <input id="asname" type="text"
-									class="form-control" placeholder="楼盘名称"> -->
+									class="form-control" placeholder="楼盘名称"> 
 							</div>
 						</div>
 					</form>
@@ -139,48 +125,17 @@
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
 					<button type="submit" class="btn btn-primary" form="formadd">确定</button>
 				</div>
+				 -->
 			</div>
 		</div>
 	</div>
-				<!-- 模态框end -->
-    <script type="text/javascript">
-		addressInit('acmbProvince', 'acmbCity', 'acmbArea');
-	</script>
- <script>
-	var path=window.document.location.href.substring(0, window.document.location.href.indexOf
-			(window.document.location.pathname));
-	//console.log("路径："+path);
-	//获得焦点事件
-	$(".change").change(asname);
-	function asname(){
-		var province=$("#acmbProvince").val();
-		var city=$("#acmbCity").val();
-		var area=$("#acmbArea").val();
-		 $.ajax({
-			url:path+"/usersSide/selectProject",
-			type:"post",
-		    data:{"province":province,"city":city,"area":area},
-		    datatype:"json",
-		    success:function(result){
-		    	var projectList=JSON.parse(result);
-		    	//console.log("楼盘名称："+projectList);
-		    	var selectCity = document.getElementById("asname");
-		    	var options = selectCity.getElementsByTagName("option");
-		    	console.log("1.options.length:"+options.length+"-------------------------");
-		    	 for(var i=options.length;i>=1;i--) {
-		    		selectCity.removeChild(options[i-1]);
-		    		console.log("第"+i+"次循环，删除："+options[i-1]);
-				}
-		    	 for(var i=0;i<projectList.length;i++){
-		    		//console.log("项目名"+projectList[i]);
-		    		var option = document.createElement("option");
-		    		option.innerHTML = projectList[i];
-		    		selectCity.appendChild(option);
-		    	} 
-		    	 console.log("2.options.length:"+options.length+"-------------------------");
-		    	
-		    }
-		}); 
-		
-	}
-	</script> 
+<script src="/style/h5static/lib/jQuery/jquery-3.2.1.min.js"></script>
+<script src="/style/h5static/lib/swiper/swiper.jquery.min.js"></script>
+<!-- 联动引入-->
+<script src="/style/h5static/lib/mui/js/mui.min.js"></script>
+<script src="/style/h5static/lib/mui/js/mui.picker.min.js"></script>
+<script src="/style/h5static/js/city.data-3.js"></script>
+<script src="/style/h5static/js/main.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/style/admstatic/js/jsAddresss.js"></script>
+<script src="/script/index.js"></script>
