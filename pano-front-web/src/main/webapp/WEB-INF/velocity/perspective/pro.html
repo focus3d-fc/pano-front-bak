@@ -51,7 +51,7 @@
 		$(function() {
 			WebGL_Container = $("#WebGl-OutPut");
 			$("#Confirm_Select").on("click", function(){
-				window.location.href = "/shopcart/list?styleId=" + $("#styleSn").val() + "&productSn=" + productSn;
+				window.location.href = "/shopcart/list?styleId=" + $("#styleSn").val() + "&productSn=" + productSn + "&packageTypeSn=" + $("#packageTypeSn").val();
 			});
 			var rate = 4 / 3;
 			var width = WebGL_Container.width();
@@ -68,5 +68,6 @@
 		});
 	</script>
 	<input type="hidden" id="styleSn" value="$!styleSn"/>
+	<input type="hidden" id="packageTypeSn" value="$!packageTypeSn"/>
 </body>
 </html>

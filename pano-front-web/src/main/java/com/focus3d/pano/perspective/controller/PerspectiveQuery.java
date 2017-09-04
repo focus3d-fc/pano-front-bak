@@ -736,6 +736,7 @@ public class PerspectiveQuery extends BaseController {
 		map.put("product", JsonUtils.objectToJson(product));
 		PanoProjectHouseStyleModel houseStyleModel = houseStyleService.getBySn(TCUtil.lv(houseStyleSn));
 		map.put("styleSn", houseStyleModel.getStyleSn());
+		map.put("packageTypeSn", houseStyleModel.getStyleSn());
 		return "perspective/pro";
 	}
 	

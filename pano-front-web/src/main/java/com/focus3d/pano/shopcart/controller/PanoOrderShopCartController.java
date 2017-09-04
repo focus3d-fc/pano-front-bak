@@ -46,7 +46,6 @@ public class PanoOrderShopCartController extends BaseController {
 	 */
 	@RequestMapping(value = "list", method = RequestMethod.GET)
 	public String list(String styleId, ModelMap modelMap, HttpServletRequest request) {
-		String checkProductOfTypeSn = HttpUtil.sv(request, "productSn");
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
 		for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
@@ -58,6 +57,10 @@ public class PanoOrderShopCartController extends BaseController {
 		}
 		modelMap.put("shopcartList", shopcartList);
 		modelMap.put("styleId", styleId);
+		//购物车状态记录
+		
+		String checkProductOfTypeSn = HttpUtil.sv(request, "productSn");
+		String checkPackageTypeSn = HttpUtil.sv(request, "packageTypeSn");
 		return "/member/shopcart/list";
 	}
 
