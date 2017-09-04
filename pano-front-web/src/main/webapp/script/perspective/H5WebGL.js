@@ -295,7 +295,7 @@ function QueryPerspectiveInfoCallback(data){
         view_list = data;
         QueryViewAllProducts(view_list[view_index]);
         if(data.length>1){
-        	$("exchange_view").on("click",function(){
+        	$("#exchange_view").on("click",function(){
         		ExchangeView();
         	}).show();
         }
