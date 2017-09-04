@@ -817,19 +817,15 @@ public class PanoOrderController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/wxpaynotify")
-	public void wxpayNotify(HttpServletRequest request,
-			HttpServletResponse response, ModelMap map) throws Exception {
+	public void wxpayNotify(HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
 		try {
-			String responseString = IOUtils.toString(request.getInputStream(),
-					request.getCharacterEncoding());
+			String responseString = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
 			XStream xstream = new XStream(new DomDriver());
 			xstream.processAnnotations(ScanPayResData.class);
-			ScanPayResData resData = (ScanPayResData) xstream
-					.fromXML(responseString);
-
+			ScanPayResData resData = (ScanPayResData) xstream.fromXML(responseString);
 			String payType = resData.getAttach().split(",")[0];
 			Configure configure = new Configure();
-			if ("WXOFFICIAL".equals(payType)) {
+			if ("WX_H5".equals(payType)) {
 				configure.setAppID(WxPayConfig.APPID);
 				configure.setMchID(WxPayConfig.MCHID);
 				configure.setKey(WxPayConfig.MCHKEY);
