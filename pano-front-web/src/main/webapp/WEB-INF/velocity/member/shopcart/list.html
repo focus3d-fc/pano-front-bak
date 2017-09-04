@@ -42,7 +42,7 @@
        		<div class="pro-show" style="display: none;">
         			#foreach($!detail in $!shopcart.details)
 					<div class="left">
-						<a href="/perspective/QueryPerspective?houseStyleSn=$!shopcart.housePackage.houseStyleSn&packageTypeSn=$!detail.packageType.sn&productSn=$!detail.packageProduct.sn"> 
+						<a id="productType_$!velocityCount" house_style="$!common.encrypt($!shopcart.housePackage.houseStyleSn)" package_type="$!common.encrypt($!detail.packageType.sn)" product_sn="$!common.encrypt($!detail.packageProduct.sn)" href="#"> 
 							<img style="width:1.2rem;height:.86rem; padding:0;" src="$!fs.url($!detail.packageProduct.fullImgSn)" alt="">
 							<div class="de">
 								<p>$!detail.packageProduct.name</p>

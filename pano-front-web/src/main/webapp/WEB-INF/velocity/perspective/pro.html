@@ -51,7 +51,7 @@
 		$(function() {
 			WebGL_Container = $("#WebGl-OutPut");
 			$("#Confirm_Select").on("click", function(){
-				window.loaction.href="/usersSide/carshow2";
+				window.location.href = "/shopcart/list?styleId=" + $("#styleSn").val() + "&productSn=" + productSn;
 			});
 			var rate = 4 / 3;
 			var width = WebGL_Container.width();
@@ -67,6 +67,6 @@
 			ProdunctInfoFill(productInfo);
 		});
 	</script>
-</body>
+	<input type="hidden" id="styleSn" value="$!styleSn"/>
 </body>
 </html>

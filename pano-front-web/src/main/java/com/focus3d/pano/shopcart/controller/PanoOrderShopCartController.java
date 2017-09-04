@@ -19,7 +19,9 @@ import com.focus3d.pano.model.PanoProjectHousePackageModel;
 import com.focus3d.pano.project.service.PanoProjectHousePackageService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focustech.common.utils.EncryptUtil;
+import com.focustech.common.utils.HttpUtil;
 import com.focustech.common.utils.StringUtils;
+import com.focustech.common.utils.TCUtil;
 
 /**
  * 购物车 *
@@ -44,6 +46,7 @@ public class PanoOrderShopCartController extends BaseController {
 	 */
 	@RequestMapping(value = "list", method = RequestMethod.GET)
 	public String list(String styleId, ModelMap modelMap, HttpServletRequest request) {
+		String checkProductOfTypeSn = HttpUtil.sv(request, "productSn");
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
 		for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
