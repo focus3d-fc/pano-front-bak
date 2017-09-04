@@ -17,7 +17,11 @@
 		<!--图片-->
 		<section class="product">
 			<div id="WebGl-OutPut" style="width: 100%"></div>
-
+			
+			<div class="control" id="exchange_view">
+                <img src="/style/h5static/image/img/44.png" alt="">
+                <p>切换视角</p>
+            </div>
 
 			<p id="name"></p>
 			<p class="content" id="venderName"></p>
@@ -49,6 +53,7 @@
 		var image_array;
 
 		$(function() {
+			$("#exchange_view").hide();
 			WebGL_Container = $("#WebGl-OutPut");
 			$("#Confirm_Select").on("click", function(){
 				window.location.href = "/shopcart/list?styleId=" + $("#styleSn").val() + "&productSn=" + productSn + "&packageTypeSn=" + $("#packageTypeSn").val();
