@@ -57,8 +57,14 @@ public abstract class CommonServiceImpl<T> {
 		Class<? super T> targetSuperClass = targetClass.getSuperclass();
 		Object u = null;
 		try {
-			u = Class.forName(targetSuperClass.getName() + "Criteria");
+			u = Class.forName(targetSuperClass.getName() + "Criteria").newInstance();
 		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return get(u, targetClass);

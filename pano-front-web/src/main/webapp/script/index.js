@@ -1,11 +1,10 @@
-	
-(function($, doc) {
-	    var mySwiper = new Swiper ('.swiper-container', {
+
+/*var mySwiper = new Swiper ('.swiper-container', {
 	        autoplay: 5000,//可选选项，自动滑动
 	        loop: true,
 	        pagination: '.swiper-pagination',
-	    })
-    
+	    })*/
+(function($, doc, jquery) {
 		$.init();
 		$.ready(function() {
 			var _getParam = function(obj, param) {
@@ -13,25 +12,20 @@
 			};
 			//普通示例
 			var userPicker = new $.PopPicker({
-				layer : 3
+				layer : 4
 			});
-			/*userPicker.setData([{
-				value: '2',
-				text: '男'
-			}, {
-				value: '1',
-				text: '女'
-			}]);*/
+			var projectSelectData = jquery('#projectSelectData').text();
+			userPicker.setData(JSON.parse(projectSelectData));
 			var showProjectPickerButton = doc.getElementById('showProjectPicker');
 			//var userResult = doc.getElementById('sexResult');
 			var projectResultValue = doc.getElementById('projectResultValue');
-			var formObj = $("form");
+			var formObj = jquery("form");
 			showProjectPickerButton.addEventListener('tap', function(event) {
 				userPicker.show(function(items) {
-					projectResultValue = _getParam(items[0], 'value');
+					projectResultValue.value = _getParam(items[3], 'value');
 					formObj.submit();
 				});
 			}, false);
 		});
-	})(mui, document);
+	})(mui, document, jQuery);
 	

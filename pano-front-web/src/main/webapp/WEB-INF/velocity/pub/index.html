@@ -17,7 +17,7 @@
         <div class="location">
             <p href="javascrpt:;" id='showCityPicker3'>
                 <!-- <span id="cityResult3"> 上海保利 铃兰公园 </span> -->
-                <span data-toggle="modal" data-target="#add" style="margin-left:30px">$!{pano_projectList[0].NAME}</span>
+                <span data-toggle="modal" data-target="#add" style="margin-left:30px">$!showProject.name</span>
                 <i id="showProjectPicker"></i>
                 <form action="/index" method="get">
 	                <input type="hidden" id="projectResultValue" name="checkProjectSn" value="$!checkProjectSn">
@@ -129,6 +129,7 @@
 			</div>
 		</div>
 	</div>
+<span id="projectSelectData" style="display: none;">$!projectSelectData</span>
 <script src="/style/h5static/lib/jQuery/jquery-3.2.1.min.js"></script>
 <script src="/style/h5static/lib/swiper/swiper.jquery.min.js"></script>
 <!-- 联动引入-->
