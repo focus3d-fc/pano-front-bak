@@ -20,6 +20,10 @@ $(function(){
 		$("#arrow_left").attr("index", --nextIndex);
 		console.info("left:" + $("#arrow_left").attr("index") + ",right:" + $(this).attr("index"));
 	});
+	
+	$("#closeProductDetail").click(function(){
+		$("#moreProd").hide();
+	});
 	resizeSlider();
 });
 
