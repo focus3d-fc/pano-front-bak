@@ -117,12 +117,13 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		PanoOrderShopcartModel shopcart = orderShopCartDao.getByHousePackage(userSn, housePackageSn);
 		if (shopcart != null) {
-			// 从购物车中删除套餐项
+			/*// 从购物车中删除套餐项
 			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
 			for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {
 				orderShopcartDetailDao.deleteByKey(shopcartDetail);
 			}
 			orderShopCartDao.deleteByKey(shopcart);
+			 */
 			status = 0;
 		} else {
 			// 添加套餐项到购物车
