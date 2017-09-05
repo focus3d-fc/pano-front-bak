@@ -20,11 +20,13 @@ import com.focus3d.pano.model.PanoOrderShopcartModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
 import com.focus3d.pano.model.PanoProjectHouseStyleModel;
 import com.focus3d.pano.model.PanoProjectPackageTypeModel;
+import com.focus3d.pano.model.panoSkin;
 import com.focus3d.pano.project.service.PanoProjectHousePackageService;
 import com.focus3d.pano.project.service.PanoProjectHouseStyleService;
 import com.focus3d.pano.project.service.PanoProjectPackageTypeService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartDetailService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
+import com.focus3d.pano.usersside.service.UsersSideService;
 import com.focustech.common.utils.EncryptUtil;
 import com.focustech.common.utils.HttpUtil;
 import com.focustech.common.utils.StringUtils;
@@ -49,6 +51,8 @@ public class PanoOrderShopCartController extends BaseController {
 	private PanoProjectPackageTypeService<PanoProjectPackageTypeModel> packageTypeService;
 	@Autowired
 	private PanoProjectHouseStyleService<PanoProjectHouseStyleModel> houseStyleService;
+	@Autowired
+	private UsersSideService usersSideService;
 	/**
 	 * 购物车列表 *
 	 * 
@@ -73,7 +77,35 @@ public class PanoOrderShopCartController extends BaseController {
 		if(StringUtils.isNotEmpty(styleId)){
 			modelMap.put("styleId", styleId);
 		}
+		//获取导航图
+		setBottomIcon(request);
 		return "/member/shopcart/list";
+	}
+	
+	private void setBottomIcon(HttpServletRequest request) {
+		//获取导航图
+		List<panoSkin> panoSkinList = usersSideService.list_selectPanoSkinList();
+		String skinName="";
+		long packageImg=0;
+		long spaceImg = 0;
+		long houseImg = 0;
+		long shopcartImg = 0;
+		for(int i = 0; i < panoSkinList.size(); i ++){
+			skinName = panoSkinList.get(i).getName();
+			if(skinName.equals("套餐")){
+				packageImg = panoSkinList.get(i).getImg_sn();
+			}else if(skinName.equals("房间")){
+				spaceImg = panoSkinList.get(i).getImg_sn();
+			}else if(skinName.equals("户型")){
+				houseImg = panoSkinList.get(i).getImg_sn();
+			}else if(skinName.equals("购物车")){
+				shopcartImg = panoSkinList.get(i).getImg_sn();
+			}
+		}
+		request.setAttribute("img_tc",packageImg);
+		request.setAttribute("img_space",spaceImg);
+		request.setAttribute("img_house",houseImg);
+		request.setAttribute("img_cart",shopcartImg);
 	}
 	/**
 	 * 
