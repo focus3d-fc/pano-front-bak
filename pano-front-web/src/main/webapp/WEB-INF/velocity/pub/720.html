@@ -89,7 +89,7 @@ p {
 		    <section class="hide">
 		        <p class="location location3" style="display: none;">客厅</p>
 		         <div class="re-box">
-		            <div class="rd-show">
+		            <div class="rd-show"  style="display: none;">
 		                <div class="swiper-container swiper4">
 		                    <div class="swiper-wrapper" id="product-swiper-wrapper">
 		                    
@@ -135,59 +135,34 @@ p {
 		</div>
 		<style>
 			#moreProd img{border-radius:4px;}
-			.prod_hotspot{ height:5.2rem;padding:.6rem; background: #000;color:#fff;border-radius:.2rem;
+			.prod_hotspot{ 
 	            font-size: 2rem;
 	            background-color:#000000;
 	            opacity: 0.9 !important;
-	           
+	        }
+	        #moreProd{
+	        	background: #000;color:#fff;
+	        	border-radius:.2rem;
 	        }
 	        .prod_hotspot p{
 	            color: #FFFFFF !important;		                  
 	        }	        	   
-       
-	        .prod_img div{margin-bottom:3rem;width:2.8rem;height:1.6rem;margin:0;left:-.16rem;}
-		.ckxq{color:#fff;bottom:-1.2rem;position:relative;right:-.2rem;padding:.11rem .3rem;background:#5e5e5e;border-radius:.24rem;}
-		
-		.slick-prev:before, .slick-next:before {line-height:3rem;}
-		.slick-prev, .slick-next {height:130px !important;}
-		
+			.prod_lr{ margin-top:1.6rem;}
 		</style>
 		<div id="moreProd" style="display: none;">
-			<section class="regular slider">
-				<div class="prod_hotspot">
+			<div id="arrow_left" class="fl prod_lr" style="margin-right:.24rem;"><a href="#">&lt;</a></div>
+			<div class="prod_hotspot">
 					<p style="float:right;position:relative;top:-.2rem;right:-.2rem;"> 
 						<img style="width:.4rem;height:.4rem;" src="/images/member/gb.png">
 					</p>
-				    <p>产品：XX壁柜</p>
-				    <p>材质：实木</p>
-				    <p>颜色：黄</p>
-				    <p>参数：100*50*80</p>
-				    <p>货号：8B0312</p>
+				    <p>产品：<span id="nameP"></span></p>
+				    <p>材质：<span id="materialNameP"></span></p>
+				    <p>颜色：<span id="materialColorP"></span></p>
+				    <p>参数：<span id="parameterP"></span></p>
+				    <p>货号：<span id="modelP"></span></p>
 				    <p>
-				    <section class="regular2 prod_img">					 				
-						<img src="/images/member/sofa111.png">						
-						<img src="/images/member/login_bj2.jpg">					
-						<img src="/images/member/sofa111.png">
-					</section>				    
-				    </p>
-				  <p style="float:right;"><a class="ckxq">查看详情</a></p> 
-				</div>
-				 <!-- <div class="prod_hotspot">
-				    <p>产品：XX壁柜11壁壁壁11111111111</p>
-				    <p>材质：实木</p>
-				    <p>颜色：黄</p>
-				    <p>参数：100*50*80</p>
-				    <p>货号：8B0312</p>
-				    <p>
-				    <section class="regular2 prod_img">					 				
-						    <img src="/images/member/login_bj2.jpg">					
-						    <img src="/images/member/sofa111.png">						
-						    <img src="/images/member/sofa111.png">
-					</section>				    
-				    </p>
-				  <p style="float:right;"><a class="ckxq">查看详情</a></p> 
-				</div> -->
-			</section>
+			</div>
+			<div id="arrow_right" class="fr prod_lr"><a href="#">&gt</a></div>
 		</div>
 		<!-- 这里styleId是动态数据，模拟从h5首页点击风格打开一个默认的全景 -->
         <input type="hidden" id="styleId" value="$!{style_id}"/>

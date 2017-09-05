@@ -273,9 +273,8 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    	var packageSn = data.packageSn;//户型风格套餐sn
 	    	var packageTypeSn = data.packageTypeSn;//套餐类别sn
 	    	var productAry = data.products;
-	    	for(var i = 0; i < 5; i ++){
-	    		$('.regular').slick('slickRemove', i, false);
-	    	}
+	    	var index = 0;
+	    	prodDetailCache.splice(0, prodDetailCache.length); 
 	    	for(var i in productAry){
 	    		var product = productAry[i];
 	    		//名称
@@ -298,20 +297,35 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    			var parameterP = $("<p/>").text("参数：").append($("<span/>").text(parameter));
 	    			var modelP = $("<p/>").text("货号：").append($("<span/>").text(model));
 	    			var imgHt = $("<img/>").attr("src", imgUrl);
-	    			var aHt = $("<a/>").addClass("shopDetail").on("click", function () {
+	    			var prodDetailP = $("<p/>").css("float", "right");
+	    			var aHt = $("<a/>").on("click", function () {
 						ValidatePerspective(houseStyleSn,packageTypeSn,product.sn);
                     }).text("查看详情");
+	    			prodDetailP.append(aHt);
 	    			//$('.regular').slick('slickAdd',"<div><img src='" + imgUrl + "'/></div>");
 	    			//$("<div/>").append($("<img/>").attr("src", imgUrl)).appendTo($("#prodSlider"));;
-	    			$("<div/>").append(nameP).append(materialNameP).append(materialColorP).append(modelP).append(imgHt).append(aHt).appendTo($("#product-swiper-wrapper"));
+	    			//$("<div/>").append(nameP).append(materialNameP).append(materialColorP).append(modelP).append(imgHt).append(aHt).appendTo($("#product-swiper-wrapper"));
+	    			//var prodDetail = $("<div/>").addClass("prod_hotspot").append(nameP).append(materialNameP).append(materialColorP).append(modelP).append(prodDetailP);
+	    			//$('.regular').slick('slickAdd', prodDetail);
+	    			var prodJo = {};
+	    			prodJo["nameP"] = name;
+	    			prodJo["materialNameP"] = materialName;
+	    			prodJo["materialColorP"] = materialColor;
+	    			prodJo["parameterP"] = parameter;
+	    			prodJo["modelP"] = model;
+	    			prodDetailCache.push(prodJo);
 	    			
 	    		}catch (e) {
 					// TODO: handle exception
 				}
+	    		index ++;
 	    	}
-	    	/*$('.regular').slick('slickGoTo', 0);
-	    	$("#moreProd").show();*/
-	    	$(".rd-show").show();
+	    	if(index > 0){
+	    		showProductDetail(0);
+	    		$("#arrow_left").attr("index", 0);
+	    		$("#arrow_right").attr("index", index - 1);
+	    		$("#moreProd").show();
+	    	}
 	    },
 	    error:function(xhr,textStatus){
 	        console.log('请求错误')
@@ -322,7 +336,7 @@ function openHotspotWin(packageSn, packageTypeSn){
  * 关闭全景产品热点回调方法
  */
 function closeHotspotWin(){
-	$(".rd-show").hide();
+	//$("#moreProd").hide();
 }
 /**
  * 全景客户端
