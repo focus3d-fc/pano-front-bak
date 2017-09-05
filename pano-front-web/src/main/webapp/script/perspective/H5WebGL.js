@@ -51,7 +51,7 @@ var WebGL = {
 
         THREE.ImageUtils.crossOrigin = 'anonymous';
 
-        webGLRenderer = new THREE.CanvasRenderer();
+        webGLRenderer = new THREE.WebGLRenderer();
         webGLRenderer.setClearColor(0xFFFFFF,1);
         webGLRenderer.setSize(WebGL_Container.width(),WebGL_Container.height());
         webGLRenderer.shadowMapEnabled = true;
