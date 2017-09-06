@@ -64,6 +64,10 @@ $(function(){
 
 //显示热点
 function showHotspot(data){
+	for(var i = 0; i < 20; i ++){
+		editorKrpano().call("removehotspot(hotspot_" + i + ")");
+		editorKrpano().call("removeplugin(tooltip_hotspot_" + i + ")");
+	}
 	for(var i in data){
 		var name = data[i].name;
 		var ath = data[i].ath;
