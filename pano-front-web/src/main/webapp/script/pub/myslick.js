@@ -2,12 +2,13 @@
 var prodDetailCache = new Array();
 $(function(){
 	$("#arrow_left").click(function(){
+		var prodDetailLen = prodDetailCache.length;
 		var index = $(this).attr("index");
 		showProductDetail(index);
 		index --;
 		var prevIndex = index > 0 ? index : 0;
 		$(this).attr("index", prevIndex);
-		$("#arrow_right").attr("index", prevIndex + 1);
+		$("#arrow_right").attr("index", prevIndex < (prodDetailLen - 1) ? ++prevIndex : prevIndex);
 		console.info("left:" + $(this).attr("index") + ",right:" + $("#arrow_right").attr("index"));
 	});
 	$("#arrow_right").click(function(){
@@ -17,7 +18,7 @@ $(function(){
 		index ++;
 		var nextIndex = index < prodDetailLen ? index : (prodDetailLen - 1);
 		$(this).attr("index", nextIndex);
-		$("#arrow_left").attr("index", --nextIndex);
+		$("#arrow_left").attr("index", nextIndex > 0 ? --nextIndex : nextIndex);
 		console.info("left:" + $("#arrow_left").attr("index") + ",right:" + $(this).attr("index"));
 	});
 	
@@ -25,20 +26,36 @@ $(function(){
 		$("#moreProd").hide();
 	});
 	resizeSlider();
+	
+	$("#moreDetail").click(function(){
+		var houseStyleSn = $("#moreDetail").attr("houseStyleSn");
+		var packageTypeSn = $("#moreDetail").attr("packageTypeSn");
+		var productSn = $("#moreDetail").attr("productSn");
+		ValidatePerspective(houseStyleSn, packageTypeSn, productSn);
+	});
 });
 
 function showProductDetail(index){
 	var data = prodDetailCache[index];
+	var houseStyleSn = data.houseStyleSn;
+	var packageTypeSn = data.packageTypeSn;
+	//产品信息
+	var productSn = data.productSn;
 	var nameP = data.nameP;
 	var materialNameP = data.materialNameP;
 	var materialColorP = data.materialColorP;
 	var parameterP = data.parameterP;
 	var modelP = data.modelP;
+	var img1 = data.img1;
 	$("#nameP").text(nameP);
 	$("#materialNameP").text(materialNameP);
 	$("#materialColorP").text(materialColorP);
 	$("#parameterP").text(parameterP);
 	$("#modelP").text(modelP);
+	$("#img1").attr("src", img1);
+	$("#moreDetail").attr("houseStyleSn", houseStyleSn);
+	$("#moreDetail").attr("packageTypeSn", packageTypeSn);
+	$("#moreDetail").attr("productSn", productSn);
 }
 
 function resizeSlider(){
@@ -51,7 +68,7 @@ function resizeSlider(){
 		factor = winW;
 	}
 	var opoWinW = factor * 0.55 / 0.75;
-	var opoWinH = factor * 0.65;
+	var opoWinH = factor * 0.9;
 	var opoWinTop = (winH - opoWinH) / 2;
 	var opoWinLeft = (winW - opoWinW) / 2;
 	$("#moreProd").css("position", "absolute");
@@ -63,7 +80,7 @@ function resizeSlider(){
 	$("#moreProd").css("z-index", 1000);
 	
 	$(".prod_hotspot").css("position", "absolute");
-	$(".prod_hotspot").height(opoWinH * 0.8);
+	$(".prod_hotspot").height(opoWinH * 0.9);
 	$(".prod_hotspot").width(opoWinW * 0.8);
 	$(".prod_hotspot").css("left", 20);
 	$(".prod_hotspot").css("top", 20);

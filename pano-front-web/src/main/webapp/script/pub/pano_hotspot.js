@@ -277,6 +277,8 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    	prodDetailCache.splice(0, prodDetailCache.length); 
 	    	for(var i in productAry){
 	    		var product = productAry[i];
+	    		//sn
+	    		var sn = product.sn;
 	    		//名称
 	    		var name = product.name;
 	    		//材质
@@ -302,28 +304,27 @@ function openHotspotWin(packageSn, packageTypeSn){
 						ValidatePerspective(houseStyleSn,packageTypeSn,product.sn);
                     }).text("查看详情");
 	    			prodDetailP.append(aHt);
-	    			//$('.regular').slick('slickAdd',"<div><img src='" + imgUrl + "'/></div>");
-	    			//$("<div/>").append($("<img/>").attr("src", imgUrl)).appendTo($("#prodSlider"));;
-	    			//$("<div/>").append(nameP).append(materialNameP).append(materialColorP).append(modelP).append(imgHt).append(aHt).appendTo($("#product-swiper-wrapper"));
-	    			//var prodDetail = $("<div/>").addClass("prod_hotspot").append(nameP).append(materialNameP).append(materialColorP).append(modelP).append(prodDetailP);
-	    			//$('.regular').slick('slickAdd', prodDetail);
+	    			
 	    			var prodJo = {};
+	    			prodJo["houseStyleSn"] = houseStyleSn;
+	    			prodJo["packageTypeSn"] = packageTypeSn;
+	    			prodJo["productSn"] = sn;
 	    			prodJo["nameP"] = name;
 	    			prodJo["materialNameP"] = materialName;
 	    			prodJo["materialColorP"] = materialColor;
 	    			prodJo["parameterP"] = parameter;
 	    			prodJo["modelP"] = model;
+	    			prodJo["img1"] = imgUrl;
 	    			prodDetailCache.push(prodJo);
 	    			
 	    		}catch (e) {
-					// TODO: handle exception
 				}
 	    		index ++;
 	    	}
 	    	if(index > 0){
 	    		showProductDetail(0);
 	    		$("#arrow_left").attr("index", 0);
-	    		$("#arrow_right").attr("index", index - 1);
+	    		$("#arrow_right").attr("index", index > 2 ? 1 : 0);
 	    		$("#moreProd").show();
 	    	}
 	    },
