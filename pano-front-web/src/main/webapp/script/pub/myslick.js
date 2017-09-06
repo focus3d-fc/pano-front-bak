@@ -1,5 +1,6 @@
 
 var prodDetailCache = new Array();
+var mySwiper;
 $(function(){
 	$("#arrow_left").click(function(){
 		var prodDetailLen = prodDetailCache.length;
@@ -33,6 +34,7 @@ $(function(){
 		var productSn = $("#moreDetail").attr("productSn");
 		ValidatePerspective(houseStyleSn, packageTypeSn, productSn);
 	});
+
 });
 
 function showProductDetail(index){
@@ -46,16 +48,34 @@ function showProductDetail(index){
 	var materialColorP = data.materialColorP;
 	var parameterP = data.parameterP;
 	var modelP = data.modelP;
-	var img1 = data.img1;
+	var fullImgUrl = data.fullImgUrl;
+	var leftImgUrl = data.leftImgUrl;
+	var downImgUrl = data.downImgUrl;
 	$("#nameP").text(nameP);
 	$("#materialNameP").text(materialNameP);
 	$("#materialColorP").text(materialColorP);
 	$("#parameterP").text(parameterP);
 	$("#modelP").text(modelP);
-	$("#img1").attr("src", img1);
 	$("#moreDetail").attr("houseStyleSn", houseStyleSn);
 	$("#moreDetail").attr("packageTypeSn", packageTypeSn);
 	$("#moreDetail").attr("productSn", productSn);
+	$("#moreProd").show();
+	//小图显示
+	if(mySwiper == null){
+		
+	} else {
+		mySwiper.destroy(true, false);
+	}
+	mySwiper = new Swiper ('#product-swiper-container', {
+		loop: true,
+		autoplay: 3000,
+		autoplayDisableOnInteraction:false
+	});
+	mySwiper.removeAllSlides();
+	mySwiper.appendSlide("<div class='swiper-slide'><img id='fullImgUrl' src='" + fullImgUrl + "'/></div>");
+	mySwiper.appendSlide("<div class='swiper-slide'><img id='fullImgUrl' src='" + leftImgUrl + "'/></div>");
+	mySwiper.appendSlide("<div class='swiper-slide'><img id='fullImgUrl' src='" + downImgUrl + "'/></div>");
+	//mySwiper.startAutoplay();
 }
 
 function resizeSlider(){

@@ -4,6 +4,7 @@
  */
 //var pano_remote_domain = "http://172.17.13.77:8899";
 var pano_remote_domain = "http://pano.joy-homeplus.com"
+
 $(function(){
 	//风格id
 	var styleId = $("#styleId").val();
@@ -294,10 +295,12 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    		//货号
 	    		var model = product.model;
 	    		//图片
-	    		var imgUrl = product.imgUrl;
+	    		var fullImgUrl = product.fullImgUrl;
+	    		var leftImgUrl = product.leftImgUrl;
+	    		var downImgUrl = product.downImgUrl;
 	    		//显示产品信息
 	    		try{
-	    			var nameP = $("<p/>").text("产品：").append($("<span/>").text(name));
+	    			/*var nameP = $("<p/>").text("产品：").append($("<span/>").text(name));
 	    			var materialNameP = $("<p/>").text("材质：").append($("<span/>").text(materialName));
 	    			var materialColorP = $("<p/>").text("颜色：").append($("<span/>").text(materialColor));
 	    			var parameterP = $("<p/>").text("参数：").append($("<span/>").text(parameter));
@@ -307,7 +310,7 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    			var aHt = $("<a/>").on("click", function () {
 						ValidatePerspective(houseStyleSn,packageTypeSn,product.sn);
                     }).text("查看详情");
-	    			prodDetailP.append(aHt);
+	    			prodDetailP.append(aHt);*/
 	    			
 	    			var prodJo = {};
 	    			prodJo["houseStyleSn"] = houseStyleSn;
@@ -318,7 +321,9 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    			prodJo["materialColorP"] = materialColor;
 	    			prodJo["parameterP"] = parameter;
 	    			prodJo["modelP"] = model;
-	    			prodJo["img1"] = imgUrl;
+	    			prodJo["fullImgUrl"] = fullImgUrl;
+	    			prodJo["leftImgUrl"] = leftImgUrl;
+	    			prodJo["downImgUrl"] = downImgUrl;
 	    			prodDetailCache.push(prodJo);
 	    			
 	    		}catch (e) {
@@ -329,7 +334,7 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    		showProductDetail(0);
 	    		$("#arrow_left").attr("index", 0);
 	    		$("#arrow_right").attr("index", index > 2 ? 1 : 0);
-	    		$("#moreProd").show();
+
 	    	}
 	    },
 	    error:function(xhr,textStatus){
