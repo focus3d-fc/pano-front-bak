@@ -67,6 +67,7 @@ public class LoginFilter extends AbstractFilter {
 		,"/order/wxpaynotify"
 		,"/order/orderspage"
 		,"/order/pay/complete"
+		,"/perspective/*"
 	};
 	public static Auth auth = new Auth();
 	

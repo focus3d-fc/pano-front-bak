@@ -96,6 +96,7 @@ function showHotspot(data){
 		} else {
 			editorKrpano().call("add_hotspot_headtitle(" + name + "," + targetName + ")");
 		}
+		editorKrpano().call("lookat(" + ath + "," + atv + ")");
 	}
 }
 //点击户型按钮
@@ -300,18 +301,6 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    		var downImgUrl = product.downImgUrl;
 	    		//显示产品信息
 	    		try{
-	    			/*var nameP = $("<p/>").text("产品：").append($("<span/>").text(name));
-	    			var materialNameP = $("<p/>").text("材质：").append($("<span/>").text(materialName));
-	    			var materialColorP = $("<p/>").text("颜色：").append($("<span/>").text(materialColor));
-	    			var parameterP = $("<p/>").text("参数：").append($("<span/>").text(parameter));
-	    			var modelP = $("<p/>").text("货号：").append($("<span/>").text(model));
-	    			var imgHt = $("<img/>").attr("src", imgUrl);
-	    			var prodDetailP = $("<p/>").css("float", "right");
-	    			var aHt = $("<a/>").on("click", function () {
-						ValidatePerspective(houseStyleSn,packageTypeSn,product.sn);
-                    }).text("查看详情");
-	    			prodDetailP.append(aHt);*/
-	    			
 	    			var prodJo = {};
 	    			prodJo["houseStyleSn"] = houseStyleSn;
 	    			prodJo["packageTypeSn"] = packageTypeSn;
@@ -353,29 +342,4 @@ function closeHotspotWin(){
  */
 function editorKrpano() {
 	return document.getElementById("krpanoSWFObject");
-}
-
-function ValidatePerspective(houseStyleSn,packageTypeSn,productSn){
-	var param = new Object();
-	param.houseStyleSn = houseStyleSn;
-	param.packageTypeSn = packageTypeSn;
-	param.productSn = productSn;
-    $.ajax({
-        url:"/perspective/ValidatePerspective",
-        type: "POST",
-        data:param,
-        dataType:"json",
-        success:function(data){
-            if(data){
-                var num = parseInt(data.num);
-                if(num!=0){
-					QueryPerspectiveInfo(data.param);
-				}
-            }
-        }
-    })
-}
-
-function QueryPerspectiveInfo(param) {
-    window.location.href = "/perspective/QueryPerspective?houseStyleSn="+param.houseStyleSn+"&packageTypeSn="+param.packageTypeSn+"&productSn="+param.productSn;
 }
