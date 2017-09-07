@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -128,12 +129,14 @@ public class PersonalController extends BaseController {
 			@RequestParam String cityResult3, @RequestParam String STREET) {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		String[] arr = cityResult3.split("\\s+");
+		String[] arrCp = new String[3];
+		System.arraycopy(arr, 0, arrCp, 0, arr.length);
 		PanoUserReceiveAddressModel receiveAddressModel = new PanoUserReceiveAddressModel();
 		receiveAddressModel.setUserName(USER_NAME);
 		receiveAddressModel.setMobile(MOBILE);
-		receiveAddressModel.setProvince(arr[0]);
-		receiveAddressModel.setCity(arr[1]);
-		receiveAddressModel.setArea(arr[2]);
+		receiveAddressModel.setProvince(TCUtil.sv(arrCp[0]));
+		receiveAddressModel.setCity(TCUtil.sv(arrCp[1]));
+		receiveAddressModel.setArea(TCUtil.sv(arrCp[2]));
 		receiveAddressModel.setStreet(STREET);
 		receiveAddressModel.setUserSn(userSn);
 		PanoMemUserModel memuser = memUserService.getBySn(userSn);
