@@ -96,7 +96,7 @@ function resizeSlider(){
 	$("#moreProd").width(opoWinW);
 	$("#moreProd").css("left", opoWinLeft);
 	var h = $("#moreProd").height();
-	$("#moreProd").css("top", opoWinTop);
+	$("#moreProd").css("top", opoWinTop * 0.7);
 	$("#moreProd").css("z-index", 1000);
 	
 	$(".prod_hotspot").css("position", "absolute");
