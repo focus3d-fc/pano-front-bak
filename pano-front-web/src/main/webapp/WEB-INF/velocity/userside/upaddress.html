@@ -1,21 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport"
-	content="width=device-width, user-scalable=no, initial-scale=1.0">
-<title>新增地址</title>
-<link rel="stylesheet"
-	href="/style/h5static/lib/mui/css/mui.picker.min.css">
+#set($layout = "layout/member/layout_modify_address.html")
+<link rel="stylesheet" href="/style/h5static/lib/mui/css/mui.picker.min.css">
 <link rel="stylesheet" href="/style/h5static/css/bass.css">
 <link rel="stylesheet" href="/style/h5static/css/index.css">
 <script src="/style/h5static/lib/mui/js/mui.min.js"></script>
 <script src="/style/h5static/lib/mui/js/mui.picker.min.js"></script>
 <script src="/style/h5static/js/city.data-3.js"></script>
 <script src="/style/h5static/js/main.js"></script>
-</head>
-<body>
+
 	<div class="container add">
 		<!--头-->
 
@@ -31,7 +22,7 @@
 				<div class="add-item">
 					<label class="label">联系电话:</label> <input type="tel"
 						placeholder="输入号码" id="MOBILE" name="MOBILE"
-						value="$!{address.mobile}">
+						value="$!{address.mobile}" maxlength="11">
 				</div>
 				<div class="add-item " id='showCityPicker3'>
 					<label class="label">送货城市:</label> <input type="text"
@@ -42,7 +33,7 @@
 				<div class="add-item">
 					<label class="label">详细地址:</label> <input type="tel"
 						placeholder="请填写地址，不少于5个字" id="STREET" name="STREET"
-						value="$!{address.street}">
+						value="$!{address.street}" maxlength="80">
 				</div>
 			</form>
 		</section>
@@ -85,6 +76,4 @@
 			});
 		})(mui, document);
 	</script>
-</body>
-</body>
-</html>
+<script src="/script/member/address/create.js"></script>
