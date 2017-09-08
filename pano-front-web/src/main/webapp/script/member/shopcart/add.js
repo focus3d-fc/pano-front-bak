@@ -45,6 +45,7 @@ $(function(){
 				$(this).attr("status", 1);
 			}
 		});
+		window.location.hash = "#" + housePackageSn;
 	}
 	
 	$("div[id^='choose_']").click(function(){

@@ -39,7 +39,7 @@
 	            </div>
 	        </div>
         
-       		<div class="pro-show" style="display: none;">
+       		<div id="$!shopcart.housePackage.sn" class="pro-show" style="display: none;">
         			#foreach($!detail in $!shopcart.details)
 					<div class="left">
 						<a id="productType_$!velocityCount" shopcart_sn="$!shopcart.encryptSn" house_style="$!common.encrypt($!shopcart.housePackage.houseStyleSn)" package_type="$!common.encrypt($!detail.packageType.sn)" product_sn="$!common.encrypt($!detail.packageProduct.sn)" href="#"> 
