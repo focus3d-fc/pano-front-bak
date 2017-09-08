@@ -24,11 +24,9 @@ public class PanoOrderShopCartDao extends CommonDao<PanoOrderShopcartModel> {
 	 *            用户sn
 	 * @return
 	 */
-	public PanoOrderShopcartModel getUserShopcartPackage(long userSn,
-			long housePackageSn) {
+	public PanoOrderShopcartModel getUserShopcartPackage(long userSn, long housePackageSn) {
 		PanoOrderShopcartCriteria criteria = new PanoOrderShopcartCriteria();
-		criteria.createCriteria().andUserSnEqualTo(userSn);
-		criteria.createCriteria().andHousePackageSnEqualTo(housePackageSn);
+		criteria.createCriteria().andUserSnEqualTo(userSn).andHousePackageSnEqualTo(housePackageSn);
 		return selectFirstByExample(criteria, PanoOrderShopcartModel.class);
 	}
 
