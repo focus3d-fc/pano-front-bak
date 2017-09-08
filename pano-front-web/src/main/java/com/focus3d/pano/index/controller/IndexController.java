@@ -70,30 +70,16 @@ public class IndexController extends BaseController{
 		long projectSn = showProject.getSn();
 		modelMap.addAttribute("showProject", showProject);
 		//风格
-		List<Style> styleList;
-		try {
-			styleList = usersSideService.selectStyleByProject_sn(projectSn);
-			modelMap.addAttribute("styleList",styleList);
-			List<pano_ad> adList=usersSideService.selectAdImg_sn(projectSn);
-			modelMap.addAttribute("adList",adList);
-			//根据每个风格-查询对应的-标签集合
-			Set<Long>  set=new HashSet<Long>();
-			Iterator<Style> style_iterator = styleList.iterator();    
-		    while (style_iterator.hasNext()) {    
-		        Style style = style_iterator.next();
-				Long style_sn=style.getId();
-				if(set.contains(style_sn)){
-					style_iterator.remove();
-					continue;
-				}else{
-					set.add(style_sn);
-					List<Lable> lableList=usersSideService.selectLableByStyle_sn(style_sn);
-					style.setLableList(lableList);
-				}
-		    }    
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		List<pano_ad> adList = usersSideService.selectAdImg_sn(projectSn);
+		modelMap.addAttribute("adList",adList);
+		List<Style> styleList = usersSideService.selectStyleByProject_sn(projectSn);
+		//添加标签
+		for(Style style : styleList) {    
+			Long style_sn = style.getId();
+			List<Lable> lableList = usersSideService.selectLableByStyle_sn(style_sn);
+			style.setLableList(lableList);
+		}    
+		modelMap.addAttribute("styleList",styleList);
 		return "/pub/index";
 	}
 	/**

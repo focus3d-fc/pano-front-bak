@@ -8,16 +8,16 @@ import com.focus3d.pano.common.model.CommonModel;
 public class Lable implements Serializable,CommonModel{
 
 	private static final long serialVersionUID = -7953345685065443073L;
-	private long id;
+	private Long id;
 	private String name;
-	private int type;
-	private long style_sn;
-	private long adder_sn;
+	private Integer type;
+	private Long style_sn;
+	private Long adder_sn;
 	private String adder_name;
-	private String add_time;
-	private long updater_sn;
+	private Date add_time;
+	private Long updater_sn;
 	private String updater_name;
-	private String update_time;
+	private Date update_time;
 	
 	
 	public Lable() {
@@ -35,10 +35,8 @@ public class Lable implements Serializable,CommonModel{
 		this.style_sn = style_sn;
 		this.adder_sn = adder_sn;
 		this.adder_name = adder_name;
-		this.add_time = add_time;
 		this.updater_sn = updater_sn;
 		this.updater_name = updater_name;
-		this.update_time = update_time;
 	}
 
 	@Override
@@ -72,11 +70,11 @@ public class Lable implements Serializable,CommonModel{
 		return true;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -88,27 +86,27 @@ public class Lable implements Serializable,CommonModel{
 		this.name = name;
 	}
 
-	public int getType() {
+	public Integer getType() {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 
-	public long getStyle_sn() {
+	public Long getStyle_sn() {
 		return style_sn;
 	}
 
-	public void setStyle_sn(long style_sn) {
+	public void setStyle_sn(Long style_sn) {
 		this.style_sn = style_sn;
 	}
 
-	public long getAdder_sn() {
+	public Long getAdder_sn() {
 		return adder_sn;
 	}
 
-	public void setAdder_sn(long adder_sn) {
+	public void setAdder_sn(Long adder_sn) {
 		this.adder_sn = adder_sn;
 	}
 
@@ -120,19 +118,19 @@ public class Lable implements Serializable,CommonModel{
 		this.adder_name = adder_name;
 	}
 
-	public String getAdd_time() {
+	public Date getAdd_time() {
 		return add_time;
 	}
 
-	public void setAdd_time(String add_time) {
+	public void setAdd_time(Date add_time) {
 		this.add_time = add_time;
 	}
 
-	public long getUpdater_sn() {
+	public Long getUpdater_sn() {
 		return updater_sn;
 	}
 
-	public void setUpdater_sn(long updater_sn) {
+	public void setUpdater_sn(Long updater_sn) {
 		this.updater_sn = updater_sn;
 	}
 
@@ -144,11 +142,11 @@ public class Lable implements Serializable,CommonModel{
 		this.updater_name = updater_name;
 	}
 
-	public String getUpdate_time() {
+	public Date getUpdate_time() {
 		return update_time;
 	}
 
-	public void setUpdate_time(String update_time) {
+	public void setUpdate_time(Date update_time) {
 		this.update_time = update_time;
 	}
 
@@ -157,81 +155,96 @@ public class Lable implements Serializable,CommonModel{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public void setAdderSn(Long adderSn) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public String getAdderName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public void setAdderName(String adderName) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public Date getAddTime() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public void setAddTime(Date addTime) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public Long getUpdaterSn() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public void setUpdaterSn(Long updaterSn) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public String getUpdaterName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public void setUpdaterName(String updaterName) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public Date getUpdateTime() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public void setUpdateTime(Date updateTime) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public Long getSn() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public void setSn(Long sn) {
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
 	public String getEncryptSn() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public void setEncryptSn(String encryptSn) {
 		// TODO Auto-generated method stub
 		
 	}
-	
+
 	
 }

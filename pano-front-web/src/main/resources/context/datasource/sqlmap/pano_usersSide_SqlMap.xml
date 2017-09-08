@@ -274,34 +274,48 @@ pano_ad
 where project_sn = #PROJECT_SN#
  </select>
  <!-- 查风格img_sn和name -->
- <select id="selectStyleByProject_sn" parameterClass="long" 
- resultClass="com.focus3d.pano.model.Style">
-SELECT 
-project.`NAME` AS project_name,
-baseStyle.`NAME` as name,
-houseStyle.IMG_SN as img_sn,
-baseStyle.IMG_SN as style_sn,
-projectStyle.PROJECT_SN AS project_sn,
-projectStyle.SN AS id,
-houseStyle.start_price AS start_price,
-houseStyle.end_price AS end_price
-FROM pano_project_style projectStyle
-INNER JOIN pano_project_base_style baseStyle
-ON baseStyle.sn = projectStyle.style_sn
-INNER JOIN (SELECT MIN(package_price) AS start_price,SUM(package_price)AS end_price,_houseStyle.* FROM pano_project_house_style _houseStyle LEFT JOIN pano_project_house_package package ON package.house_style_sn = _houseStyle.sn GROUP BY _houseStyle.sn) AS houseStyle
-ON houseStyle.style_sn = projectStyle.sn
-INNER JOIN pano_project_house house
-ON house.sn = houseStyle.house_sn
-INNER JOIN pano_project project
-ON project.sn = houseStyle.project_sn
-where project.SN=#project_sn#
+ <select id="selectStyleByProject_sn" parameterClass="long" resultClass="com.focus3d.pano.model.Style">
+ 
+	SELECT 
+		project.`NAME` AS project_name,
+		baseStyle.`NAME` AS NAME,
+		houseStyle.IMG_SN AS img_sn,
+		baseStyle.IMG_SN AS style_sn,
+		projectStyle.PROJECT_SN AS project_sn,
+		projectStyle.SN AS id,
+		houseStyle.start_price AS start_price,
+		houseStyle.end_price AS end_price
+		FROM pano_project_style projectStyle
+		INNER JOIN pano_project_base_style baseStyle
+		ON baseStyle.sn = projectStyle.style_sn
+		INNER JOIN (
+			SELECT 
+				MIN(package_price) AS start_price,
+				SUM(package_price)AS end_price,
+				_houseStyle.style_sn,
+				_houseStyle.img_sn,
+				_houseStyle.house_sn,
+				_houseStyle.project_sn
+				FROM pano_project_house_style _houseStyle 
+				LEFT JOIN pano_project_house_package package ON package.house_style_sn = _houseStyle.sn 
+				INNER JOIN pano_project_style _proj_style ON _proj_style.SN = _houseStyle.STYLE_SN
+			WHERE _houseStyle.PROJECT_SN = #project_sn#
+			GROUP BY _proj_style.SN
+		) AS houseStyle
+		ON houseStyle.style_sn = projectStyle.sn
+		INNER JOIN pano_project_house house
+		ON house.sn = houseStyle.house_sn
+		INNER JOIN pano_project project
+		ON project.sn = houseStyle.project_sn
+	WHERE project.SN=#project_sn#
+
  </select>
  <!-- 根据style_sn查询lable集合 -->
  <select id="selectLableByStyle_sn" parameterClass="long"
   resultClass="com.focus3d.pano.model.Lable">
  SELECT
 pano_project_label.SN as id,
-pano_project_label.`NAME`,
+pano_project_label.NAME,
 pano_project_label.TYPE,
 pano_project_label.STYLE_SN,
 pano_project_label.ADDER_SN,
