@@ -16,4 +16,6 @@ public interface PanoOrderCouponItemService<T> extends CommonService<T> {
 	 * @return
 	 */
 	T getByCode(String codeNum);
+	
+	T getByOrderSn(Long orderSn);
 }

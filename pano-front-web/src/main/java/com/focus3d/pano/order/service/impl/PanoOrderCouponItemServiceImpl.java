@@ -51,6 +51,8 @@ public class PanoOrderCouponItemServiceImpl extends CommonServiceImpl<PanoOrderC
 						status = 1;//未生效
 					} else if(now.compareTo(endDate) > 0){
 						status = 2;//已过期
+					} else if(couponItem.getCodeStatus() == 1){
+						status = 3;//已被使用过
 					}
 					couponItem.setStatus(status);
 					couponItem.setPriceDiscount(coupon.getPriceDiscount());
@@ -61,5 +63,9 @@ public class PanoOrderCouponItemServiceImpl extends CommonServiceImpl<PanoOrderC
 			}
 		}
 		return null;
+	}
+	@Override
+	public PanoOrderCouponItemModel getByOrderSn(Long orderSn) {
+		return orderCouponItemDao.getByOrderSn(orderSn);
 	}
 }

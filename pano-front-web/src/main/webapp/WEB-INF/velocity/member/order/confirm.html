@@ -336,7 +336,10 @@ function choosePayScheme(paySchemeParam,ele){
                     	alert('优惠券未生效')
                     }else if(data.status == 2){
                     	alert('优惠券过期')
-                    }else{
+                    }else if(data.status == 3){
+                    	alert('优惠券已使用')
+                    }
+                    else{
                     	couponAmount = data.discountAmount;
                     	couponCode = event.target.value;
                     	calculate();

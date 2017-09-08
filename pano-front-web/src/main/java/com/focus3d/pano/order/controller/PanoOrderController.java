@@ -17,7 +17,6 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
-import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -35,7 +34,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.focus3d.pano.common.controller.BaseController;
 import com.focus3d.pano.filter.LoginThreadLocal;
-import com.focus3d.pano.login.constant.LoginTypeEnum;
 import com.focus3d.pano.login.service.PanoMemLoginService;
 import com.focus3d.pano.member.service.PanoUserBankcardService;
 import com.focus3d.pano.member.service.PanoUserReceiveAddressService;
@@ -66,7 +64,6 @@ import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focus3d.pano.sms.service.SmsValidateService;
 import com.focus3d.pano.user.service.PanoMemUserService;
 import com.focustech.common.utils.EncryptUtil;
-import com.focustech.common.utils.TCUtil;
 import com.lianpay.share.security.Md5Algorithm;
 import com.lianpay.share.util.DateUtil;
 import com.llpay.client.vo.PayDataBean;
@@ -741,6 +738,8 @@ public class PanoOrderController extends BaseController {
 				orderTransModel.setTransId(orderNum);
 				orderTransModel.setTransStatus("SUCCESS");
 				panoOrderTransService.insert(orderTransModel);
+				//优惠券使用
+				setCouponItemToUse(orderSn);
 			}
 
 			retBean.setRet_code("0000");
@@ -755,7 +754,7 @@ public class PanoOrderController extends BaseController {
 			resp.getWriter().write(JSON.toJSONString(retBean));
 			resp.getWriter().flush();
 		}
-
+		
 		return;
 	}
 
@@ -860,6 +859,8 @@ public class PanoOrderController extends BaseController {
 			orderTransModel.setTransId(resData.getTransaction_id());
 			orderTransModel.setTransStatus("SUCCESS");
 			panoOrderTransService.insert(orderTransModel);
+			//优惠券使用
+			setCouponItemToUse(orderModel.getSn());
 			response.getWriter()
 					.write("<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>");
 		} catch (Exception e) {
@@ -881,6 +882,16 @@ public class PanoOrderController extends BaseController {
 	@RequestMapping(value = "/wxpayreturn")
 	public String wxpayReturn(String orderSn, HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
 		return redirect("/order/pay/complete?orderSn=" + orderSn);
+	}
+	/**
+	 * 
+	 * *
+	 * @param orderSn
+	 */
+	public void setCouponItemToUse(long orderSn){
+		PanoOrderCouponItemModel couponItemModel = panoOrderCouponItemService.getByOrderSn(orderSn);
+		couponItemModel.setCodeStatus(1);
+		panoOrderCouponItemService.update(couponItemModel);
 	}
 	
 	/**

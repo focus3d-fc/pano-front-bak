@@ -21,7 +21,7 @@ public class PanoOrderCouponItemModel extends PanoOrderCouponItem<PanoOrderCoupo
 
 	private BigDecimal priceDiscount;//优惠价
 	
-	private int status;//0-可用 1-未生效 2-过期
+	private int status;//0-可用 1-未生效 2-过期 3-已被使用过
 
 	public BigDecimal getPriceDiscount() {
 		return priceDiscount;
