@@ -31,6 +31,9 @@ $(function(){
 	    	$("#houseId").val(houseSn);
 	    	//默认打开一个户型全景
 	    	var defaultPanoId = $("#scrollArea").find("img:eq(0)").attr("pano_id");
+	    	if(!defaultPanoId){
+	    		defaultPanoId = -1;
+	    	}
 	    	$("#panoId").val(defaultPanoId);
 	    	if(defaultPanoId){
 	    		$.ajax({
@@ -129,6 +132,9 @@ function getHouse(){
 	    			$(this).addClass("hxfj_border");
 	    			$("#houseId").val(houseSn);
 	    			var panoId = $(this).attr("pano_id");
+	    			if(!panoId){
+	    				panoId = -1;
+	    			}
 	    			$("#panoId").val(panoId);
 	    			$.ajax({
 	    			    url: pano_remote_domain + "/rm-pano/" + panoId,
@@ -138,12 +144,17 @@ function getHouse(){
 	    			    dataType: "jsonp",
 	    			    jsonp: "jsoncallback", 
 	    			    success:function(data){
-	    			    	var xmlUrl = data.xmlUrl;
-	    			    	var panoDomain = data.panoDomain;
-	    			    	var skinVersion = data.skinVersion;
-	    			    	var apiVersion = data.apiVersion;
-	    			    	$("#pano").children().remove();
-	    			       	embedpano({id:"krpanoSWFObject", xml:xmlUrl, target:"pano", html5:"auto", initvars:{pano_domain:panoDomain,skin_version:skinVersion,api_version:apiVersion}, mobilescale:1.0, passQueryParameters:true});
+	    			    	var status = data.status;
+	    			    	if(status == 1){
+	    			    		var xmlUrl = data.xmlUrl;
+	    			    		var panoDomain = data.panoDomain;
+	    			    		var skinVersion = data.skinVersion;
+	    			    		var apiVersion = data.apiVersion;
+	    			    		$("#pano").children().remove();
+	    			    		embedpano({id:"krpanoSWFObject", xml:xmlUrl, target:"pano", html5:"auto", initvars:{pano_domain:panoDomain,skin_version:skinVersion,api_version:apiVersion}, mobilescale:1.0, passQueryParameters:true});
+	    			    	} else {
+	    			    		alert("全景不存在");
+	    			    	}
 	    			    },
 	    			    error:function(xhr,textStatus){
 	    			        console.log('请求错误')
@@ -336,6 +347,10 @@ function openHotspotWin(packageSn, packageTypeSn){
  */
 function closeHotspotWin(){
 	//$("#moreProd").hide();
+}
+
+function panoLoadComplete(){
+	$("#bottomBar").show();
 }
 /**
  * 全景客户端
