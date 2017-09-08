@@ -1,5 +1,8 @@
 <style>
 /*合同条款弹窗*/
+.new-wrap{
+    position: fixed !important;
+}
 .httk { width: 80%; background-color: #fff; padding: .4rem; position:absolute;top:5%;left:10%;height:9rem; border-radius: .1rem; overflow:scroll; }
 .httk h3, .httk div { text-align: center; margin-bottom: .1rem; }
 .httk h5{}
@@ -12,7 +15,7 @@
 
 
 <!--合同条款弹窗-->
-<div class="wrap">
+<div class="wrap new-wrap">
 	<div class="httk">
 		<h3>免 责 声 明</h3>
 		<p>1、格物至居平台内的所有商品均由供应商负责提供，商品的质量、包装装潢、价格、优惠促销、使用方法、使用期限、送货、换货、退货、咨询、投诉等相关问题亦由供应商负责。格物至居平台仅提供代付款服务，并非商品的销售商，与供应商无任何代理关系，不提供与商品相关的任何担保。</p>
@@ -74,7 +77,7 @@
         
 		<p></p>
 		<div>
-			<a href="#" class="paid" id="readContract"> 我已阅读</a>
+			<a href="javascript:void(0)" class="paid" id="readContract"> 我已阅读</a>
 		</div>
 	</div>
 </div>
