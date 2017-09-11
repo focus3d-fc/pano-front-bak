@@ -67,6 +67,7 @@ $(function(){
 });
 
 //显示热点
+/*
 function showHotspot(data){
 	for(var i = 0; i < 20; i ++){
 		editorKrpano().call("removehotspot(hotspot_" + i + ")");
@@ -102,6 +103,7 @@ function showHotspot(data){
 		editorKrpano().call("lookat(" + ath + "," + atv + ")");
 	}
 }
+*/
 //点击户型按钮
 function getHouse(){
 	$("#hx-swiper-wrapper").children().remove();
@@ -222,6 +224,7 @@ function getTcshow(houseId){
 	    		var imgUrl = data[i].imgUrl;
 	    		var img = $("<img/>").attr("src", imgUrl).attr("package_sn",sn);
 	    		$("<div/>").addClass("bd-r1").addClass("swiper-slide" + (i == 0 ? " bd-r " : "")).append($("<div/>").append($("<a/>").append(img).append($("<p/>").text(name)))).appendTo($("#tc-swiper-wrapper"));
+	    		/*
 	    		img.bind("click", function(){
 	    			$("#tc-swiper-wrapper").find("a").removeClass("active");
 	    			$(this).parent().addClass("active");
@@ -255,6 +258,7 @@ function getTcshow(houseId){
 	    			    }
 	    			});
 	    		});
+	    		*/
 	    	}
 	    	
 	    },
