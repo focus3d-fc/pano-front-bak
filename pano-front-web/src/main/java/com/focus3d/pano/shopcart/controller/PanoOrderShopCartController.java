@@ -58,7 +58,7 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 	 * @return
 	 */
 	@RequestMapping(value = "list", method = RequestMethod.GET)
-	public String list(String styleId, ModelMap modelMap, HttpServletRequest request) {
+	public String list(String checkProjectSn, String styleId, ModelMap modelMap, HttpServletRequest request) {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		//透视图状态信息
 		setPerspectiveStatus(modelMap, request);
@@ -71,9 +71,8 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 			}
 		}
 		modelMap.put("shopcartList", shopcartList);
-		if(StringUtils.isNotEmpty(styleId)){
-			modelMap.put("styleId", styleId);
-		}
+		modelMap.put("styleId", styleId);
+		modelMap.put("checkProjectSn", checkProjectSn);
 		//获取导航图
 		setBottomIcon(request);
 		return "/member/shopcart/list";
