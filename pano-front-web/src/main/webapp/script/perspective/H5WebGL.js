@@ -97,16 +97,23 @@ var WebGL = {
         var vector  = new THREE.Vector3(x,y,1).unproject(camera);
         var ray = vector.sub(camera.position).normalize();
         var raycaster = new THREE.Raycaster(camera.position,ray);
+        /*
         var layer = WebGL.root.getObjectByName(layerName);
         if(layer){
             var intersects = raycaster.intersectObjects(layer.children);
             for (var i=0,len = intersects.length;i<len;i++) {
+            	
                 if(intersects[i].object.name == elementName){
                     // WebGL.reLoadElement(intersects[i].object,)
                     ExchangeProduct(intersects[i].object);
                 }
+            	console.log("Hello");
             }
-        }
+        }*/
+        var intersects = raycaster.intersectObjects(WebGL.root.children,true);
+       if(intersects.length>0) {
+        	ExchangeProduct(intersects[0].object);
+       }
     },
     onmouseup:function (event){
         this.INTERSECTED = null;
@@ -367,18 +374,16 @@ function CaculateSpace(data){
 	             }
 	         }
          }
-         debugger;
          CreatePerspectiveSpace(space_index++);
 	 }
 }
 var view_index = 0;
 function CreatePerspectiveView(view){
-	debugger;
 	WebGL.clearScene();
 	var view_render = WebGL.createView("",view.data);
 	for(var layer_key in view.layer){
 		var layer = view.layer[layer_key];
-		var layer_render = WebGL.createLayer(view_render,layer);
+		var layer_render = WebGL.createLayer(view_render,layer.data);
 		for(var element_key in layer.element){
 			var element = layer.element[element_key];
 			WebGL.createElement(layer_render,element);
@@ -613,6 +618,7 @@ function string_to_vec(data){
     return vec;
 }
 
+/*
 function ExchangeProduct(element){
     var i = (++index)%productList.length;
     var data = productList[i];
@@ -620,6 +626,18 @@ function ExchangeProduct(element){
     WebGL.reLoadElement(element,data);
 
     $.ajax({
+    	url:'/perspective/QueryProduct',
+    	data:{"productSn":productSn},
+        type: "POST",
+        dataType:"json",
+        success:function(data){
+    	    $("#image_container").empty();
+            ProdunctInfoFill(data.product);
+        }
+    })
+}*/
+function ExchangeProduct(){
+	$.ajax({
     	url:'/perspective/QueryProduct',
     	data:{"productSn":productSn},
         type: "POST",
