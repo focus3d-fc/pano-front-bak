@@ -288,7 +288,173 @@ function QueryPerspectiveInfo(){
         }
     });
 }
+var space_map = new Object();
+var space_index = 0;
+function CaculateSpace(data){
+	 if(data){
+         space_index = 0;
+         var layer_map;
+         for(var i=0,len=data.length;i<len;i++){
+             var _data = data[i];
+             var view_map;
+             space = space_map[_data.spaceId];
+             if(space){
+            	 view_map = space.view; 
+             }else{
+            	 space = new Object();
+            	 space.name = _data.spaceName;
+            	 view_map = new Object();
+            	 space.view = view_map;
+            	 space_map[_data.spaceId] = space;
+             }
+             
+             var view = view_map[_data.viewId];
+	         if(view){
+	             layer_map = view.layer;
+	         }else{
+	        	 var view_data = new Object();
+	             view_data.id = _data.viewId;
+	             view_data.name = _data.viewName;
+	             view_data.mapid = _data.viewMapId;
+	             view_data.url = _data.viewMapUrl;
+	             view_data.width = _data.viewMapWidth;
+	             view_data.height = _data.viewMapHeight;
+	             
+	             view = new Object();
+	             view.data = view_data;
+	             //view.render = WebGL.createView("",view_data);
+	
+	             view_map[_data.viewId] = view;
+	             layer_map = new Object();
+	             view.layer = layer_map;
+	         }
+	         
+	         if(_data.layerId){
+	        	 var layer = layer_map[_data.layerId];
+	        	 var element_map;
+	             if(layer){
+	            	 element_map = layer.element;
+	             }else{
+	            	 var layer_data = new Object();
+	                 layer_data.id = _data.layerId;
+	                 layer_data.name = _data.layerName;
+	                 layer_data.viewSn = _data.viewSn;
+	                 layer_data.layerOrder = Object.keys(view.layer).length + 1;
+	
+	                 var layer = new Object();
+	                 //layer.render = WebGL.createLayer(view,layer_data);
+	                 layer.data = layer_data;
+	                 element_map = new Object();
+	                 layer.element = element_map;
+	                 layer_map[_data.layerId] = layer;
+	             }
+	
+	             if(_data.elementId){
+	            	 var element_data = new Object();
+	                 element_data.elementId = _data.elementId;
+	                 element_data.elementName = _data.elementName;
+	                 element_data.elementOrder =  Object.keys(layer.element).length + 1;
+	                 element_data.position = _data.position;
+	                 element_data.scale = _data.scale;
+	                 element_data.repeating = _data.repeating;
+	                 element_data.url = _data.elementMapUrl;
+	                 element_data.width = _data.elementMapWidth;
+	                 element_data.height = _data.elementMapHeight;
+	                 
+	                 element_map[_data.elementId] = element_data;
+	                 
+	                 //WebGL.createElement(layer.render,element_data);
+	             }
+	         }
+         }
+         debugger;
+         CreatePerspectiveSpace(space_index++);
+	 }
+}
+var view_index = 0;
+function CreatePerspectiveView(view){
+	debugger;
+	WebGL.clearScene();
+	var view_render = WebGL.createView("",view.data);
+	for(var layer_key in view.layer){
+		var layer = view.layer[layer_key];
+		var layer_render = WebGL.createLayer(view_render,layer);
+		for(var element_key in layer.element){
+			var element = layer.element[element_key];
+			WebGL.createElement(layer_render,element);
+		}
+	}
+	 /*
+     var view_map = new Object();
+     var layer_map;
+     for(var i=0,len=data.length;i<len;i++){
+         var _data = data[i];
+         var view_data;
+         
+         var view = view_map[_data.viewId];
+         if(view){
+             layer_map = view.layer;
+         }else{
+        	 var view_data = new Object();
+             view_data.id = _data.viewId;
+             view_data.name = _data.viewName;
+             view_data.mapid = _data.viewMapId;
+             view_data.url = _data.viewMapUrl;
+             view_data.width = _data.viewMapWidth;
+             view_data.height = _data.viewMapHeight;
+             
+             view = new Object();
+             view.render = WebGL.createView("",view_data);
 
+             view_map[_data.viewId] = view;
+             layer_map = new Object();
+             view.layer = layer_map;
+         }
+
+         if(_data.layerId){
+        	 var layer = layer_map[_data.layerId];
+             if(layer){
+
+             }else{
+            	 var layer_data = new Object();
+                 layer_data.id = _data.layerId;
+                 layer_data.name = _data.layerName;
+                 layer_data.viewSn = _data.viewSn;
+                 layer_data.layerOrder = Object.keys(view.layer).length + 1;
+                 var layer = new Object();
+                 layer.render = WebGL.createLayer(view,layer_data);
+                 layer_map[_data.layerId] = layer;
+             }
+
+             if(_data.elementId){
+            	 var element_data = new Object();
+                 element_data.elementId = _data.elementId;
+                 element_data.elementName = _data.elementName;
+                 element_data.elementOrder = layer.render.children.length + 1;
+                 element_data.position = _data.position;
+                 element_data.scale = _data.scale;
+                 element_data.repeating = _data.repeating;
+                 element_data.url = _data.elementMapUrl;
+                 element_data.width = _data.elementMapWidth;
+                 element_data.height = _data.elementMapHeight;
+                 
+                 WebGL.createElement(layer.render,element_data);
+             }
+         }
+     }*/
+}
+
+function CreatePerspectiveSpace(index){
+	var list = Object.getOwnPropertyNames(space_map);
+	var data = space_map[list].view;
+	view_index = 0;
+	if(data){
+		var length = Object.getOwnPropertyNames(data);
+		CreatePerspectiveView(data[length[view_index++]]);
+	}
+}
+
+/*
 function QueryPerspectiveInfoCallback(data){
     view_index = 0;
     if(data.length!=0){
@@ -300,8 +466,9 @@ function QueryPerspectiveInfoCallback(data){
         	}).show();
         }
     }
-}
+}*/
 
+/*
 function QueryViewAllProducts(data){
     elementName = "element_"+data.elementSn;
     layerName = "layer_"+data.layerSn;
@@ -316,8 +483,9 @@ function QueryViewAllProducts(data){
             }
         }
     });
-}
+}*/
 
+/*
 function QueryViewAllProductsCallback(data){
     index = 0;
     productList = data.productList;
@@ -374,6 +542,65 @@ function QueryViewAllProductsCallback(data){
                     element_data.width = _data.elementMapWidth;
                     element_data.height = _data.elementMapHeight;
                     WebGL.createElement(layer.render,element_data);
+                }
+            }
+        }
+    }
+}*/
+
+function QueryViewAllProductsCallback(data){
+    if(data){
+        WebGL.clearScene();
+        var view_map = new Object();
+        var layer_map;
+        for(var i=0,len=data.length;i<len;i++){
+            var _data = data[i];
+            var view = view_map[_data.viewId];
+            if(view){
+                layer_map = view_map.layer;
+            }else{
+                var view_data = new Object();
+                view_data.id = _data.viewId;
+                view_data.name = _data.viewName;
+                view_data.mapid = _data.viewMapId;
+                view_data.url = _data.viewMapUrl;
+                view_data.width = _data.viewMapWidth;
+                view_data.height = _data.viewMapHeight;
+                view = new View(view_data);
+                view_map[_data.viewId] = view;
+                layer_map = new Object();
+                view_map.layer = layer_map;
+            }
+
+            if(_data.layerId){
+                var layer = layer_map[_data.layerId];
+                if(layer){
+                	
+                }else{
+                    var layer_data = new Object();
+                    layer_data.id = _data.layerId;
+                    layer_data.name = _data.layerName;
+                    layer_data.viewSn = _data.viewSn;
+                    layer_data.layerOrder = _data.layerOrder;
+
+                    layer = view.add_layer(layer_data);
+                    layer_map[_data.layerId] = layer;
+                }
+
+                if(_data.elementId){
+                    var element_data = new Object();
+                    element_data.elementId = _data.elementId;
+                    element_data.elementName = _data.elementName;
+
+                    element_data.elementOrder = layer.layer.children.length + 1;
+                    element_data.position = _data.position;
+                    element_data.scale = _data.scale;
+                    element_data.repeating = _data.repeating;
+                    element_data.url = _data.elementMapUrl;
+                    element_data.width = _data.elementMapWidth;
+                    element_data.height = _data.elementMapHeight;
+
+                    WebGL.createElement(layer.layer,element_data);
                 }
             }
         }

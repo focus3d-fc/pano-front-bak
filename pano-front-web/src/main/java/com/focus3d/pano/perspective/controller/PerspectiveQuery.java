@@ -89,9 +89,8 @@ public class PerspectiveQuery extends BaseController {
 			PanoPerspectiveViewModel model) {
 		try {
 			LinkedHashMap<String, Object> space = new LinkedHashMap<String, Object>();
-
-			List<LinkedHashMap<String, Object>> list = _service
-					.QueryViewAllProductInfo(model);
+			
+			List<LinkedHashMap<String, Object>> list = _service.QueryViewAllProductInfo(model);
 			for (LinkedHashMap<String, Object> map : list) {
 				if (map.get("viewMap") != null) {
 					Long viewMapKey = Long.parseLong(map.get("viewMap")
@@ -125,72 +124,6 @@ public class PerspectiveQuery extends BaseController {
 					map.put("elementMapId", EncryptUtil.encode(elementMapKey));
 				}
 			}
-			/*
-			 * for (LinkedHashMap<String, Object> map : list) {
-			 * LinkedHashMap<String, Object> view; LinkedHashMap<String, Object>
-			 * view_child;
-			 * 
-			 * String viewId = map.get("viewId").toString();
-			 * 
-			 * if (space.containsKey(viewId)) { view = (LinkedHashMap<String,
-			 * Object>)space.get(viewId); view_child = (LinkedHashMap<String,
-			 * Object>)view.get("layer"); } else { view = new
-			 * LinkedHashMap<String, Object>(); space.put(viewId, view);
-			 * 
-			 * view.put("id", viewId); view.put("name",
-			 * map.get("viewName").toString());
-			 * 
-			 * Long mapKey = Long.valueOf(map.get("viewMap").toString());
-			 * 
-			 * view.put("mapid", EncryptUtil.encode(mapKey));
-			 * 
-			 * view.put("url", client.getFile(mapKey,
-			 * FileAttributeEnum.VISIT_ADDR)); view.put("width",
-			 * client.getFile(mapKey, FileAttributeEnum.WIDTH));
-			 * view.put("height", client.getFile(mapKey,
-			 * FileAttributeEnum.HEIGHT)); view_child = new
-			 * LinkedHashMap<String, Object>(); view.put("layer", view_child); }
-			 * 
-			 * Object _layerId = map.get("layerId"); if (_layerId != null) {
-			 * String layerId = _layerId.toString(); LinkedHashMap<String,
-			 * Object> layer; LinkedHashMap<String, Object> layer_child; if
-			 * (view_child.containsKey(layerId)) { layer =
-			 * (LinkedHashMap<String, Object>)view_child.get(layerId);
-			 * layer_child = (LinkedHashMap<String,
-			 * Object>)layer.get("element"); } else { layer = new
-			 * LinkedHashMap<String, Object>(); view_child.put(layerId, layer);
-			 * 
-			 * layer.put("id", layerId); layer.put("name",
-			 * map.get("layerName").toString()); layer.put("viewSn", viewId);
-			 * layer.put("layerOrder",map.get("layerOrder").toString());
-			 * 
-			 * layer_child = new LinkedHashMap<String, Object>();
-			 * layer.put("element", layer_child); }
-			 * 
-			 * Object _elementId = map.get("elementId"); if (_elementId != null)
-			 * { String elementId = _elementId.toString(); LinkedHashMap<String,
-			 * Object> element = new LinkedHashMap<String, Object>();
-			 * layer_child.put(elementId, element);
-			 * 
-			 * element.put("elementId", _elementId);
-			 * element.put("elementName",map.get("elementName").toString());
-			 * element.put("elementOrder",map.get("elementOrder").toString());
-			 * 
-			 * if(map.get("elementMap")!=null){ Long element_mapKey =
-			 * Long.valueOf(map.get("elementMap").toString());
-			 * 
-			 * Map<String,String> element_map = client.getFile(element_mapKey);
-			 * 
-			 * element.put("url",element_map.get(FileAttributeEnum.VISIT_ADDR.name
-			 * ()));
-			 * element.put("width",element_map.get(FileAttributeEnum.WIDTH.
-			 * name()));
-			 * element.put("height",element_map.get(FileAttributeEnum.HEIGHT
-			 * .name())); element.put("position",
-			 * map.get("position").toString()); element.put("scale",
-			 * map.get("scale").toString()); } } } } String value =
-			 * JsonUtils.mapToJson(space);
-			 */
 			String value = JsonUtils.arrayToJson(list.toArray());
 			ajaxOutput(response, JsonUtils.arrayToJson(list.toArray()));
 		} catch (IOException e) {
@@ -709,7 +642,12 @@ public class PerspectiveQuery extends BaseController {
 			Long _packageTypeSn = EncryptUtil.decode(packageTypeSn);
 			Long _productSn = EncryptUtil.decode(productSn);
 			
-			List<Map<String, Object>> list = QueryPerspectiveByProductSn(_houseStyleSn.toString(),_packageTypeSn.toString(),_productSn.toString());
+			PanoPerspectiveViewModel panoPerspectiveView = new PanoPerspectiveViewModel();
+			panoPerspectiveView.setHouseStyleSn(_houseStyleSn);
+					
+			List<LinkedHashMap<String, Object>> list = _service.QueryViewAllProductInfo(panoPerspectiveView);
+			
+			//List<Map<String, Object>> list = QueryPerspectiveByProductSn(_houseStyleSn.toString(),_packageTypeSn.toString(),_productSn.toString());
 			JSONObject json = new JSONObject();
 			JSONObject param = new JSONObject();
 			param.put("houseStyleSn", _houseStyleSn);
@@ -727,14 +665,55 @@ public class PerspectiveQuery extends BaseController {
 	}
 	
 	@RequestMapping("QueryPerspective")
-	public String QueryPerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String packageTypeSn,String productSn, ModelMap map) {
-		// 验证有没有透视图
-		List<Map<String, Object>> list = QueryPerspectiveByProductSn(houseStyleSn,packageTypeSn,productSn);
-		Product product = product_service.getProductBySn(productSn);
-		map.put("viewlist",JsonUtils.arrayToJson(list.toArray()));
-		map.put("product", JsonUtils.objectToJson(product));
-		map.put("packageTypeSn", packageTypeSn);
-		map.put("houseStyleSn", houseStyleSn);
+	public String QueryPerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String packageTypeSn,String productSn, ModelMap result) {
+		try{
+			Long _houseStyleSn = Long.parseLong(houseStyleSn);
+			PanoPerspectiveViewModel panoPerspectiveView = new PanoPerspectiveViewModel();
+			panoPerspectiveView.setHouseStyleSn(_houseStyleSn);
+			List<LinkedHashMap<String, Object>> list = _service.QueryViewAllProductInfo(panoPerspectiveView);
+			
+			for (LinkedHashMap<String, Object> map : list) {
+				if (map.get("viewMap") != null) {
+					Long viewMapKey = Long.parseLong(map.get("viewMap")
+							.toString());
+
+					Map<String, String> viewMapFile = client
+							.getFile(viewMapKey);
+
+					map.put("viewMapUrl", viewMapFile
+							.get(FileAttributeEnum.VISIT_ADDR.name()));
+					map.put("viewMapWidth",
+							viewMapFile.get(FileAttributeEnum.WIDTH.name()));
+					map.put("viewMapHeight",
+							viewMapFile.get(FileAttributeEnum.HEIGHT.name()));
+					map.put("viewMapId", EncryptUtil.encode(viewMapKey));
+				}
+
+				if (map.get("elementMap") != null) {
+					Long elementMapKey = Long.parseLong(map.get("elementMap")
+							.toString());
+
+					Map<String, String> elementMapFile = client
+							.getFile(elementMapKey);
+
+					map.put("elementMapUrl", elementMapFile
+							.get(FileAttributeEnum.VISIT_ADDR.name()));
+					map.put("elementMapWidth",
+							elementMapFile.get(FileAttributeEnum.WIDTH.name()));
+					map.put("elementMapHeight",
+							elementMapFile.get(FileAttributeEnum.HEIGHT.name()));
+					map.put("elementMapId", EncryptUtil.encode(elementMapKey));
+				}
+			}
+			//List<Map<String, Object>> list = QueryPerspectiveByProductSn(houseStyleSn,packageTypeSn,productSn);
+			Product product = product_service.getProductBySn(productSn);
+			result.put("viewlist",JsonUtils.arrayToJson(list.toArray()));
+			result.put("product", JsonUtils.objectToJson(product));
+			result.put("packageTypeSn", packageTypeSn);
+			result.put("houseStyleSn", houseStyleSn);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		return "perspective/pro";
 	}
 	

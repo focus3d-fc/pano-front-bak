@@ -343,9 +343,11 @@
     -->
     <![CDATA[select count(*) from pano_perspective_view]]>
   </select>
-  
- <select id="view_all_products" parameterClass="com.focus3d.pano.model.ibator.PanoPerspectiveView" resultClass="java.util.LinkedHashMap">
+
+	<select id="view_all_products" parameterClass="com.focus3d.pano.model.ibator.PanoPerspectiveView" resultClass="java.util.LinkedHashMap">
 	    SELECT 
+	      space.sn AS spaceId,
+	      space.name AS spaceName,
 	      view.`SN` AS viewId,
 	      View.`VIEW_NAME` AS viewName,
 	      view.`BASE_MAP` AS viewMap,
@@ -361,15 +363,17 @@
 	      elementName, 
 	      element.package_type_sn AS elementStyleId
 	    FROM
-	      pano_perspective_view VIEW 
+	      pano_perspective_view view
+	      INNER JOIN pano_project_space space
+	      ON space.sn = view.house_space_sn
 	      LEFT JOIN pano_perspective_layer layer
 	        ON view.`SN` = layer.view_sn 
 	      LEFT JOIN (SELECT _element.*,type.`NAME` AS elementName FROM pano_perspective_element _element INNER JOIN pano_project_package_type TYPE ON _element.package_type_sn = type.sn) AS element
 	        ON layer.`SN` = element.`LAYER_SN`
 	      LEFT JOIN (SELECT _elementProduct.* FROM pano_perspective_element_product _elementProduct INNER JOIN pano_product product ON _elementProduct.product_sn = product.sn) AS elementProduct
 		ON element.element_product_sn = elementProduct.sn
-		 WHERE view.`SN` = #sn#
-		 ORDER BY layerOrder ASC,elementOrder ASC
+		where view.`HOUSE_STYLE_SN` = #houseStyleSn#
+		ORDER BY layerOrder ASC,elementOrder ASC
 	</select>
 	
  	<select id="view_layer_element" parameterClass="java.lang.Long" resultClass="java.util.LinkedHashMap">
