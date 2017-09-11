@@ -26,4 +26,16 @@ public class PanoProjectPackageProductDao extends CommonDao<PanoProjectPackagePr
 		criteria.createCriteria().andPackageTypeSnEqualTo(housePackageTypeSn);
 		return selectByCriteria(criteria, PanoProjectPackageProductModel.class);
 	}
+	/**
+	 * 
+	 * *
+	 * @param housePackageTypeSn
+	 * @param productSn
+	 * @return
+	 */
+	public PanoProjectPackageProductModel getByPackageTypeAndProduct(long housePackageTypeSn, long productSn){
+		PanoProjectPackageProductCriteria criteria = new PanoProjectPackageProductCriteria();
+		criteria.createCriteria().andPackageTypeSnEqualTo(housePackageTypeSn).andProductSnEqualTo(productSn);
+		return selectFirstByExample(criteria, PanoProjectPackageProductModel.class);
+	}
 }

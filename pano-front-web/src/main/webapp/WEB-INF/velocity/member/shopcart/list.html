@@ -34,7 +34,10 @@
 	                <div class="detail">
 	                    <a href="#"><p>$!shopcart.housePackage.style.name $!shopcart.housePackage.house.name</p></a>
 	                    <p >户型：$!shopcart.housePackage.house.roomNum室$!shopcart.housePackage.house.hallNum厅</p>
-	                    <p class="red">￥$!shopcart.housePackage.packagePrice<s class="col"> ￥$!shopcart.housePackage.discountPrice</s><small class="fr col">6件</small></p>
+	                    <p class="red">
+	                    	￥$!shopcart.housePackage.packagePrice<s class="col"> ￥$!shopcart.housePackage.discountPrice</s>
+	                    	<small class="fr col">$!{shopcart.totalProductNum}件</small>
+	                    </p>
 	                </div>
 	            </div>
 	        </div>
@@ -47,8 +50,7 @@
 							<div class="de">
 								<p>$!detail.packageProduct.name</p>
 								<p class="col">$!{detail.packageProduct.length}*$!{detail.packageProduct.wide}*$!detail.packageProduct.height</p>
-								<p>$!detail.packageProduct.fabricColor</p>
-								<p>x1</p>
+								<p>$!detail.packageProduct.fabricColor x$!detail.productNum</p>
 							</div>
 						</a>
 					</div>
