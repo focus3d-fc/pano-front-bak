@@ -1,9 +1,6 @@
 package com.focus3d.pano.index.controller;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,6 +54,7 @@ public class IndexController extends BaseController{
 		if(StringUtils.isEmpty(checkProjectSn)){
 			//默认首页显示数据库里第一个楼盘
 			showProject = projectList.get(0);
+			checkProjectSn = showProject.getEncryptSn();
 		} else {
 			//条件查询
 			for (PanoProjectModel project : projectList) {
@@ -80,6 +78,7 @@ public class IndexController extends BaseController{
 			style.setLableList(lableList);
 		}    
 		modelMap.addAttribute("styleList",styleList);
+		modelMap.put("checkProjectSn", checkProjectSn);
 		return "/pub/index";
 	}
 	/**

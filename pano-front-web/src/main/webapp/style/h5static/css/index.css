@@ -30,7 +30,7 @@
     vertical-align: middle;
     width: .65rem;
     height: .65rem;
-    background: url("/images/show.png") -.2rem -.05rem/cover no-repeat;
+    font-style: normal;
 }
 .banner .location a{
     position: absolute;
