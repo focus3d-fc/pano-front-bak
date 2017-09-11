@@ -70,4 +70,5 @@
 	<sqlMap resource="context/datasource/sqlmap/pano_order_trans_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/pano_user_bankcard_SqlMap.xml" />
 	<sqlMap resource="context/datasource/sqlmap/custom/c_pano_order_SqlMap.xml" />
+	<sqlMap resource="context/datasource/sqlmap/custom/c_pano_project_house_package.xml" />
 </sqlMapConfig>

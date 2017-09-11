@@ -19,6 +19,8 @@ public class PanoOrderShopcartDetailModel extends PanoOrderShopcartDetail<PanoOr
 	private PanoProductModel packageProduct;
 	
 	private PanoProjectPackageTypeModel packageType;
+	
+	private Integer productNum = 1;//产品组合数量
 
 	public PanoProductModel getPackageProduct() {
 		return packageProduct;
@@ -34,5 +36,13 @@ public class PanoOrderShopcartDetailModel extends PanoOrderShopcartDetail<PanoOr
 
 	public void setPackageType(PanoProjectPackageTypeModel packageType) {
 		this.packageType = packageType;
+	}
+
+	public Integer getProductNum() {
+		return productNum;
+	}
+
+	public void setProductNum(Integer productNum) {
+		this.productNum = productNum;
 	}
 }

@@ -38,6 +38,12 @@ public class PanoOrderShopcartModel extends PanoOrderShopcart<PanoOrderShopcartM
 		this.details = details;
 	}
 
-	
+	public Integer getTotalProductNum() {
+		int num = 0;
+		for(PanoOrderShopcartDetailModel detail : details){
+			num += detail.getProductNum();
+		}
+		return num;
+	}
 
 }

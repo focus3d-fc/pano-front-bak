@@ -1,5 +1,7 @@
 package com.focus3d.pano.project.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +71,11 @@ public class PanoProjectHousePackageServiceImpl extends CommonServiceImpl<PanoPr
 			}
 		}
 		return housePackage;
+	}
+
+	@Override
+	public List<PanoProjectHousePackageModel> listByProject(long projectSn) {
+		return housePackageDao.listByProject(projectSn);
 	}
 
 }

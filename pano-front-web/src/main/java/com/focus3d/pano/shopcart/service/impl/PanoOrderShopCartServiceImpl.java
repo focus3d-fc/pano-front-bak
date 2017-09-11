@@ -22,6 +22,7 @@ import com.focus3d.pano.shopcart.dao.PanoOrderShopCartDao;
 import com.focus3d.pano.shopcart.dao.PanoOrderShopcartDetailDao;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focustech.common.utils.ListUtils;
+import com.focustech.common.utils.TCUtil;
 
 /**
  * 
@@ -89,18 +90,20 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 			List<PanoOrderShopcartDetailModel> shopcartDetails = orderShopcartDetailDao.listByShopcart(shopcart.getSn());
 			// 设置购物车明细信息
 			for (PanoOrderShopcartDetailModel shopcartDetail : shopcartDetails) {
-				Long packageProductSn = shopcartDetail.getPackageProductSn();
-				if (packageProductSn != null) {
-					PanoProductModel packageProduct = productDao.getBySn(packageProductSn);
-					if (packageProduct != null) {
-						shopcartDetail.setPackageProduct(packageProduct);
-					}
-				}
+				Long productSn = shopcartDetail.getPackageProductSn();
 				Long packageTypeSn = shopcartDetail.getPackageTypeSn();
-				if (packageTypeSn != null) {
+				if(productSn != null && packageTypeSn != null){
+					PanoProductModel product = productDao.getBySn(productSn);
+					if (product != null) {
+						shopcartDetail.setPackageProduct(product);
+					}
 					PanoProjectPackageTypeModel packageType = packageTypeDao.getBySn(packageTypeSn);
 					if (packageType != null) {
 						shopcartDetail.setPackageType(packageType);
+					}
+					PanoProjectPackageProductModel packageProduct = packageProductDao.getByPackageTypeAndProduct(packageTypeSn, productSn);
+					if(packageProduct != null){
+						shopcartDetail.setProductNum(TCUtil.iv(packageProduct.getProductNum()));
 					}
 				}
 			}
