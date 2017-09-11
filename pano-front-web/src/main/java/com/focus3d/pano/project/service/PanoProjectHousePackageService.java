@@ -1,5 +1,7 @@
 package com.focus3d.pano.project.service;
 
+import java.util.List;
+
 import com.focus3d.pano.common.service.CommonService;
 /**
  * 户型套餐
@@ -16,4 +18,11 @@ public interface PanoProjectHousePackageService<T> extends CommonService<T> {
 	 * @return
 	 */
 	T getDetail(long housePackageSn);
+	/**
+	 * 
+	 * *
+	 * @param projectSn
+	 * @return
+	 */
+	List<T> listByProject(long projectSn);
 }
