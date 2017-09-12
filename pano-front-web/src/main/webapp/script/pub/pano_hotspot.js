@@ -355,6 +355,7 @@ function closeHotspotWin(){
 
 function panoLoadComplete(){
 	$("#bottomBar").show();
+	$("#mcIcon").show();
 }
 /**
  * 全景客户端
