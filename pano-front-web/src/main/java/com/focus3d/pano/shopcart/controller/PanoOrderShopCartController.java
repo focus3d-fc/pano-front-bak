@@ -116,7 +116,6 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 	 */
 	private void setPerspectiveInfo(ModelMap modelMap, HttpServletRequest request) {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		//购物车状态记录,类别下面产品更换
 		String productSn = HttpUtil.sv(request, "productSn");
 		String packageTypeSn = HttpUtil.sv(request, "packageTypeSn");
 		String houseStyleSn = HttpUtil.sv(request, "houseStyleSn");
@@ -126,12 +125,14 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 			PanoOrderShopcartModel shopcart = orderShopCartService.getUserShopcartPackage(userSn, housePackageSn);
 			PanoOrderShopcartDetailModel shopcartDetail = orderShopCartDetailService.getByAttribute(shopcart.getSn(), TCUtil.lv(packageTypeSn));
 			Long oldProductSn = shopcartDetail.getPackageProductSn();
+			//更新购物车产品
 			if(shopcartDetail != null && !TCUtil.sv(oldProductSn).equals(productSn)){
 				shopcartDetail.setPackageProductSn(TCUtil.lv(productSn));
 				orderShopCartDetailService.update(shopcartDetail);
 			}
 			PanoProjectHouseStyleModel houseStyle = houseStyleService.getBySn(TCUtil.lv(houseStyleSn));
 			modelMap.put("styleId", houseStyle.getStyleSn());
+			//购物车状态记录,返回到购物车时设置勾选等状态信息
 			JSONObject rememberStatus = new JSONObject();
 			rememberStatus.put("housePackageSn", housePackageSn);
 			rememberStatus.put("productSn", productSn);
