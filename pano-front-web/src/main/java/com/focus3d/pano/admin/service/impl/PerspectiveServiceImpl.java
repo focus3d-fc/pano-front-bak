@@ -64,8 +64,14 @@ public class PerspectiveServiceImpl implements IPerspectiveService{
 	}
 
 	@Override
-	public List<LinkedHashMap<String, Object>> QueryViewAllProductInfo(PanoPerspectiveViewModel map) throws SQLException {
-		List<LinkedHashMap<String, Object>> list = perspectiveView.QueryViewAllProductInfo(map);
+	public List<LinkedHashMap<String, Object>> QueryPerspective(HashMap<String,Object> map) throws SQLException {
+		List<LinkedHashMap<String, Object>> list = perspectiveView.QueryPerspective(map);
+		return list;
+	}
+	
+	@Override
+	public List<LinkedHashMap<String, Object>> QueryRelation(HashMap<String,Object> map) throws SQLException {
+		List<LinkedHashMap<String, Object>> list = perspectiveView.QueryRelation(map);
 		return list;
 	}
 
@@ -163,6 +169,16 @@ public class PerspectiveServiceImpl implements IPerspectiveService{
 	public List<String> QueryUsedPackageTypeName(Long sn) throws SQLException {
 		List<String> list = perspectiveView.QueryUsedPackageTypeName(sn);
 		return list;
+	}
+	
+	@Override
+	public void UpdateShopCart(HashMap<String,Object> map) throws SQLException{
+		perspectiveView.UpdateShopCart(map);
+	}
+	
+	@Override
+	public List<Map<String, Object>> QueryProductView(HashMap<String,Object> map) throws SQLException{
+		return perspectiveView.QueryProductView(map);
 	}
 
 }

@@ -376,6 +376,108 @@
 		ORDER BY layerOrder ASC,elementOrder ASC
 	</select>
 	
+	<!--  select id="query_perspective" parameterClass="java.util.HashMap" resultClass="java.util.LinkedHashMap">
+		SELECT 
+		  space.sn AS spaceId,
+		  space.name AS spaceName,
+		  view.`SN` AS viewId,
+		  View.`VIEW_NAME` AS viewName,
+		  view.`BASE_MAP` AS viewMap,
+		  layer.`SN` AS layerId,
+		  layer.`LAYER_NAME` AS layerName,
+		  layer.`LAYER_ORDER` AS layerOrder,
+		  element.`SN` AS elementId,
+		  element.`ELEMENT_ORDER` AS elementOrder,
+		  elementName,
+		  element.package_type_sn AS elementStyleId,
+		  shop_cart.productId AS productId,
+		  shop_cart.elementMap AS elementMap,
+		  shop_cart.position AS position,
+		  shop_cart.scale AS scale,
+		  shop_cart.repeating AS repeating
+		FROM
+		  pano_perspective_view VIEW 
+		  INNER JOIN pano_project_space SPACE
+		    ON space.sn = view.house_space_sn 
+		  LEFT JOIN pano_perspective_layer layer 
+		    ON view.`SN` = layer.view_sn 
+		  LEFT JOIN  (SELECT _element.*,type.`NAME` AS elementName FROM pano_perspective_element _element INNER JOIN pano_project_package_type TYPE ON _element.package_type_sn = type.sn) AS element 
+		    ON layer.`SN` = element.`LAYER_SN` 
+		  LEFT JOIN ( SELECT element.sn AS elementId,cart_detail.package_product_sn AS productId,elementProduct.product_map AS elementMap, elementProduct.`position` AS position,elementProduct.`scale` AS scale,elementProduct.`repeating` AS repeating,cart_detail.package_type_sn,cart_detail.package_product_sn AS product_sn FROM pano_order_shopcart cart INNER JOIN pano_order_shopcart_detail cart_detail ON cart_detail.shopcart_sn = cart.sn INNER JOIN pano_perspective_element element ON element.package_type_sn = cart_detail.package_type_sn INNER JOIN pano_perspective_element_product elementProduct ON elementProduct.element_sn = element.sn AND elementProduct.product_sn = cart_detail.package_product_sn INNER JOIN pano_product product ON elementProduct.product_sn = product.sn WHERE cart.user_sn = #USER_SN#) AS shop_cart 
+		    ON shop_cart.elementId = element.`SN`
+		WHERE view.`HOUSE_STYLE_SN` = #HOUSE_STYLE_SN# 
+		ORDER BY layerOrder ASC,elementOrder ASC 
+	</select-->
+	
+	<select id="query_relation" parameterClass="java.util.HashMap" resultClass="java.util.LinkedHashMap">
+		SELECT 
+		  space.sn AS spaceId,
+		  space.name AS spaceName,
+		  view.`SN` AS viewId,
+		  View.`VIEW_NAME` AS viewName
+		FROM
+		  pano_perspective_view VIEW 
+		INNER JOIN pano_project_space SPACE
+		  ON space.sn = view.house_space_sn
+		WHERE view.`HOUSE_STYLE_SN` = #HOUSE_STYLE_SN# 
+	</select>
+	
+	<select id="query_perspective" parameterClass="java.util.HashMap" resultClass="java.util.LinkedHashMap">
+		SELECT 
+		  view.`SN` AS viewId,
+		  View.`VIEW_NAME` AS viewName,
+		  view.`BASE_MAP` AS viewMap,
+		  layer.`SN` AS layerId,
+		  layer.`LAYER_NAME` AS layerName,
+		  layer.`LAYER_ORDER` AS layerOrder,
+		  element.`SN` AS elementId,
+		  element.`ELEMENT_ORDER` AS elementOrder,
+		  elementName,
+		  element.package_type_sn AS elementStyleId,
+		  shop_cart.productId AS productId,
+		  shop_cart.elementMap AS elementMap,
+		  shop_cart.position AS position,
+		  shop_cart.scale AS scale,
+		  shop_cart.repeating AS repeating
+		FROM
+		  pano_perspective_view VIEW 
+		  LEFT JOIN pano_perspective_layer layer 
+		    ON view.`SN` = layer.view_sn 
+		  LEFT JOIN  (SELECT _element.*,type.`NAME` AS elementName FROM pano_perspective_element _element INNER JOIN pano_project_package_type TYPE ON _element.package_type_sn = type.sn) AS element 
+		    ON layer.`SN` = element.`LAYER_SN` 
+		  LEFT JOIN ( SELECT element.sn AS elementId,cart_detail.package_product_sn AS productId,elementProduct.product_map AS elementMap, elementProduct.`position` AS position,elementProduct.`scale` AS scale,elementProduct.`repeating` AS repeating,cart_detail.package_type_sn,cart_detail.package_product_sn AS product_sn FROM pano_order_shopcart cart INNER JOIN pano_order_shopcart_detail cart_detail ON cart_detail.shopcart_sn = cart.sn INNER JOIN pano_perspective_element element ON element.package_type_sn = cart_detail.package_type_sn INNER JOIN pano_perspective_element_product elementProduct ON elementProduct.element_sn = element.sn AND elementProduct.product_sn = cart_detail.package_product_sn INNER JOIN pano_product product ON elementProduct.product_sn = product.sn WHERE cart.user_sn = #USER_SN#) AS shop_cart 
+		    ON shop_cart.elementId = element.`SN`
+		WHERE view.`HOUSE_STYLE_SN` = #HOUSE_STYLE_SN# 
+			AND view.sn = #VIEW_SN#
+		ORDER BY layerOrder ASC,elementOrder ASC 
+	</select>
+	
+	<select id="query_product_view" parameterClass="java.util.HashMap" resultClass="java.util.LinkedHashMap">
+		SELECT 
+          view.sn AS viewId,
+          element.sn AS elementId 
+        FROM
+          pano_perspective_view VIEW 
+          INNER JOIN pano_perspective_layer layer 
+            ON view.`SN` = layer.view_sn 
+          INNER JOIN pano_perspective_element element 
+            ON layer.sn = element.layer_sn 
+            AND element.package_type_sn = 10170 
+        WHERE view.`HOUSE_STYLE_SN` = #HOUSE_STYLE_SN#
+	</select>
+	
+	
+	<update id="update_shopcart" parameterClass="java.util.HashMap">
+		UPDATE 
+        	pano_order_shopcart_detail cart_detail 
+        INNER JOIN pano_order_shopcart cart 
+          ON cart.sn = cart_detail.shopcart_sn 
+          AND cart.user_sn = #user_sn# 
+        INNER JOIN pano_perspective_element element 
+          ON element.package_type_sn = cart_detail.package_type_sn AND element.sn = #element_sn#
+        SET cart_detail.package_product_sn = #product_sn# 
+	</update>
+	
  	<select id="view_layer_element" parameterClass="java.lang.Long" resultClass="java.util.LinkedHashMap">
  		SELECT 
       view.`SN` AS viewId,

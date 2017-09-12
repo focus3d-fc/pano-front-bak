@@ -15,6 +15,7 @@
 	<div class="container">
 		<!--图片-->
 		<section class="product">
+		 	<div id="space_name"></div>
 			<div class="toushi">
 	           <div id="WebGl-OutPut" style="width: 100%"></div>
 	           
@@ -23,6 +24,8 @@
 	                <p>切换视角</p>
 	            </div>
 	        </div>
+	        <div class="button" id="return_panorama">返回全景</div>
+	        <div class="button" id="next_space">下个空间</div>
 			
 			<p id="name"></p>
 			<p class="content" id="venderName"></p>
@@ -54,10 +57,25 @@
 		var image_array;
 
 		$(function() {
+			
+			houseStyleSn = '$!{houseStyleSn}';
+			spaceSn = '$!{spaceSn}'
+			userSn = '$!{userSn}';
+			productView = $.parseJSON('$!productView');
+			
+			//spaceSn = 100041;
+			
 			$("#exchange_view").hide();
+			
+			$("#return_panorama").on("click",function(){
+				return_panorama();
+			})
+			
+			$("#next_space").hide();
+			
 			WebGL_Container = $("#WebGl-OutPut");
 			$("#Confirm_Select").on("click", function(){
-				window.location.href = "/shopcart/list?productSn=" + productSn + "&packageTypeSn=" + $("#packageTypeSn").val() + "&houseStyleSn=" + $("#houseStyleSn").val();
+				update_cart();
 			});
 			var rate = 4 / 3;
 			var width = WebGL_Container.width();
@@ -68,7 +86,8 @@
 			scaler = width / 800.0;
 			var value = '$!viewlist';
 			var _list = $.parseJSON('$!viewlist');
-			var productInfo = $.parseJSON('$!product');
+			//var productInfo = $.parseJSON('$!product');
+			
 			CaculateSpace(_list);
 			//ProdunctInfoFill(productInfo);
 		});

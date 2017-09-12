@@ -29,8 +29,13 @@ public class PerspectiveViewDAOImpl extends CommonDao<PanoPerspectiveViewModel>{
 		return value;
 	}
 	
-	public List<LinkedHashMap<String, Object>> QueryViewAllProductInfo(PanoPerspectiveViewModel model) throws SQLException{
-		List<LinkedHashMap<String, Object>> list = getSqlMapClient().queryForList("pano_perspective_view.view_all_products", model);
+	public List<LinkedHashMap<String, Object>> QueryRelation(HashMap<String,Object> map) throws SQLException{
+		List<LinkedHashMap<String, Object>> list = getSqlMapClient().queryForList("pano_perspective_view.query_relation", map);
+		return list;
+	}
+	
+	public List<LinkedHashMap<String, Object>> QueryPerspective(HashMap<String,Object> map) throws SQLException{
+		List<LinkedHashMap<String, Object>> list = getSqlMapClient().queryForList("pano_perspective_view.query_perspective", map);
 		return list;
 	}
 	
@@ -54,6 +59,14 @@ public class PerspectiveViewDAOImpl extends CommonDao<PanoPerspectiveViewModel>{
 	public List<String> QueryUsedPackageTypeName(Long sn) throws SQLException{
 		List<String> list = getSqlMapClient().queryForList("pano_perspective_view.query_used_package_type", sn);
 		return list;
+	}
+	
+	public void UpdateShopCart(HashMap<String,Object> map) throws SQLException{
+		getSqlMapClient().update("pano_perspective_view.update_shopcart", map);
+	}
+	
+	public List<Map<String, Object>> QueryProductView(HashMap<String,Object> map) throws SQLException{
+		return getSqlMapClient().queryForList("pano_perspective_view.query_product_view", map);
 	}
 	
 }

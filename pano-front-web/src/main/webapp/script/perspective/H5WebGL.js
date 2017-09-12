@@ -9,7 +9,22 @@ var layerName;
 var productList;
 var productSn;
 var index = 0;
+
+var houseStyleSn;
+var spaceSn;
+var viewSn;
+var userSn;
+
+var productView;
+
+var space_list = new Array();
+
+
+var space_index = 0;
 var view_index = 0;
+
+var element_product;
+var element_user_product;
 
 var WebGL = {
     scene:{},
@@ -110,9 +125,14 @@ var WebGL = {
             	console.log("Hello");
             }
         }*/
-        var intersects = raycaster.intersectObjects(WebGL.root.children,true);
-       if(intersects.length>0) {
-        	ExchangeProduct(intersects[0].object);
+       var intersects = raycaster.intersectObjects(WebGL.root.children,true);
+       
+       for(var i=0,len=intersects.length;i<len;i++) {
+    	    var child = intersects[i].object;
+    	    if(child.name.indexOf("element_")!=-1){
+    	    	ExchangeProduct(child);
+    	    	break;
+    	    }
        }
     },
     onmouseup:function (event){
@@ -295,8 +315,8 @@ function QueryPerspectiveInfo(){
         }
     });
 }
-var space_map = new Object();
-var space_index = 0;
+
+/*
 function CaculateSpace(data){
 	 if(data){
          space_index = 0;
@@ -359,6 +379,7 @@ function CaculateSpace(data){
 	             if(_data.elementId){
 	            	 var element_data = new Object();
 	                 element_data.elementId = _data.elementId;
+	                 element_data.productId = _data.productId;
 	                 element_data.elementName = _data.elementName;
 	                 element_data.elementOrder =  Object.keys(layer.element).length + 1;
 	                 element_data.position = _data.position;
@@ -369,247 +390,319 @@ function CaculateSpace(data){
 	                 element_data.height = _data.elementMapHeight;
 	                 
 	                 element_map[_data.elementId] = element_data;
-	                 
 	                 //WebGL.createElement(layer.render,element_data);
 	             }
 	         }
          }
-         CreatePerspectiveSpace(space_index++);
+         debugger;
+         var length = Object.keys(space_map).length;
+         if(length>1){
+        	$("#next_space").show().off("click").on("click",function(){
+ 				//next_space(space_index++%length);
+ 				update_cart(function(){
+ 					CreatePerspectiveSpace(space_index++%length);
+ 				})
+ 			})
+         }
+         CreatePerspectiveSpace(space_index++%length);
+	 }
+}*/
+
+function CaculateSpace(data){
+	 if(data){
+        space_index = 0;
+        var space_map = new Object();
+        var layer_map;
+        for(var i=0,len=data.length;i<len;i++){
+            var _data = data[i];
+            var view_map;
+            space = space_map[_data.spaceId];
+            if(space){
+            	view_map = space.view; 
+            }else{
+            	space = new Object();
+            	
+            	space.id = _data.spaceId;
+            	space.name = _data.spaceName;
+            	view_map = new Object();
+            	space.view = view_map;
+            	space_map[_data.spaceId] = space;
+            }
+            
+            var view = view_map[_data.viewId];
+	        if(!view){
+	        	view = new Object();
+	        	view.id = _data.viewId;
+	        	view_map[_data.viewId] = view;
+	        }
+        }
+        
+        var keys = Object.keys(space_map);
+        
+        if(space_map.hasOwnProperty(spaceSn)){
+        	var data = space_map[spaceSn];
+        	var view_list = new Array();
+        	for(var i=0,len=productView.length;i<len;i++){
+    			var key = productView[i].viewId;
+    			if(data.view.hasOwnProperty[key]){
+    				view_list.push(data.view[key].id);
+    			}
+    		}
+        	
+        	for(var key in data.view){
+        		if($.inArray(key,view_list)==-1){
+        			view_list.push(data.view[key].id);
+        		}
+        	}
+        	data.view = view_list;
+        	space_list.push(data);
+        	
+        	for(var key in space_map){
+        		if(key!=spaceSn){
+        			var data = space_map[key];
+            		var view_list = new Array();
+            		for(var key in data.view){
+            			view_list.push(data.view[key].id);
+            		}
+            		data.view = view_list;
+            		space_list.push(data);
+        		}
+        	}
+        }else{
+        	for(var key in space_map){
+        		var data = space_map[key];
+        		var view_list = new Array();
+        		for(var key in data.view){
+        			view_list.push(data.view[key].id);
+        		}
+        		data.view = view_list;
+        		space_list.push(data);
+        	}
+        }
+
+        if(space_list.length>1){
+        	$("#next_space").show().off("click").on("click",function(){
+				update_cart(function(){
+					QuerySpacePerspectiveInfo(space_index++%space_list.length);
+				})
+			})
+        }
+        
+        QuerySpacePerspectiveInfo(space_index++%space_list.length);
 	 }
 }
-var view_index = 0;
-function CreatePerspectiveView(view){
-	WebGL.clearScene();
-	var view_render = WebGL.createView("",view.data);
+
+function QuerySpacePerspectiveInfo(index){
+	$("#exchange_view").hide();
+	var space_data = space_list[index];
+	var data = space_data.view;
+	$("#space_name").text(space_data.name);
+	view_index = 0;
+	if(data.length!=0){
+		if(data.length>1){
+			$("#exchange_view").show().off("click").on("click",function(){
+				update_cart(function(){
+					QueryPerspectiveDetail(data[view_index++%data.length]);
+ 				})
+			});
+		}
+		QueryPerspectiveDetail(data[view_index++%data.length]);
+	}
+}
+
+function QueryPerspectiveDetail(viewKey){
+	//WebGL.clearScene();
+	//var view_render = WebGL.createView("",view.data);
+	/*
+	element_user_product = new Object();
+	element_product = new Object();
 	for(var layer_key in view.layer){
 		var layer = view.layer[layer_key];
 		var layer_render = WebGL.createLayer(view_render,layer.data);
 		for(var element_key in layer.element){
 			var element = layer.element[element_key];
+			element_user_product[element.elementId] = element.productId;
 			WebGL.createElement(layer_render,element);
 		}
-	}
-	 /*
-     var view_map = new Object();
-     var layer_map;
-     for(var i=0,len=data.length;i<len;i++){
-         var _data = data[i];
-         var view_data;
-         
-         var view = view_map[_data.viewId];
-         if(view){
-             layer_map = view.layer;
-         }else{
-        	 var view_data = new Object();
-             view_data.id = _data.viewId;
-             view_data.name = _data.viewName;
-             view_data.mapid = _data.viewMapId;
-             view_data.url = _data.viewMapUrl;
-             view_data.width = _data.viewMapWidth;
-             view_data.height = _data.viewMapHeight;
-             
-             view = new Object();
-             view.render = WebGL.createView("",view_data);
-
-             view_map[_data.viewId] = view;
-             layer_map = new Object();
-             view.layer = layer_map;
-         }
-
-         if(_data.layerId){
-        	 var layer = layer_map[_data.layerId];
-             if(layer){
-
-             }else{
-            	 var layer_data = new Object();
-                 layer_data.id = _data.layerId;
-                 layer_data.name = _data.layerName;
-                 layer_data.viewSn = _data.viewSn;
-                 layer_data.layerOrder = Object.keys(view.layer).length + 1;
-                 var layer = new Object();
-                 layer.render = WebGL.createLayer(view,layer_data);
-                 layer_map[_data.layerId] = layer;
-             }
-
-             if(_data.elementId){
-            	 var element_data = new Object();
-                 element_data.elementId = _data.elementId;
-                 element_data.elementName = _data.elementName;
-                 element_data.elementOrder = layer.render.children.length + 1;
-                 element_data.position = _data.position;
-                 element_data.scale = _data.scale;
-                 element_data.repeating = _data.repeating;
-                 element_data.url = _data.elementMapUrl;
-                 element_data.width = _data.elementMapWidth;
-                 element_data.height = _data.elementMapHeight;
-                 
-                 WebGL.createElement(layer.render,element_data);
-             }
-         }
-     }*/
-}
-
-function CreatePerspectiveSpace(index){
-	var list = Object.getOwnPropertyNames(space_map);
-	var data = space_map[list].view;
-	view_index = 0;
-	if(data){
-		var length = Object.getOwnPropertyNames(data);
-		CreatePerspectiveView(data[length[view_index++]]);
-	}
-}
-
-/*
-function QueryPerspectiveInfoCallback(data){
-    view_index = 0;
-    if(data.length!=0){
-        view_list = data;
-        QueryViewAllProducts(view_list[view_index]);
-        if(data.length>1){
-        	$("#exchange_view").on("click",function(){
-        		ExchangeView();
-        	}).show();
-        }
-    }
-}*/
-
-/*
-function QueryViewAllProducts(data){
-    elementName = "element_"+data.elementSn;
-    layerName = "layer_"+data.layerSn;
-    productSn = data.productSn;
-    $.ajax({url:"/perspective/QueryViewElementInfo",
+	}*/
+	var param = new Object();
+	param.userSn = "100007";
+	param.viewSn = viewKey;
+	param.houseStyleSn = houseStyleSn;
+	
+	$.ajax({url:"/perspective/QueryPerspectiveDetail",
         type: "POST",
-        data:data,
+        data:param,
         dataType:"json",
         success:function(data){
             if(data){
-                QueryViewAllProductsCallback(data);
+            	CreatePerspective(data);
             }
         }
     });
-}*/
+}
 
-/*
-function QueryViewAllProductsCallback(data){
-    index = 0;
-    productList = data.productList;
-    if(data.renderList){
-        WebGL.clearScene();
-        var view_map = new Object();
-        var layer_map;
-        for(var i=0,len=data.renderList.length;i<len;i++){
-            var _data = data.renderList[i];
-            var view = view_map[_data.viewId];
-            if(view){
-                layer_map = view.layer;
+function CreatePerspective(data){
+	WebGL.clearScene();
+	element_user_product = new Object();
+	element_product = new Object();
+	
+	var view_map = new Object();
+    var layer_map;
+    var exhibition_product = "";
+    var random_elementId = "";
+    for(var i=0,len=data.length;i<len;i++){
+        var _data = data[i];
+        
+        var view = view_map[_data.viewId];
+        if(view){
+            layer_map = view.layer;
+        }else{
+       	 	var view_data = new Object();
+            view_data.id = _data.viewId;
+            view_data.name = _data.viewName;
+            view_data.mapid = _data.viewMapId;
+            view_data.url = _data.viewMapUrl;
+            view_data.width = _data.viewMapWidth;
+            view_data.height = _data.viewMapHeight;
+            
+            view = new Object();
+            view.data = view_data;
+            view.render = WebGL.createView("",view_data);
+
+            view_map[_data.viewId] = view;
+            layer_map = new Object();
+            view.layer = layer_map;
+        }
+        
+        for(var j=0;j<productView.length;j++){
+        	if(productView[j].viewId == _data.viewId){
+        		exhibition_product = productView[j].elementId;
+        	}
+        }
+
+        if(_data.layerId){
+        	var layer = layer_map[_data.layerId];
+       	 	var element_map;
+            if(layer){
+            	
             }else{
-                var view_data = new Object();
-                view_data.id = _data.viewId;
-                view_data.name = _data.viewName;
-                view_data.mapid = _data.viewMapId;
-                view_data.url = _data.viewMapUrl;
-                view_data.width = _data.viewMapWidth;
-                view_data.height = _data.viewMapHeight;
+           	 	var layer_data = new Object();
+                layer_data.id = _data.layerId;
+                layer_data.name = _data.layerName;
+                layer_data.viewSn = _data.viewSn;
+                layer_data.layerOrder = Object.keys(view.layer).length + 1;
 
-                view = new Object();
-                view.render = WebGL.createView("",view_data);
-
-                view_map[_data.viewId] = view;
-                layer_map = new Object();
-                view.layer = layer_map;
+                var layer = new Object();
+                layer.render = WebGL.createLayer(view,layer_data);
+                layer_map[_data.layerId] = layer;
             }
 
-            if(_data.layerId){
-                var layer = layer_map[_data.layerId];
-                if(layer){
-
-                }else{
-                    var layer_data = new Object();
-                    layer_data.id = _data.layerId;
-                    layer_data.name = _data.layerName;
-                    layer_data.viewSn = _data.viewSn;
-                    layer_data.layerOrder = Object.keys(view.layer).length + 1;
-                    var layer = new Object();
-                    layer.render = WebGL.createLayer(view,layer_data);
-                    layer_map[_data.layerId] = layer;
-                }
-
-                if(_data.elementId){
-                    var element_data = new Object();
-                    element_data.elementId = _data.elementId;
-                    element_data.elementName = _data.elementName;
-                    element_data.elementOrder = layer.render.children.length + 1;
-                    element_data.position = _data.position;
-                    element_data.scale = _data.scale;
-                    element_data.repeating = _data.repeating;
-                    element_data.url = _data.elementMapUrl;
-                    element_data.width = _data.elementMapWidth;
-                    element_data.height = _data.elementMapHeight;
-                    WebGL.createElement(layer.render,element_data);
+            if(_data.elementId){
+            	if(random_elementId==""){
+            		random_elementId =  _data.elementId;
+            	}
+           	 	var element_data = new Object();
+                element_data.elementId = _data.elementId;
+                element_data.productId = _data.productId;
+                element_data.elementName = _data.elementName;
+                element_data.elementOrder =  layer.render.children.length + 1;
+                element_data.position = _data.position;
+                element_data.scale = _data.scale;
+                element_data.repeating = _data.repeating;
+                element_data.url = _data.elementMapUrl;
+                element_data.width = _data.elementMapWidth;
+                element_data.height = _data.elementMapHeight;
+                
+                element_user_product[_data.elementId] = _data.productId;
+                
+                
+                WebGL.createElement(layer.render,element_data);
+                
+                if(exhibition_product == _data.elementId){
+                	var elementId = _data.elementId;
+                	$.ajax({
+            	    	url:'/perspective/queryElementProduct',
+            	    	data:{"sn":elementId},
+            	        type: "POST",
+            	        dataType:"json",
+            	        success:function(data){
+            	        	product_list = new Object();
+            	        	element_product[elementId] = product_list;
+            	        	for(var i=0,len=data.length;i<len;i++){
+            	        		var child_data = data[i];
+            	        		product_list[child_data.sn] = child_data;
+            	        	}
+            	        	var keys = Object.keys(product_list);
+            	    		var product_key  = element_user_product[elementId];
+            	    		for(var i=0;i<keys.length;i++){
+            	    			if(product_key == keys[i]){
+            	    				var data = product_list[product_key];
+            	    				ProdunctInfoFill(data);
+            	    				break;
+            	    			}
+            	    		}
+            	        }
+            	    })
                 }
             }
         }
     }
-}*/
-
-function QueryViewAllProductsCallback(data){
-    if(data){
-        WebGL.clearScene();
-        var view_map = new Object();
-        var layer_map;
-        for(var i=0,len=data.length;i<len;i++){
-            var _data = data[i];
-            var view = view_map[_data.viewId];
-            if(view){
-                layer_map = view_map.layer;
-            }else{
-                var view_data = new Object();
-                view_data.id = _data.viewId;
-                view_data.name = _data.viewName;
-                view_data.mapid = _data.viewMapId;
-                view_data.url = _data.viewMapUrl;
-                view_data.width = _data.viewMapWidth;
-                view_data.height = _data.viewMapHeight;
-                view = new View(view_data);
-                view_map[_data.viewId] = view;
-                layer_map = new Object();
-                view_map.layer = layer_map;
-            }
-
-            if(_data.layerId){
-                var layer = layer_map[_data.layerId];
-                if(layer){
-                	
-                }else{
-                    var layer_data = new Object();
-                    layer_data.id = _data.layerId;
-                    layer_data.name = _data.layerName;
-                    layer_data.viewSn = _data.viewSn;
-                    layer_data.layerOrder = _data.layerOrder;
-
-                    layer = view.add_layer(layer_data);
-                    layer_map[_data.layerId] = layer;
-                }
-
-                if(_data.elementId){
-                    var element_data = new Object();
-                    element_data.elementId = _data.elementId;
-                    element_data.elementName = _data.elementName;
-
-                    element_data.elementOrder = layer.layer.children.length + 1;
-                    element_data.position = _data.position;
-                    element_data.scale = _data.scale;
-                    element_data.repeating = _data.repeating;
-                    element_data.url = _data.elementMapUrl;
-                    element_data.width = _data.elementMapWidth;
-                    element_data.height = _data.elementMapHeight;
-
-                    WebGL.createElement(layer.layer,element_data);
-                }
-            }
-        }
+    
+    if(exhibition_product == ""){
+    	var elementId = random_elementId;
+    	if(elementId!=""){
+			$.ajax({
+		    	url:'/perspective/queryElementProduct',
+		    	data:{"sn":elementId},
+		        type: "POST",
+		        dataType:"json",
+		        success:function(data){
+		        	product_list = new Object();
+		        	element_product[elementId] = product_list;
+		        	for(var i=0,len=data.length;i<len;i++){
+		        		var child_data = data[i];
+		        		product_list[child_data.sn] = child_data;
+		        	}
+		        	var keys = Object.keys(product_list);
+		    		var product_key  = element_user_product[elementId];
+		    		
+		    		for(var i=0,len=keys.length;i<len;i++){
+		    			if(product_key == keys[i]){
+		    				var data = product_list[product_key];
+		    				ProdunctInfoFill(data);
+		    				break;
+		    			}
+		    		}
+		        }
+		    })
+    	}
     }
+}
+
+function return_panorama(){
+	
+}
+
+function update_cart(callback){
+	var param = new Object();
+	param.userSn = "100007";
+	
+	if(Object.keys(element_user_product).length!=0){
+		param.data = JSON.stringify(element_user_product);
+		$.ajax({url:"/perspective/UpdateShopCart",
+	        type: "POST",
+	        data:param,
+	        dataType:"json",
+	        success:function(data){
+	            if(data){
+	            	callback();
+	            }
+	        }
+	    });
+	}else{
+		callback();
+	}
 }
 
 function string_to_vec(data){
@@ -618,40 +711,51 @@ function string_to_vec(data){
     return vec;
 }
 
-/*
+
 function ExchangeProduct(element){
-    var i = (++index)%productList.length;
-    var data = productList[i];
-    productSn = data.productSn;
-    WebGL.reLoadElement(element,data);
-
-    $.ajax({
-    	url:'/perspective/QueryProduct',
-    	data:{"productSn":productSn},
-        type: "POST",
-        dataType:"json",
-        success:function(data){
-    	    $("#image_container").empty();
-            ProdunctInfoFill(data.product);
-        }
-    })
-}*/
-function ExchangeProduct(){
-	$.ajax({
-    	url:'/perspective/QueryProduct',
-    	data:{"productSn":productSn},
-        type: "POST",
-        dataType:"json",
-        success:function(data){
-    	    $("#image_container").empty();
-            ProdunctInfoFill(data.product);
-        }
-    })
-}
-
-function ExchangeView(){
-    var i = (++view_index)%view_list.length;
-    QueryViewAllProducts(view_list[i]);
+	var name = element.name;
+	var elementId = name.split("_")[1];
+	var product_list = element_product[elementId];
+	if(product_list==null&&product_list==undefined){
+		$.ajax({
+	    	url:'/perspective/queryElementProduct',
+	    	data:{"sn":elementId},
+	        type: "POST",
+	        dataType:"json",
+	        success:function(data){
+	        	product_list = new Object();
+	        	element_product[elementId] = product_list;
+	        	for(var i=0,len=data.length;i<len;i++){
+	        		var child_data = data[i];
+	        		product_list[child_data.sn] = child_data;
+	        	}
+	            //ProdunctInfoFill(data.product);
+	        	var keys = Object.keys(product_list);
+	    		var product_key  = element_user_product[elementId];
+	    		for(var i=0,len=keys.length;i<len;i++){
+	    			if(product_key == keys[i]){
+	    				element_user_product[elementId] = keys[++i%len];
+	    				var data = product_list[element_user_product[elementId]];
+	    				WebGL.reLoadElement(element,data);
+	    				ProdunctInfoFill(data);
+	    				break;
+	    			}
+	    		}
+	        }
+	    })
+	}else{
+		var keys = Object.keys(product_list);
+		var product_key  = element_user_product[elementId];
+		for(var i=0,len=keys.length;i<len;i++){
+			if(product_key == keys[i]){
+				element_user_product[elementId] = keys[++i%len];
+				var data = product_list[element_user_product[elementId]];
+				WebGL.reLoadElement(element,data);
+				ProdunctInfoFill(data);
+				break;
+			}
+		}
+	}
 }
 
 function ProdunctInfoFill(productInfo){

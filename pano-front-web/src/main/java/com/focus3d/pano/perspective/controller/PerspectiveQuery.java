@@ -3,6 +3,7 @@ package com.focus3d.pano.perspective.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,57 +85,6 @@ public class PerspectiveQuery extends BaseController {
 		}
 	}
 
-	@RequestMapping("QueryViewProducts")
-	public void QueryViewProducts(HttpServletResponse response,
-			PanoPerspectiveViewModel model) {
-		try {
-			LinkedHashMap<String, Object> space = new LinkedHashMap<String, Object>();
-			
-			List<LinkedHashMap<String, Object>> list = _service.QueryViewAllProductInfo(model);
-			for (LinkedHashMap<String, Object> map : list) {
-				if (map.get("viewMap") != null) {
-					Long viewMapKey = Long.parseLong(map.get("viewMap")
-							.toString());
-
-					Map<String, String> viewMapFile = client
-							.getFile(viewMapKey);
-
-					map.put("viewMapUrl", viewMapFile
-							.get(FileAttributeEnum.VISIT_ADDR.name()));
-					map.put("viewMapWidth",
-							viewMapFile.get(FileAttributeEnum.WIDTH.name()));
-					map.put("viewMapHeight",
-							viewMapFile.get(FileAttributeEnum.HEIGHT.name()));
-					map.put("viewMapId", EncryptUtil.encode(viewMapKey));
-				}
-
-				if (map.get("elementMap") != null) {
-					Long elementMapKey = Long.parseLong(map.get("elementMap")
-							.toString());
-
-					Map<String, String> elementMapFile = client
-							.getFile(elementMapKey);
-
-					map.put("elementMapUrl", elementMapFile
-							.get(FileAttributeEnum.VISIT_ADDR.name()));
-					map.put("elementMapWidth",
-							elementMapFile.get(FileAttributeEnum.WIDTH.name()));
-					map.put("elementMapHeight",
-							elementMapFile.get(FileAttributeEnum.HEIGHT.name()));
-					map.put("elementMapId", EncryptUtil.encode(elementMapKey));
-				}
-			}
-			String value = JsonUtils.arrayToJson(list.toArray());
-			ajaxOutput(response, JsonUtils.arrayToJson(list.toArray()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	@RequestMapping("queryElement")
 	public void QueryElement(HttpServletResponse response,
 			PanoPerspectiveElementModel model) {
@@ -193,7 +143,10 @@ public class PerspectiveQuery extends BaseController {
 				json.put("sn", child.get("sn").toString());
 				json.put("id", child.get("id").toString());
 				json.put("name", child.get("name").toString());
-
+				json.put("summary", child.get("summary").toString());
+				json.put("venderName", child.get("venderName").toString());
+				json.put("dimension", child.get("dimension").toString());
+				
 				if (child.get("elementProductSn") != null) {
 					Long mapid = Long.parseLong(child.get("mapid").toString());
 					Map<String, String> map = client.getFile(mapid);
@@ -526,114 +479,6 @@ public class PerspectiveQuery extends BaseController {
 		}
 	}
 
-	@RequestMapping("QueryViewElementInfo")
-	public void QueryViewElementInfo(HttpServletResponse response,
-			String viewSn, String elementSn, String productSn)
-			throws SQLException {
-		try {
-			Long element_sn = Long.parseLong(elementSn);
-			Long product_sn = Long.parseLong(productSn);
-
-			PanoPerspectiveViewModel viewModel = new PanoPerspectiveViewModel();
-			viewModel.setSn(Long.parseLong(viewSn));
-
-			List<PanoPerspectiveElementProduct> product_list = _service
-					.QueryElementProdctList(element_sn);
-
-			Map<String, Object> data = new HashMap<String, Object>();
-
-			List<LinkedHashMap<String, Object>> list = _service
-					.QueryViewAllProductInfo(viewModel);
-			for (LinkedHashMap<String, Object> map : list) {
-				if (map.get("viewMap") != null) {
-					Long viewMapKey = Long.parseLong(map.get("viewMap")
-							.toString());
-
-					Map<String, String> viewMapFile = client
-							.getFile(viewMapKey);
-					map.put("viewMapUrl", viewMapFile
-							.get(FileAttributeEnum.VISIT_ADDR.name()));
-					map.put("viewMapWidth",
-							viewMapFile.get(FileAttributeEnum.WIDTH.name()));
-					map.put("viewMapHeight",
-							viewMapFile.get(FileAttributeEnum.HEIGHT.name()));
-					map.put("viewMapId", EncryptUtil.encode(viewMapKey));
-				}
-
-				if (map.get("elementId") != null) {
-					Long elementId = Long.parseLong(map.get("elementId")
-							.toString());
-					if (elementId.longValue() == element_sn.longValue()) {
-						for (PanoPerspectiveElementProduct product : product_list) {
-							if (product.getProductSn().longValue() == product_sn
-									.longValue()) {
-								Long elementMapKey = product.getProductMap();
-								Map<String, String> elementMapFile = client
-										.getFile(elementMapKey);
-								map.put("elementMapUrl", elementMapFile.get(FileAttributeEnum.VISIT_ADDR.name()));
-								map.put("elementMapWidth", elementMapFile.get(FileAttributeEnum.WIDTH.name()));
-								map.put("elementMapHeight", elementMapFile.get(FileAttributeEnum.HEIGHT.name()));
-								map.put("elementMapId",EncryptUtil.encode(elementMapKey));
-								map.put("position", product.getPosition());
-								map.put("scale", product.getScale());
-								map.put("repeating", product.getRepeating());
-								break;
-							}
-						}
-					} else {
-						if (map.get("elementMap") != null) {
-							Long elementMapKey = Long.parseLong(map.get(
-									"elementMap").toString());
-
-							Map<String, String> elementMapFile = client
-									.getFile(elementMapKey);
-
-							map.put("elementMapUrl", elementMapFile
-									.get(FileAttributeEnum.VISIT_ADDR.name()));
-							map.put("elementMapWidth", elementMapFile
-									.get(FileAttributeEnum.WIDTH.name()));
-							map.put("elementMapHeight", elementMapFile
-									.get(FileAttributeEnum.HEIGHT.name()));
-							map.put("elementMapId",
-									EncryptUtil.encode(elementMapKey));
-						}
-					}
-				}
-			}
-
-			List<Map<String, Object>> product_info = new LinkedList<Map<String, Object>>();
-			for (PanoPerspectiveElementProduct product : product_list) {
-				Map<String, Object> info = new HashMap<String, Object>();
-				Long mapKey = product.getProductMap();
-				Map<String, String> mapFile = client.getFile(mapKey);
-				info.put("productSn", product.getProductSn());
-				info.put("url",mapFile.get(FileAttributeEnum.VISIT_ADDR.name()));
-				info.put("width", mapFile.get(FileAttributeEnum.WIDTH.name()));
-				info.put("height", mapFile.get(FileAttributeEnum.HEIGHT.name()));
-				info.put("position", product.getPosition());
-				info.put("scale", product.getScale());
-				info.put("repeating", product.getRepeating());
-
-				if (product.getProductSn().longValue() == product_sn.longValue()) {
-					product_info.add(0, info);
-				} else {
-					product_info.add(info);
-				}
-			}
-
-			data.put("renderList", list);
-			data.put("productList", product_info);
-
-			ajaxOutput(response, JsonUtils.mapToJson(data));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	@RequestMapping("ValidatePerspective")
 	public void ValidatePerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String packageTypeSn,String productSn) {
 		// 验证有没有透视图
@@ -642,10 +487,11 @@ public class PerspectiveQuery extends BaseController {
 			Long _packageTypeSn = EncryptUtil.decode(packageTypeSn);
 			Long _productSn = EncryptUtil.decode(productSn);
 			
-			PanoPerspectiveViewModel panoPerspectiveView = new PanoPerspectiveViewModel();
-			panoPerspectiveView.setHouseStyleSn(_houseStyleSn);
-					
-			List<LinkedHashMap<String, Object>> list = _service.QueryViewAllProductInfo(panoPerspectiveView);
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			map.put("HOUSE_STYLE_SN", _houseStyleSn);
+			map.put("USER_SN", "100007");
+			
+			List<LinkedHashMap<String, Object>> list = _service.QueryRelation(map);
 			
 			//List<Map<String, Object>> list = QueryPerspectiveByProductSn(_houseStyleSn.toString(),_packageTypeSn.toString(),_productSn.toString());
 			JSONObject json = new JSONObject();
@@ -665,12 +511,44 @@ public class PerspectiveQuery extends BaseController {
 	}
 	
 	@RequestMapping("QueryPerspective")
-	public String QueryPerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String packageTypeSn,String productSn, ModelMap result) {
-		try{
-			Long _houseStyleSn = Long.parseLong(houseStyleSn);
-			PanoPerspectiveViewModel panoPerspectiveView = new PanoPerspectiveViewModel();
-			panoPerspectiveView.setHouseStyleSn(_houseStyleSn);
-			List<LinkedHashMap<String, Object>> list = _service.QueryViewAllProductInfo(panoPerspectiveView);
+	public String QueryPerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String spaceSn,String packageTypeSn,String userSn,String productSn,ModelMap result) {
+		try{		
+			HashMap<String,Object> param = new HashMap<String,Object>();
+			param.put("HOUSE_STYLE_SN", houseStyleSn);
+			param.put("SPACE_SN", spaceSn);
+			param.put("PACKAGE_TYPE_SN", packageTypeSn);
+			param.put("USER_SN", "100007");
+			
+			List<LinkedHashMap<String, Object>> list = _service.QueryRelation(param);
+			
+			List<Map<String,Object>> product_view = _service.QueryProductView(param);
+			
+			//List<Map<String, Object>> list = QueryPerspectiveByProductSn(houseStyleSn,packageTypeSn,productSn);
+			//Product product = product_service.getProductBySn(productSn);
+			
+			result.put("viewlist",JsonUtils.arrayToJson(list.toArray()));
+			//result.put("product", JsonUtils.objectToJson(product));
+			result.put("packageTypeSn", packageTypeSn);
+			result.put("houseStyleSn", houseStyleSn);
+			result.put("userSn", userSn);
+			result.put("spaceSn", spaceSn);
+			result.put("viewSn","");
+			result.put("productView", JsonUtils.arrayToJson(product_view.toArray()));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "perspective/pro";
+	}
+	
+	@RequestMapping("QueryPerspectiveDetail")
+	public void QueryPerspectiveDetail(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String userSn,String viewSn,ModelMap result){
+		try{			
+			HashMap<String,Object> param = new HashMap<String,Object>();
+			param.put("HOUSE_STYLE_SN", houseStyleSn);
+			param.put("USER_SN", userSn);
+			param.put("VIEW_SN", viewSn);
+			
+			List<LinkedHashMap<String, Object>> list = _service.QueryPerspective(param);
 			
 			for (LinkedHashMap<String, Object> map : list) {
 				if (map.get("viewMap") != null) {
@@ -706,16 +584,13 @@ public class PerspectiveQuery extends BaseController {
 				}
 			}
 			//List<Map<String, Object>> list = QueryPerspectiveByProductSn(houseStyleSn,packageTypeSn,productSn);
-			Product product = product_service.getProductBySn(productSn);
-			result.put("viewlist",JsonUtils.arrayToJson(list.toArray()));
-			result.put("product", JsonUtils.objectToJson(product));
-			result.put("packageTypeSn", packageTypeSn);
-			result.put("houseStyleSn", houseStyleSn);
+			ajaxOutput(response, JsonUtils.arrayToJson(list.toArray()));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return "perspective/pro";
+		//return "perspective/pro";
 	}
+	
 	
 	@RequestMapping("QueryProduct")
 	public void QueryProduct(HttpServletResponse response, ModelMap model_map,String productSn){
@@ -724,6 +599,31 @@ public class PerspectiveQuery extends BaseController {
 			JSONObject json = new JSONObject();
 			json.put("product", product);
 			ajaxOutput(response, json.toJSONString());
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping("UpdateShopCart")
+	public void UpdateShopCart(HttpServletResponse response, String userSn,String data){
+		try{
+			JSONObject map = JSONObject.parseObject(data);
+			for (Map.Entry<String, Object> entry : map.entrySet()) {
+	            HashMap<String,Object> hashMap = new HashMap<String,Object>();
+	            hashMap.put("element_sn", entry.getKey());
+	            String value = entry.getValue().toString();
+	            if(value.equals("")){
+	            	continue;
+	            }
+	            hashMap.put("product_sn", entry.getValue());
+	            hashMap.put("user_sn",userSn);
+	            _service.UpdateShopCart(hashMap);
+	        }
+			JSONObject json = new JSONObject();
+			json.put("info", "succeed");
+			ajaxOutput(response, json.toJSONString());
+		}catch(SQLException e){
+			e.printStackTrace();
 		}catch(IOException e){
 			e.printStackTrace();
 		}

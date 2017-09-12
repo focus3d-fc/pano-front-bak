@@ -17,7 +17,9 @@ public interface IPerspectiveService{
 	
 	List<PanoPerspectiveViewModel> QueryViewInfo(PanoPerspectiveViewModel model) throws SQLException;
 	
-	List<LinkedHashMap<String, Object>> QueryViewAllProductInfo(PanoPerspectiveViewModel map) throws SQLException;
+	List<LinkedHashMap<String, Object>> QueryRelation(HashMap<String,Object> map) throws SQLException;
+	
+	List<LinkedHashMap<String, Object>> QueryPerspective(HashMap<String,Object> map) throws SQLException;
 	
 	List<Map<String, Object>> QueryElement(PanoPerspectiveElementModel model) throws SQLException;
 	
@@ -54,4 +56,8 @@ public interface IPerspectiveService{
 	List<LinkedHashMap<String, Object>> QueryViewLayerElementInfo(Long sn) throws SQLException;
 	
 	List<String> QueryUsedPackageTypeName(Long sn) throws SQLException;
+	
+	void UpdateShopCart(HashMap<String,Object> map) throws SQLException;
+	
+	List<Map<String, Object>> QueryProductView(HashMap<String,Object> map) throws SQLException;
 }
