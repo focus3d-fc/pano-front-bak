@@ -75,19 +75,17 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 			//复制楼盘套餐数据到购车车
 			orderShopCartService.copyFromHousePackage(userSn, projectSn);
 			//透视图状态信息
-			setPerspectiveStatus(modelMap, request);
-			List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
-			for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
-				Long housePackageSn = panoOrderShopcartModel.getHousePackageSn();
-				PanoProjectHousePackageModel housePackage = housePackageService.getDetail(housePackageSn);
-				if (housePackage != null) {
-					panoOrderShopcartModel.setHousePackage(housePackage);
-				}
-			}
+			setPerspectiveInfo(modelMap, request);
 			//分组显示
 			Map<Long, PanoOrderShopcartListVo> groupMap = new HashMap<Long, PanoOrderShopcartListVo>();
+			List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
 			for (PanoOrderShopcartModel shopcart : shopcartList) {
-				PanoProjectHousePackageModel housePackage = shopcart.getHousePackage();
+				Long housePackageSn = shopcart.getHousePackageSn();
+				PanoProjectHousePackageModel housePackage = housePackageService.getDetail(housePackageSn);
+				if (housePackage != null) {
+					shopcart.setHousePackage(housePackage);
+				}
+				//分组
 				PanoProjectHouseModel house = housePackage.getHouse();
 				PanoProjectStyleModel style = housePackage.getStyle();
 				Long houseSn = house.getSn();
@@ -103,7 +101,6 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 				}
 				
 			}
-			//modelMap.put("shopcartList", shopcartList);
 			modelMap.put("styleId", styleId);
 			modelMap.put("project", project);
 			modelMap.put("houseGroupMap", groupMap);
@@ -117,7 +114,7 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 	 * @param modelMap
 	 * @param request
 	 */
-	private void setPerspectiveStatus(ModelMap modelMap, HttpServletRequest request) {
+	private void setPerspectiveInfo(ModelMap modelMap, HttpServletRequest request) {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		//购物车状态记录,类别下面产品更换
 		String productSn = HttpUtil.sv(request, "productSn");
