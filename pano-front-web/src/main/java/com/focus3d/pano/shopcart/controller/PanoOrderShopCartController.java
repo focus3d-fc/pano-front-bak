@@ -56,12 +56,17 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 	 * @param request
 	 * @param session
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "list", method = RequestMethod.GET)
-	public String list(String checkProjectSn, String styleId, ModelMap modelMap, HttpServletRequest request) {
+	public String list(String checkProjectSn, String styleId, ModelMap modelMap, HttpServletRequest request) throws Exception {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
+		long projectSn = EncryptUtil.decode(checkProjectSn);
+		//复制楼盘套餐数据到购车车
+		orderShopCartService.copyFromHousePackage(userSn, projectSn);
 		//透视图状态信息
 		setPerspectiveStatus(modelMap, request);
+		
 		List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
 		for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
 			Long housePackageSn = panoOrderShopcartModel.getHousePackageSn();

@@ -7,11 +7,12 @@
 		pano_order_shopcart , 
 		pano_order_shopcart_detail 
 	  FROM 
-		pano_order_shopcart , 
+		pano_order_shopcart 
+	  LEFT JOIN 
 		pano_order_shopcart_detail 
+	  ON pano_order_shopcart.sn = pano_order_shopcart_detail.shopcart_sn
 	  WHERE 
-		pano_order_shopcart.sn = pano_order_shopcart_detail.shopcart_sn
-	  AND pano_order_shopcart.user_sn = #user_sn#;
+		pano_order_shopcart.user_sn = #user_sn#;
   </delete>
   
   <insert id="insertShopcart">

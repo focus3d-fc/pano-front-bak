@@ -68,7 +68,7 @@ public class PanoOrderShopCartDao extends CommonDao<PanoOrderShopcartModel> {
 	 * @param userSn 当前用户sn
 	 * @param projectSn 项目sn
 	 */
-	public void copyByUserAndProject(long userSn, long projectSn){
+	public void copyFromHousePackage(long userSn, long projectSn){
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("user_sn", userSn);
 		map.put("project_sn", projectSn);

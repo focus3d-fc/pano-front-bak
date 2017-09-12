@@ -32,4 +32,11 @@ public interface PanoOrderShopCartService<T> extends CommonService<T> {
 	 * @param housePackageSn 户型套餐sn
 	 */
 	int addOrDelete(long housePackageSn);
+	/**
+	 * 复制楼盘套餐信息到购物车
+	 * *
+	 * @param userSn
+	 * @param projectSn
+	 */
+	void copyFromHousePackage(long userSn, long projectSn);
 }

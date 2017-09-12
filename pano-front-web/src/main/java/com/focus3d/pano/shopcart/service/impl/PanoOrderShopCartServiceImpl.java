@@ -185,4 +185,9 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 		return housePackageTypeList;
 	}
 
+	@Override
+	public void copyFromHousePackage(long userSn, long projectSn) {
+		orderShopCartDao.copyFromHousePackage(userSn, projectSn);
+	}
+
 }
