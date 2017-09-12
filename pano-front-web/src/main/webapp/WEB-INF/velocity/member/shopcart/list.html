@@ -13,12 +13,21 @@
     height: .28rem;
     background: url("/images/choose.png") 0/cover;
 }
+.one_list{background-color:#fff !important; border-bottom:1px solid #e1e1e1;height:.6rem;}
+.one_list h6{font-size:.24rem;font-weight:bold; line-height:.6rem;padding-left:12px;}
+.eidt{font-size:.22rem;color:#434343;margin-right:12px;line-height:.6rem;}
+.two_list{background-color:#fff !important; border-bottom:1px solid #e1e1e1;height:.6rem;}
+.two_list p{font-size:.24rem;line-height:.6rem;padding-left:12px;}
+.order-items .order-item {margin-top:0 !important;}
 </style>
 <script src="/style/admstatic/js/main.js"></script>
 <div class="container car se720">
-    <!--订单-->
+	<div class="one_list"><h6 class="fl">$!project.name</h6><a href="#" class="fr eidt" style="display: none;">编辑</a></div>
+    <div class="clearfix"></div>
     <section class="order-items">
-    	#foreach($!shopcart in $!shopcartList)
+	    #foreach($!houseKey in $!houseGroupMap.keySet())
+	    <div class="two_list"><p> $!houseGroupMap.get($!houseKey).style.name $!houseGroupMap.get($!houseKey).house.name</p></div>
+    	#foreach($!shopcart in $!houseGroupMap.get($!houseKey).shopcarts)
     	<div>
 	        <div class="order-item">
 	            <div class="title">
@@ -67,10 +76,11 @@
 			</div>
     	</div>
 		#end
+		#end
 		<div style="height:1.8rem;"></div>
  
         <nav class="nav" style="padding: 0 .1rem;">
-            <a href="/index?checkProjectSn=$!checkProjectSn"  id="tcshow">
+            <a href="/index?checkProjectSn=$!project.encryptSn"  id="tcshow">
                 <img style="width:.65rem;height:.65rem;" src="$!fs.url($!{img_home})" alt="">
                 <p>首页</p>
             </a>
@@ -82,15 +92,15 @@
                 <img style="width:.65rem;height:.65rem;" src="$!fs.url($!{img_space})" alt="">
                 <p>房间</p>
             </a>
-            <a href="/shopcart/list?styleId=$!styleId&checkProjectSn=$!checkProjectSn" class="on">
+            <a href="/shopcart/list?styleId=$!styleId&checkProjectSn=$!project.encryptSn" class="on">
                 <img style="width:.65rem;height:.65rem;" src="$!fs.url($!{img_tc})" alt="">
                 <p>套餐</p>
             </a>
         </nav>
     </section>
-    
+   
     <div class="car-total" style="border-top:1px solid #bdbdbd;">
-        #if($!shopcartList.size() > 0)
+        #if($!houseGroupMap.size() > 0)
         <div class="choose" style="margin-left:.2rem;"  id="selectAll">            
         </div><span style="margin-left:.14rem;font-size:.24rem;">全选</span>
         #end

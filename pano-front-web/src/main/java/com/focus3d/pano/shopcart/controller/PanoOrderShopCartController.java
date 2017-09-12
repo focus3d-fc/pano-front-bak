@@ -1,6 +1,8 @@
 package com.focus3d.pano.shopcart.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,12 +18,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
+import com.focus3d.pano.model.PanoProjectHouseModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
 import com.focus3d.pano.model.PanoProjectHouseStyleModel;
+import com.focus3d.pano.model.PanoProjectModel;
 import com.focus3d.pano.model.PanoProjectPackageTypeModel;
+import com.focus3d.pano.model.PanoProjectStyleModel;
 import com.focus3d.pano.project.service.PanoProjectHousePackageService;
 import com.focus3d.pano.project.service.PanoProjectHouseStyleService;
 import com.focus3d.pano.project.service.PanoProjectPackageTypeService;
+import com.focus3d.pano.project.service.PanoProjectService;
 import com.focus3d.pano.pub.controller.AbstractPanoController;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartDetailService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
@@ -49,6 +55,8 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 	private PanoProjectPackageTypeService<PanoProjectPackageTypeModel> packageTypeService;
 	@Autowired
 	private PanoProjectHouseStyleService<PanoProjectHouseStyleModel> houseStyleService;
+	@Autowired
+	private PanoProjectService<PanoProjectModel> projectService;
 
 	/**
 	 * 购物车列表 *
@@ -62,24 +70,44 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 	public String list(String checkProjectSn, String styleId, ModelMap modelMap, HttpServletRequest request) throws Exception {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		long projectSn = EncryptUtil.decode(checkProjectSn);
-		//复制楼盘套餐数据到购车车
-		orderShopCartService.copyFromHousePackage(userSn, projectSn);
-		//透视图状态信息
-		setPerspectiveStatus(modelMap, request);
-		
-		List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
-		for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
-			Long housePackageSn = panoOrderShopcartModel.getHousePackageSn();
-			PanoProjectHousePackageModel housePackage = housePackageService.getDetail(housePackageSn);
-			if (housePackage != null) {
-				panoOrderShopcartModel.setHousePackage(housePackage);
+		PanoProjectModel project = projectService.getBySn(projectSn);
+		if(project != null){
+			//复制楼盘套餐数据到购车车
+			orderShopCartService.copyFromHousePackage(userSn, projectSn);
+			//透视图状态信息
+			setPerspectiveStatus(modelMap, request);
+			List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
+			for (PanoOrderShopcartModel panoOrderShopcartModel : shopcartList) {
+				Long housePackageSn = panoOrderShopcartModel.getHousePackageSn();
+				PanoProjectHousePackageModel housePackage = housePackageService.getDetail(housePackageSn);
+				if (housePackage != null) {
+					panoOrderShopcartModel.setHousePackage(housePackage);
+				}
 			}
+			//分组显示
+			Map<Long, PanoOrderShopcartListVo> groupMap = new HashMap<Long, PanoOrderShopcartListVo>();
+			for (PanoOrderShopcartModel shopcart : shopcartList) {
+				PanoProjectHousePackageModel housePackage = shopcart.getHousePackage();
+				PanoProjectHouseModel house = housePackage.getHouse();
+				PanoProjectStyleModel style = housePackage.getStyle();
+				Long houseSn = house.getSn();
+				if(groupMap.containsKey(houseSn)){
+					groupMap.get(houseSn).getShopcarts().add(shopcart);
+					groupMap.get(houseSn).setStyle(style);
+				} else {
+					PanoOrderShopcartListVo v = new PanoOrderShopcartListVo();
+					v.setHouse(house);
+					v.setStyle(style);
+					v.getShopcarts().add(shopcart);
+					groupMap.put(houseSn, v);
+				}
+				
+			}
+			//modelMap.put("shopcartList", shopcartList);
+			modelMap.put("styleId", styleId);
+			modelMap.put("project", project);
+			modelMap.put("houseGroupMap", groupMap);
 		}
-		modelMap.put("shopcartList", shopcartList);
-		modelMap.put("styleId", styleId);
-		modelMap.put("checkProjectSn", checkProjectSn);
-		//获取导航图
-		setBottomIcon(request);
 		return "/member/shopcart/list";
 	}
 	

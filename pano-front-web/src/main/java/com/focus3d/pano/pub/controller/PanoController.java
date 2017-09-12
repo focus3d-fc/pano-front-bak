@@ -28,8 +28,6 @@ public class PanoController extends AbstractPanoController {
 	public String to720(HttpServletRequest request,HttpSession session, ModelMap modelMap){
 		long style_id = HttpUtil.iv(request, "style_id");
 		String checkProjectSn = HttpUtil.sv(request, "checkProjectSn"); 
-		//获取导航图
-		setBottomIcon(request);
 		modelMap.put("checkProjectSn", checkProjectSn);
 		modelMap.put("style_id", style_id);
 		return "/pub/720";

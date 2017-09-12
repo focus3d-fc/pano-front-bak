@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.focus3d.pano.common.controller.BaseController;
 import com.focus3d.pano.model.panoSkin;
@@ -14,7 +16,8 @@ public class AbstractPanoController extends BaseController {
 	@Autowired
 	private UsersSideService usersSideService;
 
-	protected void setBottomIcon(HttpServletRequest request) {
+	@ModelAttribute
+	protected void setBottomIcon(HttpServletRequest request, ModelMap modelMap) {
 		//获取导航图
 		List<panoSkin> panoSkinList = usersSideService.list_selectPanoSkinList();
 		String skinName="";
@@ -35,9 +38,9 @@ public class AbstractPanoController extends BaseController {
 				homeImg = panoSkin.getImg_sn();
 			}
 		}
-		request.setAttribute("img_tc",packageImg);
-		request.setAttribute("img_space",spaceImg);
-		request.setAttribute("img_house",houseImg);
-		request.setAttribute("img_home",homeImg);
+		modelMap.put("img_tc",packageImg);
+		modelMap.put("img_space",spaceImg);
+		modelMap.put("img_house",houseImg);
+		modelMap.put("img_home",homeImg);
 	}
 }
