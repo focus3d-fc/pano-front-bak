@@ -148,7 +148,6 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 				PanoOrderShopcartModel shopcartModel = new PanoOrderShopcartModel();
 				shopcartModel.setUserSn(userSn);
 				shopcartModel.setHousePackageSn(housePackageSn);
-				shopcartModel.setPackageTypeNum(housePackageNum);
 				shopcartModel.setPurchaseNum(1);
 				orderShopCartDao.insert(shopcartModel);
 				Long shopcartSn = shopcartModel.getSn();

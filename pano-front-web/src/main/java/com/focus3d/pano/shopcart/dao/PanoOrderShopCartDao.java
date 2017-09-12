@@ -1,6 +1,9 @@
 package com.focus3d.pano.shopcart.dao;
 
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +20,9 @@ import com.focus3d.pano.model.ibator.PanoOrderShopcartCriteria;
  */
 @Repository
 public class PanoOrderShopCartDao extends CommonDao<PanoOrderShopcartModel> {
+	private static final String DELETE_SHOPCART_AND_DETAIL = "c_pano_order_shopcart.deleteShopcartAndDetail";
+	private static final String INSERT_SHOPCART = "c_pano_order_shopcart.insertShopcart";
+	private static final String INSERT_SHOPCART_DETAIL = "c_pano_order_shopcart.insertShopcartDetail";
 	/**
 	 * 获取用户购物车套餐 *
 	 * 
@@ -55,5 +61,25 @@ public class PanoOrderShopCartDao extends CommonDao<PanoOrderShopcartModel> {
 		PanoOrderShopcartCriteria criteria = new PanoOrderShopcartCriteria();
 		criteria.createCriteria().andHousePackageSnEqualTo(housePackageSn).andUserSnEqualTo(userSn);
 		return selectFirstByExample(criteria, PanoOrderShopcartModel.class);
+	}
+	/**
+	 * 复制数据
+	 * *
+	 * @param userSn 当前用户sn
+	 * @param projectSn 项目sn
+	 */
+	public void copyByUserAndProject(long userSn, long projectSn){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_sn", userSn);
+		map.put("project_sn", projectSn);
+		try {
+			int delete = getSqlMapClient().delete(DELETE_SHOPCART_AND_DETAIL, map);
+			if(delete >= 0){
+				getSqlMapClient().insert(INSERT_SHOPCART, map);
+				getSqlMapClient().insert(INSERT_SHOPCART_DETAIL, map);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
