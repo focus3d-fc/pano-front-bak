@@ -490,13 +490,12 @@ public class PerspectiveQuery extends BaseController {
 			List<LinkedHashMap<String, Object>> list = _service.QueryRelation(map);
 			
 			//List<Map<String, Object>> list = QueryPerspectiveByProductSn(_houseStyleSn.toString(),_packageTypeSn.toString(),_productSn.toString());
-			PanoProjectPackageTypeModel packageType = packageTypeService.getBySn(_packageTypeSn);
+			
 			JSONObject json = new JSONObject();
 			JSONObject param = new JSONObject();
 			param.put("houseStyleSn", _houseStyleSn);
 			param.put("packageTypeSn", _packageTypeSn);
 			param.put("productSn", _productSn);
-			param.put("spaceSn", packageType.getSpaceSn());
 			json.put("num", list.size());
 			json.put("param", param);
 			ajaxOutput(response, json.toJSONString());
@@ -508,10 +507,15 @@ public class PerspectiveQuery extends BaseController {
 	}
 	
 	@RequestMapping("QueryPerspective")
-	public String QueryPerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String spaceSn,String packageTypeSn,String productSn,ModelMap result) {
+	public String QueryPerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String packageTypeSn,String productSn,ModelMap result) {
 		try{		
 			Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 			HashMap<String,Object> param = new HashMap<String,Object>();
+			Long _packageTypeSn = Long.parseLong(packageTypeSn);
+			PanoProjectPackageTypeModel packageType = packageTypeService.getBySn(_packageTypeSn);
+			
+			Long spaceSn = packageType.getSpaceSn();
+			
 			param.put("HOUSE_STYLE_SN", houseStyleSn);
 			param.put("SPACE_SN", spaceSn);
 			param.put("PACKAGE_TYPE_SN", packageTypeSn);
