@@ -13,9 +13,11 @@ import com.focus3d.pano.filter.LoginThreadLocal;
 import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
 import com.focus3d.pano.model.PanoProductModel;
+import com.focus3d.pano.model.PanoProjectHousePackageModel;
 import com.focus3d.pano.model.PanoProjectPackageProductModel;
 import com.focus3d.pano.model.PanoProjectPackageTypeModel;
 import com.focus3d.pano.product.dao.PanoProductDao;
+import com.focus3d.pano.project.dao.PanoProjectHousePackageDao;
 import com.focus3d.pano.project.dao.PanoProjectPackageProductDao;
 import com.focus3d.pano.project.dao.PanoProjectPackageTypeDao;
 import com.focus3d.pano.shopcart.dao.PanoOrderShopCartDao;
@@ -44,6 +46,8 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 	private PanoProjectPackageTypeDao packageTypeDao;
 	@Autowired
 	private PanoProjectPackageProductDao packageProductDao;
+	@Autowired
+	private PanoProjectHousePackageDao housePackageDao;
 
 	@Override
 	public CommonDao<PanoOrderShopcartModel> getDao() {
@@ -187,7 +191,36 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 
 	@Override
 	public void copyFromHousePackage(long userSn, long projectSn) {
-		orderShopCartDao.copyFromHousePackage(userSn, projectSn);
+		List<PanoProjectHousePackageModel> housePackages = housePackageDao.listByProject(projectSn);
+		List<PanoOrderShopcartModel> shopcarts = orderShopCartDao.listByUser(userSn);
+		if(housePackages != null){
+			boolean isCopy = false;
+			for (PanoOrderShopcartModel shopcart : shopcarts) {
+				Long housePackageSn = shopcart.getHousePackageSn();
+				if(!findHousePackage(housePackageSn, housePackages)){
+					isCopy = true;
+					break;
+				}
+			}
+			if(isCopy){
+				orderShopCartDao.copyFromHousePackage(userSn, projectSn);
+			}
+		}
+	}
+	/**
+	 * 
+	 * *
+	 * @param housePackageSn
+	 * @param housePackages
+	 * @return
+	 */
+	private boolean findHousePackage(long housePackageSn, List<PanoProjectHousePackageModel> housePackages){
+		for(PanoProjectHousePackageModel pk : housePackages){
+			if(pk.getSn().equals(housePackageSn)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

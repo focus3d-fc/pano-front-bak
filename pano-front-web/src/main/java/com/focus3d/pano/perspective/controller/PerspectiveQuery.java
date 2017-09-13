@@ -21,6 +21,7 @@ import com.focus3d.pano.admin.service.IPerspectiveService;
 import com.focus3d.pano.admin.service.IProductAdmService;
 import com.focus3d.pano.common.controller.BaseController;
 import com.focus3d.pano.filter.LoginThreadLocal;
+import com.focus3d.pano.model.PanoProjectHouseStyleModel;
 import com.focus3d.pano.model.PanoProjectPackageTypeModel;
 import com.focus3d.pano.model.Product;
 import com.focus3d.pano.model.ibator.PanoPerspectiveElementModel;
@@ -28,11 +29,13 @@ import com.focus3d.pano.model.ibator.PanoPerspectiveElementProduct;
 import com.focus3d.pano.model.ibator.PanoPerspectiveElementProductModel;
 import com.focus3d.pano.model.ibator.PanoPerspectiveLayerModel;
 import com.focus3d.pano.model.ibator.PanoPerspectiveViewModel;
+import com.focus3d.pano.project.service.PanoProjectHouseStyleService;
 import com.focus3d.pano.project.service.PanoProjectPackageTypeService;
 import com.focustech.cief.filemanage.client.api.IFileReadClient;
 import com.focustech.cief.filemanage.client.constant.FileAttributeEnum;
 import com.focustech.common.utils.EncryptUtil;
 import com.focustech.common.utils.JsonUtils;
+import com.focustech.common.utils.TCUtil;
 
 @Controller
 @RequestMapping("/perspective")
@@ -45,6 +48,8 @@ public class PerspectiveQuery extends BaseController {
 	private IFileReadClient client;
 	@Autowired
 	private PanoProjectPackageTypeService<PanoProjectPackageTypeModel> packageTypeService;
+	@Autowired
+	private PanoProjectHouseStyleService<PanoProjectHouseStyleModel> houseStyleService;
 
 	/**
 	 * @param map
@@ -528,6 +533,11 @@ public class PerspectiveQuery extends BaseController {
 			//List<Map<String, Object>> list = QueryPerspectiveByProductSn(houseStyleSn,packageTypeSn,productSn);
 			//Product product = product_service.getProductBySn(productSn);
 			
+			PanoProjectHouseStyleModel houseStyleModel = houseStyleService.getBySn(TCUtil.lv(houseStyleSn));
+			Long projectSn = houseStyleModel.getProjectSn();
+			Long styleSn = houseStyleModel.getStyleSn();
+			result.put("styleId", styleSn);
+			result.put("projectSn", EncryptUtil.encode(projectSn));
 			result.put("viewlist",JsonUtils.arrayToJson(list.toArray()));
 			//result.put("product", JsonUtils.objectToJson(product));
 			result.put("packageTypeSn", packageTypeSn);

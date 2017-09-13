@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.focus3d.pano.filter.LoginThreadLocal;
-import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
 import com.focus3d.pano.model.PanoProjectHouseModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
@@ -29,7 +28,6 @@ import com.focus3d.pano.project.service.PanoProjectHouseStyleService;
 import com.focus3d.pano.project.service.PanoProjectPackageTypeService;
 import com.focus3d.pano.project.service.PanoProjectService;
 import com.focus3d.pano.pub.controller.AbstractPanoController;
-import com.focus3d.pano.shopcart.service.PanoOrderShopCartDetailService;
 import com.focus3d.pano.shopcart.service.PanoOrderShopCartService;
 import com.focustech.common.utils.EncryptUtil;
 import com.focustech.common.utils.HttpUtil;
@@ -47,8 +45,8 @@ import com.focustech.common.utils.TCUtil;
 public class PanoOrderShopCartController extends AbstractPanoController {
 	@Autowired
 	private PanoOrderShopCartService<PanoOrderShopcartModel> orderShopCartService;
-	@Autowired
-	private PanoOrderShopCartDetailService<PanoOrderShopcartDetailModel> orderShopCartDetailService;
+	//@Autowired
+	//private PanoOrderShopCartDetailService<PanoOrderShopcartDetailModel> orderShopCartDetailService;
 	@Autowired
 	private PanoProjectHousePackageService<PanoProjectHousePackageModel> housePackageService;
 	@Autowired
@@ -115,27 +113,25 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 	 * @param request
 	 */
 	private void setPerspectiveInfo(ModelMap modelMap, HttpServletRequest request) {
-		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		String productSn = HttpUtil.sv(request, "productSn");
+		//Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 		String packageTypeSn = HttpUtil.sv(request, "packageTypeSn");
 		String houseStyleSn = HttpUtil.sv(request, "houseStyleSn");
-		if(StringUtils.isNotEmpty(productSn)){
+		if(StringUtils.isNotEmpty(packageTypeSn)){
 			PanoProjectPackageTypeModel packageTypeModel = packageTypeService.getBySn(TCUtil.lv(packageTypeSn));
 			Long housePackageSn = packageTypeModel.getHousePackageSn();
-			PanoOrderShopcartModel shopcart = orderShopCartService.getUserShopcartPackage(userSn, housePackageSn);
-			PanoOrderShopcartDetailModel shopcartDetail = orderShopCartDetailService.getByAttribute(shopcart.getSn(), TCUtil.lv(packageTypeSn));
-			Long oldProductSn = shopcartDetail.getPackageProductSn();
+			//PanoOrderShopcartModel shopcart = orderShopCartService.getUserShopcartPackage(userSn, housePackageSn);
+			//PanoOrderShopcartDetailModel shopcartDetail = orderShopCartDetailService.getByAttribute(shopcart.getSn(), TCUtil.lv(packageTypeSn));
+			//Long oldProductSn = shopcartDetail.getPackageProductSn();
 			//更新购物车产品
-			if(shopcartDetail != null && !TCUtil.sv(oldProductSn).equals(productSn)){
+			/*if(shopcartDetail != null && !TCUtil.sv(oldProductSn).equals(productSn)){
 				shopcartDetail.setPackageProductSn(TCUtil.lv(productSn));
 				orderShopCartDetailService.update(shopcartDetail);
-			}
+			}*/
 			PanoProjectHouseStyleModel houseStyle = houseStyleService.getBySn(TCUtil.lv(houseStyleSn));
 			modelMap.put("styleId", houseStyle.getStyleSn());
 			//购物车状态记录,返回到购物车时设置勾选等状态信息
 			JSONObject rememberStatus = new JSONObject();
 			rememberStatus.put("housePackageSn", housePackageSn);
-			rememberStatus.put("productSn", productSn);
 			rememberStatus.put("packageTypeSn", packageTypeSn);
 			modelMap.put("rememberStatus", rememberStatus);
 		}

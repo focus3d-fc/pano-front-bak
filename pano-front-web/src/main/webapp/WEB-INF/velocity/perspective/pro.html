@@ -62,16 +62,14 @@
 			spaceSn = '$!{spaceSn}';
 			userSn = '$!{userSn}';
 			productView = $.parseJSON('$!productView');
-			
-			alert(spaceSn);
-			
-			//spaceSn = 100041;
-			
+			var styleId = $("#styleId").val();
+			var projectSn = $("#projectSn").val();
+			var packageTypeSn = $("#packageTypeSn").val();		
 			$("#exchange_view").hide();
 			
 			$("#return_panorama").on("click",function(){
 				//return_panorama方法体中添加返回全景代码
-				return_panorama();
+				return_panorama(projectSn, styleId);
 			})
 			
 			$("#next_space").hide();
@@ -80,6 +78,7 @@
 			$("#Confirm_Select").on("click", function(){
 				update_cart(function(){
 					//这里添加返回至套餐的代码
+					window.location.href = "/shopcart/list?packageTypeSn=" + packageTypeSn + "&houseStyleSn=" + houseStyleSn + "&checkProjectSn=" + projectSn;
 				});
 			});
 			var rate = 4 / 3;
@@ -99,5 +98,7 @@
 	</script>
 	<input type="hidden" id="packageTypeSn" value="$!packageTypeSn"/>
 	<input type="hidden" id="houseStyleSn" value="$!houseStyleSn"/>
+	<input type="hidden" id="styleId" value="$!styleId"/>
+	<input type="hidden" id="projectSn" value="$!projectSn"/>
 </body>
 </html>
