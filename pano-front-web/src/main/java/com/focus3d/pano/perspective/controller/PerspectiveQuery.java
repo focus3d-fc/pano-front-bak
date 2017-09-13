@@ -3,7 +3,6 @@ package com.focus3d.pano.perspective.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,15 +20,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.focus3d.pano.admin.service.IPerspectiveService;
 import com.focus3d.pano.admin.service.IProductAdmService;
 import com.focus3d.pano.common.controller.BaseController;
-import com.focus3d.pano.model.PanoProjectHouseStyleModel;
+import com.focus3d.pano.filter.LoginThreadLocal;
+import com.focus3d.pano.model.PanoProjectPackageTypeModel;
 import com.focus3d.pano.model.Product;
 import com.focus3d.pano.model.ibator.PanoPerspectiveElementModel;
 import com.focus3d.pano.model.ibator.PanoPerspectiveElementProduct;
 import com.focus3d.pano.model.ibator.PanoPerspectiveElementProductModel;
 import com.focus3d.pano.model.ibator.PanoPerspectiveLayerModel;
 import com.focus3d.pano.model.ibator.PanoPerspectiveViewModel;
-import com.focus3d.pano.project.service.PanoProjectHouseStyleService;
-import com.focus3d.pano.usersside.service.ProductRelevanceService;
+import com.focus3d.pano.project.service.PanoProjectPackageTypeService;
 import com.focustech.cief.filemanage.client.api.IFileReadClient;
 import com.focustech.cief.filemanage.client.constant.FileAttributeEnum;
 import com.focustech.common.utils.EncryptUtil;
@@ -45,9 +44,7 @@ public class PerspectiveQuery extends BaseController {
 	@Autowired
 	private IFileReadClient client;
 	@Autowired
-	private ProductRelevanceService productRelevanceService;
-	@Autowired
-	private PanoProjectHouseStyleService<PanoProjectHouseStyleModel> houseStyleService;
+	private PanoProjectPackageTypeService<PanoProjectPackageTypeModel> packageTypeService;
 
 	/**
 	 * @param map
@@ -486,20 +483,20 @@ public class PerspectiveQuery extends BaseController {
 			Long _houseStyleSn = EncryptUtil.decode(houseStyleSn);
 			Long _packageTypeSn = EncryptUtil.decode(packageTypeSn);
 			Long _productSn = EncryptUtil.decode(productSn);
-			
+			Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 			HashMap<String,Object> map = new HashMap<String,Object>();
 			map.put("HOUSE_STYLE_SN", _houseStyleSn);
-			map.put("USER_SN", "100007");
-			
+			map.put("USER_SN", userSn);
 			List<LinkedHashMap<String, Object>> list = _service.QueryRelation(map);
 			
 			//List<Map<String, Object>> list = QueryPerspectiveByProductSn(_houseStyleSn.toString(),_packageTypeSn.toString(),_productSn.toString());
+			PanoProjectPackageTypeModel packageType = packageTypeService.getBySn(_packageTypeSn);
 			JSONObject json = new JSONObject();
 			JSONObject param = new JSONObject();
 			param.put("houseStyleSn", _houseStyleSn);
 			param.put("packageTypeSn", _packageTypeSn);
 			param.put("productSn", _productSn);
-			
+			param.put("spaceSn", packageType.getSpaceSn());
 			json.put("num", list.size());
 			json.put("param", param);
 			ajaxOutput(response, json.toJSONString());
@@ -511,13 +508,14 @@ public class PerspectiveQuery extends BaseController {
 	}
 	
 	@RequestMapping("QueryPerspective")
-	public String QueryPerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String spaceSn,String packageTypeSn,String userSn,String productSn,ModelMap result) {
+	public String QueryPerspective(HttpServletResponse response, ModelMap model_map,String houseStyleSn,String spaceSn,String packageTypeSn,String productSn,ModelMap result) {
 		try{		
+			Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
 			HashMap<String,Object> param = new HashMap<String,Object>();
 			param.put("HOUSE_STYLE_SN", houseStyleSn);
 			param.put("SPACE_SN", spaceSn);
 			param.put("PACKAGE_TYPE_SN", packageTypeSn);
-			param.put("USER_SN", "100007");
+			param.put("USER_SN", userSn);
 			
 			List<LinkedHashMap<String, Object>> list = _service.QueryRelation(param);
 			
