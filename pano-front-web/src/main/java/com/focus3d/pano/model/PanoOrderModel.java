@@ -23,7 +23,7 @@ public class PanoOrderModel extends PanoOrder<PanoOrderModel, PanoOrderCriteria>
 	//子订单
 	private PanoOrderModel childrenOrder;
 	
-	private Map<Long, PanoOrderPackageVo> packageGropMap;
+	private Map<String, PanoOrderPackageVo> packageGropMap;
 
 	public PanoOrderModel getChildrenOrder() {
 		return childrenOrder;
@@ -71,11 +71,11 @@ public class PanoOrderModel extends PanoOrder<PanoOrderModel, PanoOrderCriteria>
 		return false;
 	}
 
-	public Map<Long, PanoOrderPackageVo> getPackageGropMap() {
+	public Map<String, PanoOrderPackageVo> getPackageGropMap() {
 		return packageGropMap;
 	}
 
-	public void setPackageGropMap(Map<Long, PanoOrderPackageVo> packageGropMap) {
+	public void setPackageGropMap(Map<String, PanoOrderPackageVo> packageGropMap) {
 		this.packageGropMap = packageGropMap;
 	}
 }

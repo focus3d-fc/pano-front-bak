@@ -75,7 +75,7 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 			//透视图状态信息
 			setPerspectiveInfo(modelMap, request);
 			//分组显示
-			Map<Long, PanoOrderShopcartListVo> groupMap = new HashMap<Long, PanoOrderShopcartListVo>();
+			Map<String, PanoOrderShopcartListVo> groupMap = new HashMap<String, PanoOrderShopcartListVo>();
 			List<PanoOrderShopcartModel> shopcartList = orderShopCartService.listByUser(userSn);
 			for (PanoOrderShopcartModel shopcart : shopcartList) {
 				Long housePackageSn = shopcart.getHousePackageSn();
@@ -87,15 +87,17 @@ public class PanoOrderShopCartController extends AbstractPanoController {
 				PanoProjectHouseModel house = housePackage.getHouse();
 				PanoProjectStyleModel style = housePackage.getStyle();
 				Long houseSn = house.getSn();
-				if(groupMap.containsKey(houseSn)){
-					groupMap.get(houseSn).getShopcarts().add(shopcart);
-					groupMap.get(houseSn).setStyle(style);
+				Long styleSn = style.getSn();
+				String key = houseSn + "_" + styleSn;
+				if(groupMap.containsKey(key)){
+					groupMap.get(key).getShopcarts().add(shopcart);
+					groupMap.get(key).setStyle(style);
 				} else {
 					PanoOrderShopcartListVo v = new PanoOrderShopcartListVo();
 					v.setHouse(house);
 					v.setStyle(style);
 					v.getShopcarts().add(shopcart);
-					groupMap.put(houseSn, v);
+					groupMap.put(key, v);
 				}
 				
 			}

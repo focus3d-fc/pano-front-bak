@@ -628,8 +628,8 @@ public class PanoOrderController extends BaseController {
 		List<PanoOrderModel> orders = orderService.listByUser(userSn, status);
 		//分组显示
  		Map<Long, PanoOrderVo> projectGroupMap = new HashMap<Long, PanoOrderVo>();
- 		Map<Long, PanoOrderPackageVo> packageGropMap = new HashMap<Long, PanoOrderPackageVo>();
 		for(PanoOrderModel order : orders){
+			Map<String, PanoOrderPackageVo> packageGropMap = new HashMap<String, PanoOrderPackageVo>();
 			List<PanoOrderPackageModel> packages = order.getOrderPackages();
 			for (PanoOrderPackageModel pk : packages) {
 				PanoProjectHousePackageModel housePackage = pk.getHousePackage();
@@ -654,15 +654,17 @@ public class PanoOrderController extends BaseController {
 				PanoProjectHouseModel house = housePackage.getHouse();
 				PanoProjectStyleModel style = housePackage.getStyle();
 				Long houseSn = house.getSn();
-				if(packageGropMap.containsKey(houseSn)){
-					packageGropMap.get(houseSn).getOrderPackages().add(pk);
-					packageGropMap.get(houseSn).setStyle(style);
+				Long styleSn = style.getSn();
+				String key = houseSn + "_" + styleSn;
+				if(packageGropMap.containsKey(key)){
+					packageGropMap.get(key).getOrderPackages().add(pk);
+					packageGropMap.get(key).setStyle(style);
 				} else {
 					PanoOrderPackageVo v = new PanoOrderPackageVo();
 					v.setHouse(house);
 					v.setStyle(style);
 					v.getOrderPackages().add(pk);
-					packageGropMap.put(houseSn, v);
+					packageGropMap.put(key, v);
 				}
 			}
 			order.setPackageGropMap(packageGropMap);
