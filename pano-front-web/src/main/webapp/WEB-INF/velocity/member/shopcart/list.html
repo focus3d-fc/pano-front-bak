@@ -30,19 +30,24 @@
     	#foreach($!shopcart in $!houseGroupMap.get($!houseKey).shopcarts)
     	<div>
 	        <div class="order-item">
+	        	<!-- 
 	            <div class="title">
 	              <span style="font-size:.24rem;">
 	                  <i class="iconfont" style="font-size:.26rem;">&#xe71f;</i>
 	                  	$!shopcart.housePackage.name
 	              </span>
 	            </div>
+	        	 -->
 	            <div class="cont">
 	                <div class="choose" id="choose_$!velocityCount" price="$!shopcart.housePackage.packagePrice" sn="$!shopcart.housePackage.encryptSn">
 	                </div>
 	                <a href="#"><img src="$!fs.url($!shopcart.housePackage.imgSn)" ></a>
 	                <div class="detail">
+	                    <a href="#"><p>$!shopcart.housePackage.name</p></a>
+	                    <!-- 
 	                    <a href="#"><p>$!shopcart.housePackage.style.name $!shopcart.housePackage.house.name</p></a>
-	                    <p >户型：$!shopcart.housePackage.house.roomNum室$!shopcart.housePackage.house.hallNum厅</p>
+	                    <p >房型：$!shopcart.housePackage.house.roomNum室$!shopcart.housePackage.house.hallNum厅</p>
+	                     -->
 	                    <p class="red">
 	                    	￥$!shopcart.housePackage.packagePrice<s class="col"> ￥$!shopcart.housePackage.discountPrice</s>
 	                    	<small class="fr col">$!{shopcart.totalProductNum}件</small>
