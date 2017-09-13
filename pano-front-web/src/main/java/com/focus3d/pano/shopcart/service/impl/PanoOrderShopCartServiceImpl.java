@@ -202,7 +202,7 @@ public class PanoOrderShopCartServiceImpl extends CommonServiceImpl<PanoOrderSho
 					break;
 				}
 			}
-			if(isCopy){
+			if(shopcarts.isEmpty() || isCopy){
 				orderShopCartDao.copyFromHousePackage(userSn, projectSn);
 			}
 		}

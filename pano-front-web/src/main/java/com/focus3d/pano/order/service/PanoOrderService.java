@@ -14,12 +14,17 @@ import com.focus3d.pano.model.PanoOrderModel;
  * @param <T>
  */
 public interface PanoOrderService<T> extends CommonService<T> {
+	
 	public PanoOrderModel getOrderByNum(String orderNum) throws SQLException ;
 
-	public List<PanoOrderModel> getUserOrders(Long userSn, Integer status)
-			throws SQLException;
+	public List<PanoOrderModel> listByUser(Long userSn, Integer status) throws SQLException;
 
-	public PanoOrderModel getSonOrder(Long orderSn) throws SQLException;
+	public PanoOrderModel getChildrenOder(Long orderSn) throws SQLException;
 
 	public PanoOrderModel getOrderDetail(Long orderSn) throws SQLException;
+	
+	public PanoOrderModel setOrderDetail(T order);
+	
+	
+	
 }

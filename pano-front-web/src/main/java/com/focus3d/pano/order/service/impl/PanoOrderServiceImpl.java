@@ -1,7 +1,6 @@
 package com.focus3d.pano.order.service.impl;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ import com.focus3d.pano.order.dao.PanoOrderPackageDao;
 import com.focus3d.pano.order.dao.PanoOrderPackageDetailDao;
 import com.focus3d.pano.order.service.PanoOrderService;
 import com.focus3d.pano.product.dao.PanoProductDao;
-import com.focus3d.pano.project.dao.PanoProjectHousePackageDao;
 import com.focus3d.pano.project.dao.PanoProjectPackageTypeDao;
 import com.focus3d.pano.project.service.PanoProjectHousePackageService;
 
@@ -38,16 +36,13 @@ import com.focus3d.pano.project.service.PanoProjectHousePackageService;
  */
 @Service
 @Transactional
-public class PanoOrderServiceImpl extends CommonServiceImpl<PanoOrderModel>
-		implements PanoOrderService<PanoOrderModel> {
+public class PanoOrderServiceImpl extends CommonServiceImpl<PanoOrderModel> implements PanoOrderService<PanoOrderModel> {
 	@Autowired
 	private PanoOrderDao orderDao;
 	@Autowired
-	private PanoOrderPackageDao orderPackageDap;
+	private PanoOrderPackageDao orderPackageDao;
 	@Autowired
 	private PanoOrderPackageDetailDao orderPackageDetailDao;
-	@Autowired
-	private PanoProjectHousePackageDao projectHousePackageDao;
 	@Autowired
 	private PanoProductDao productDao;
 	@Autowired
@@ -65,8 +60,8 @@ public class PanoOrderServiceImpl extends CommonServiceImpl<PanoOrderModel>
 	}
 
 	@Override
-	public PanoOrderModel getSonOrder(Long orderSn) throws SQLException {
-		return orderDao.getSonOrder(orderSn);
+	public PanoOrderModel getChildrenOder(Long orderSn) throws SQLException {
+		return orderDao.getChildrenOrder(orderSn);
 	}
 	@Override
 	public PanoOrderModel getOrderByNum(String orderNum) throws SQLException {
@@ -74,58 +69,50 @@ public class PanoOrderServiceImpl extends CommonServiceImpl<PanoOrderModel>
 	}
 
 	@Override
-	public List<PanoOrderModel> getUserOrders(Long userSn, Integer status)
-			throws SQLException {
-		List<PanoOrderModel> orders = orderDao.myOrders(userSn, status);
-		List<PanoOrderModel> ordersDeal = new ArrayList<PanoOrderModel>();
+	public List<PanoOrderModel> listByUser(Long userSn, Integer status) throws SQLException {
+		List<PanoOrderModel> orders = orderDao.listByUser(userSn, status);
 		for (PanoOrderModel order : orders) {
-			// List<PanoOrderPackageModel> orderPackages = orderPackageDap
-			// .list(order.getSn());
-			// order.setOrderPackageModels(orderPackages);
-
-			ordersDeal.add(getOrderDetail(order.getSn()));
+			setOrderDetail(order);
 		}
-		return ordersDeal;
+		return orders;
 	}
 
 	@Override
 	public PanoOrderModel getOrderDetail(Long orderSn) throws SQLException {
 		PanoOrderModel order = orderDao.getBySn(orderSn);
-		order.setSonOrder(orderDao.getSonOrder(orderSn));
-		List<PanoOrderPackageModel> orderPackages = orderPackageDap.list(order
-				.getSn());
-		order.setAddress(receiveAddressService.getBySn(order.getAddressSn()));
-		order.setCouponItem(panoOrderCouponItemDao.getByOrderSn(order.getSn()));
+		return setOrderDetail(order);
+	}
+
+	@Override
+	public PanoOrderModel setOrderDetail(PanoOrderModel order) {
+		PanoUserReceiveAddressModel address = receiveAddressService.getBySn(order.getAddressSn());
+		PanoOrderCouponItemModel coupon = panoOrderCouponItemDao.getByOrderSn(order.getSn());
+		order.setAddress(address);
+		order.setCouponItem(coupon);
+		List<PanoOrderPackageModel> orderPackages = orderPackageDao.listByOrder(order.getSn());
 		for (PanoOrderPackageModel orderPackage : orderPackages) {
-			List<PanoOrderPackageDetailModel> orderPackageDetails = orderPackageDetailDao
-					.listByOrderPackage(orderPackage.getSn());
+			//订单套餐明细信息
+			List<PanoOrderPackageDetailModel> orderPackageDetails = orderPackageDetailDao.listByOrderPackage(orderPackage.getSn());
 			for (PanoOrderPackageDetailModel orderPackageDetail : orderPackageDetails) {
-				Long packageProductSn = orderPackageDetail
-						.getPackageProductSn();
-				if (packageProductSn != null) {
-					PanoProductModel packageProduct = productDao
-							.getBySn(packageProductSn);
+				Long productSn = orderPackageDetail.getPackageProductSn();
+				Long packageTypeSn = orderPackageDetail.getPackageTypeSn();
+				if (productSn != null && packageTypeSn != null) {
+					PanoProductModel packageProduct = productDao.getBySn(productSn);
 					if (packageProduct != null) {
 						orderPackageDetail.setPackageProduct(packageProduct);
 					}
-				}
-				Long packageTypeSn = orderPackageDetail.getPackageTypeSn();
-				if (packageTypeSn != null) {
-					PanoProjectPackageTypeModel packageType = packageTypeDao
-							.getBySn(packageTypeSn);
+					PanoProjectPackageTypeModel packageType = packageTypeDao.getBySn(packageTypeSn);
 					if (packageType != null) {
 						orderPackageDetail.setPackageType(packageType);
 					}
 				}
 			}
-
-			PanoProjectHousePackageModel housePackage = housePackageService
-					.getDetail(orderPackage.getHousePackageSn());
-			orderPackage.setHousePackageModel(housePackage);
-
-			orderPackage.setOrderPackageDetails(orderPackageDetails);
+			orderPackage.setDetails(orderPackageDetails);
+			
+			PanoProjectHousePackageModel housePackage = housePackageService.getDetail(orderPackage.getHousePackageSn());
+			orderPackage.setHousePackage(housePackage);
+			order.getOrderPackages().add(orderPackage);
 		}
-		order.setOrderPackageModels(orderPackages);
 		return order;
 	}
 }

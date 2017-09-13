@@ -11,9 +11,11 @@ import com.focus3d.pano.model.PanoProjectBaseStyleModel;
 import com.focus3d.pano.model.PanoProjectHouseModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
 import com.focus3d.pano.model.PanoProjectHouseStyleModel;
+import com.focus3d.pano.model.PanoProjectModel;
 import com.focus3d.pano.model.PanoProjectPackageModel;
 import com.focus3d.pano.model.PanoProjectStyleModel;
 import com.focus3d.pano.project.dao.PanoProjectBaseStyleDao;
+import com.focus3d.pano.project.dao.PanoProjectDao;
 import com.focus3d.pano.project.dao.PanoProjectHouseDao;
 import com.focus3d.pano.project.dao.PanoProjectHousePackageDao;
 import com.focus3d.pano.project.dao.PanoProjectHouseStyleDao;
@@ -40,6 +42,8 @@ public class PanoProjectHousePackageServiceImpl extends CommonServiceImpl<PanoPr
 	private PanoProjectStyleDao projectStyleDao;
 	@Autowired
 	private PanoProjectBaseStyleDao baseStyleDao;
+	@Autowired
+	private PanoProjectDao projectDao;
 	@Override
 	public CommonDao<PanoProjectHousePackageModel> getDao() {
 		return housePackageDao;
@@ -68,6 +72,11 @@ public class PanoProjectHousePackageServiceImpl extends CommonServiceImpl<PanoPr
 				PanoProjectBaseStyleModel baseStyle = baseStyleDao.getBySn(baseStyleSn);
 				projectStyle.setName(baseStyle.getName());
 				housePackage.setStyle(projectStyle);
+			}
+			Long projectSn = houseStyle.getProjectSn();
+			PanoProjectModel project = projectDao.getBySn(projectSn);
+			if(project != null){
+				housePackage.setProject(project);
 			}
 		}
 		return housePackage;

@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +48,10 @@ import com.focus3d.pano.model.PanoOrderPackageModel;
 import com.focus3d.pano.model.PanoOrderShopcartDetailModel;
 import com.focus3d.pano.model.PanoOrderShopcartModel;
 import com.focus3d.pano.model.PanoOrderTransModel;
+import com.focus3d.pano.model.PanoProjectHouseModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
+import com.focus3d.pano.model.PanoProjectModel;
+import com.focus3d.pano.model.PanoProjectStyleModel;
 import com.focus3d.pano.model.PanoUserBankcardModel;
 import com.focus3d.pano.model.PanoUserReceiveAddressModel;
 import com.focus3d.pano.model.PanoValidateModel;
@@ -590,12 +595,7 @@ public class PanoOrderController extends BaseController {
 										.getPackageProductSn());
 						panoOrderPackageDetailService
 								.insert(orderPackageDetailModel);
-						orderShopCartDetailService
-								.delete(shopcartPackageDetail);
-						orderShopCartDetailService
-								.delete(shopcartPackageDetail);
 					}
-					shopCartService.delete(shopcart);
 				}
 			}
 
@@ -620,19 +620,54 @@ public class PanoOrderController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/orderspage")
-	public String ordersPage(HttpServletRequest request,
-			HttpServletResponse response, ModelMap map) throws Exception {
+	public String ordersPage(HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
 		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		String statusParam = StringUtils.trimToNull(request
-				.getParameter("status"));
-		Integer status = statusParam == null ? null : Integer
-				.parseInt(statusParam);
-		// PanoProjectHousePackageModel housePackage =
-		// housePackageService.getDetail(housePackageSn);
-		List<PanoOrderModel> orders = orderService
-				.getUserOrders(userSn, status);
-
-		map.put("orders", orders);
+		String statusParam = StringUtils.trimToNull(request.getParameter("status"));
+		Integer status = statusParam == null ? null : Integer.parseInt(statusParam);
+		
+		List<PanoOrderModel> orders = orderService.listByUser(userSn, status);
+		//分组显示
+ 		Map<Long, PanoOrderVo> projectGroupMap = new HashMap<Long, PanoOrderVo>();
+ 		Map<Long, PanoOrderPackageVo> packageGropMap = new HashMap<Long, PanoOrderPackageVo>();
+		for(PanoOrderModel order : orders){
+			List<PanoOrderPackageModel> packages = order.getOrderPackages();
+			for (PanoOrderPackageModel pk : packages) {
+				PanoProjectHousePackageModel housePackage = pk.getHousePackage();
+				if(housePackage == null){
+					continue;
+				}
+				PanoProjectModel project = housePackage.getProject();
+				//按项目分组
+				Long projectSn = project.getSn();
+				if(projectGroupMap.containsKey(projectSn)){
+					List<PanoOrderModel> ords = projectGroupMap.get(projectSn).getOrders();
+					if(!ords.contains(order)){
+						ords.add(order);
+					}
+				} else {
+					PanoOrderVo v = new PanoOrderVo();
+					v.setProject(project);
+					v.getOrders().add(order);
+					projectGroupMap.put(projectSn, v);
+				}
+				//按户型分组
+				PanoProjectHouseModel house = housePackage.getHouse();
+				PanoProjectStyleModel style = housePackage.getStyle();
+				Long houseSn = house.getSn();
+				if(packageGropMap.containsKey(houseSn)){
+					packageGropMap.get(houseSn).getOrderPackages().add(pk);
+					packageGropMap.get(houseSn).setStyle(style);
+				} else {
+					PanoOrderPackageVo v = new PanoOrderPackageVo();
+					v.setHouse(house);
+					v.setStyle(style);
+					v.getOrderPackages().add(pk);
+					packageGropMap.put(houseSn, v);
+				}
+			}
+			order.setPackageGropMap(packageGropMap);
+		}
+		map.put("orderGroupMap", projectGroupMap);
 		map.put("status", StringUtils.isEmpty(statusParam) ? "0" : statusParam);
 		return "/member/order/orderAll";
 	}
@@ -646,18 +681,13 @@ public class PanoOrderController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/orderpage")
-	public String orderPage(HttpServletRequest request,
-			HttpServletResponse response, ModelMap map) throws Exception {
-		Long userSn = LoginThreadLocal.getLoginInfo().getUserSn();
-		String orderSnParam = StringUtils.trimToNull(request
-				.getParameter("order_sn"));
+	public String orderPage(HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
+		String orderSnParam = StringUtils.trimToNull(request.getParameter("order_sn"));
 		Long orderSn = Long.parseLong(orderSnParam);
-
 		PanoOrderModel order = orderService.getOrderDetail(orderSn);
-
+		
 		map.put("order", order);
-		map.put("dueStage1Money",
-				(int) (order.getSumMoney().floatValue() * 0.2 * 100) / 100.0);
+		map.put("dueStage1Money", (int) (order.getSumMoney().floatValue() * 0.2 * 100) / 100.0);
 		return "/member/order/order_detail";
 	}
 

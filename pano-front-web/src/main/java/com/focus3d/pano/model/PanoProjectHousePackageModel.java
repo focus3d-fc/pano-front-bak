@@ -18,9 +18,12 @@ public class PanoProjectHousePackageModel extends PanoProjectHousePackage<PanoPr
 
 	private String name;
 	
-	private PanoProjectHouseModel house;
+	private PanoProjectModel project;//楼盘
 	
-	private PanoProjectStyleModel style;
+	private PanoProjectHouseModel house;//户型
+	
+	private PanoProjectStyleModel style;//风格
+	
 
 	public PanoProjectHouseModel getHouse() {
 		return house;
@@ -45,5 +48,13 @@ public class PanoProjectHousePackageModel extends PanoProjectHousePackage<PanoPr
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public PanoProjectModel getProject() {
+		return project;
+	}
+
+	public void setProject(PanoProjectModel project) {
+		this.project = project;
 	}
 }
