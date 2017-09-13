@@ -59,15 +59,18 @@
 		$(function() {
 			
 			houseStyleSn = '$!{houseStyleSn}';
-			spaceSn = '$!{spaceSn}'
+			spaceSn = '$!{spaceSn}';
 			userSn = '$!{userSn}';
 			productView = $.parseJSON('$!productView');
+			
+			alert(spaceSn);
 			
 			//spaceSn = 100041;
 			
 			$("#exchange_view").hide();
 			
 			$("#return_panorama").on("click",function(){
+				//return_panorama方法体中添加返回全景代码
 				return_panorama();
 			})
 			
@@ -75,7 +78,9 @@
 			
 			WebGL_Container = $("#WebGl-OutPut");
 			$("#Confirm_Select").on("click", function(){
-				update_cart();
+				update_cart(function(){
+					//这里添加返回至套餐的代码
+				});
 			});
 			var rate = 4 / 3;
 			var width = WebGL_Container.width();
