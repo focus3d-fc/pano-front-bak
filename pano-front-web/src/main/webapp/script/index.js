@@ -1,11 +1,15 @@
+var userPicker;
 $(function(){
 	var mySwiper = new Swiper ('.swiper-container', {
 		autoplay: 5000,//可选选项，自动滑动
 		loop: true,
 		pagination: '.swiper-pagination',
 	})
+	
+	$(".container").click(function(){
+		//userPicker.hide();
+	});
 });
-
 (function($, doc, jquery) {
 		$.init();
 		$.ready(function() {
@@ -13,7 +17,7 @@ $(function(){
 				return obj[param] || '';
 			};
 			//普通示例
-			var userPicker = new $.PopPicker({
+			userPicker = new $.PopPicker({
 				layer : 4
 			});
 			var projectSelectData = jquery('#projectSelectData').text();
