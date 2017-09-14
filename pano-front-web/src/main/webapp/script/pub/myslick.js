@@ -67,14 +67,14 @@ function showProductDetail(index){
 		mySwiper.destroy(true, false);
 	}
 	mySwiper = new Swiper ('#product-swiper-container', {
-		loop: true,
+		loop: false,
 		autoplay: 3000,
 		autoplayDisableOnInteraction:false
 	});
 	mySwiper.removeAllSlides();
 	mySwiper.appendSlide("<div class='swiper-slide'><img id='fullImgUrl' src='" + fullImgUrl + "'/></div>");
-	mySwiper.appendSlide("<div class='swiper-slide'><img id='fullImgUrl' src='" + leftImgUrl + "'/></div>");
-	mySwiper.appendSlide("<div class='swiper-slide'><img id='fullImgUrl' src='" + downImgUrl + "'/></div>");
+	//mySwiper.appendSlide("<div class='swiper-slide'><img id='fullImgUrl' src='" + leftImgUrl + "'/></div>");
+	//mySwiper.appendSlide("<div class='swiper-slide'><img id='fullImgUrl' src='" + downImgUrl + "'/></div>");
 	//mySwiper.startAutoplay();
 }
 
