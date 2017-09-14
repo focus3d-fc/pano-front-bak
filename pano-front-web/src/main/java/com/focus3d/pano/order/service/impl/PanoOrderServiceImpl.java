@@ -16,6 +16,7 @@ import com.focus3d.pano.model.PanoOrderPackageDetailModel;
 import com.focus3d.pano.model.PanoOrderPackageModel;
 import com.focus3d.pano.model.PanoProductModel;
 import com.focus3d.pano.model.PanoProjectHousePackageModel;
+import com.focus3d.pano.model.PanoProjectPackageProductModel;
 import com.focus3d.pano.model.PanoProjectPackageTypeModel;
 import com.focus3d.pano.model.PanoUserReceiveAddressModel;
 import com.focus3d.pano.order.dao.PanoOrderCouponItemDao;
@@ -24,8 +25,10 @@ import com.focus3d.pano.order.dao.PanoOrderPackageDao;
 import com.focus3d.pano.order.dao.PanoOrderPackageDetailDao;
 import com.focus3d.pano.order.service.PanoOrderService;
 import com.focus3d.pano.product.dao.PanoProductDao;
+import com.focus3d.pano.project.dao.PanoProjectPackageProductDao;
 import com.focus3d.pano.project.dao.PanoProjectPackageTypeDao;
 import com.focus3d.pano.project.service.PanoProjectHousePackageService;
+import com.focustech.common.utils.TCUtil;
 
 /**
  * 
@@ -53,6 +56,8 @@ public class PanoOrderServiceImpl extends CommonServiceImpl<PanoOrderModel> impl
 	private PanoProjectHousePackageService<PanoProjectHousePackageModel> housePackageService;
 	@Autowired
 	private PanoOrderCouponItemDao panoOrderCouponItemDao;
+	@Autowired
+	private PanoProjectPackageProductDao packageProductDao;
 
 	@Override
 	public CommonDao<PanoOrderModel> getDao() {
@@ -97,13 +102,17 @@ public class PanoOrderServiceImpl extends CommonServiceImpl<PanoOrderModel> impl
 				Long productSn = orderPackageDetail.getPackageProductSn();
 				Long packageTypeSn = orderPackageDetail.getPackageTypeSn();
 				if (productSn != null && packageTypeSn != null) {
-					PanoProductModel packageProduct = productDao.getBySn(productSn);
-					if (packageProduct != null) {
-						orderPackageDetail.setPackageProduct(packageProduct);
+					PanoProductModel product = productDao.getBySn(productSn);
+					if (product != null) {
+						orderPackageDetail.setPackageProduct(product);
 					}
 					PanoProjectPackageTypeModel packageType = packageTypeDao.getBySn(packageTypeSn);
 					if (packageType != null) {
 						orderPackageDetail.setPackageType(packageType);
+					}
+					PanoProjectPackageProductModel packageProduct = packageProductDao.getByPackageTypeAndProduct(packageTypeSn, productSn);
+					if(packageProduct != null){
+						orderPackageDetail.setProductNum(TCUtil.iv(packageProduct.getProductNum()));
 					}
 				}
 			}

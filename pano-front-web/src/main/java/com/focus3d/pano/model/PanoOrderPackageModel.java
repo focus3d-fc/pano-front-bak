@@ -33,4 +33,13 @@ public class PanoOrderPackageModel extends PanoOrderPackage<PanoOrderPackageMode
 	public void setDetails(List<PanoOrderPackageDetailModel> details) {
 		this.details = details;
 	}
+
+	public Integer getTotalProductNum() {
+		int num = 0;
+		for(PanoOrderPackageDetailModel detail : details){
+			num += detail.getProductNum();
+		}
+		return num;
+	}
+
 }
