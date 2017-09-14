@@ -351,6 +351,7 @@
 	   	product.`NAME` AS name,
 	   	product.summary AS summary,
 	   	product.dimension AS dimension,
+	   	product.`LONG_IMG_SN` AS longImgSn,
 	   	vender.name AS venderName,
 	   	elementProduct.product_map AS mapid,
 	   	elementProduct.sn AS elementProductSn,

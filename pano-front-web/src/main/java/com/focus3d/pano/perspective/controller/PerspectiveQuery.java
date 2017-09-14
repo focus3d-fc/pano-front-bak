@@ -134,8 +134,7 @@ public class PerspectiveQuery extends BaseController {
 	public void QueryElementProduct(HttpServletResponse response,
 			PanoPerspectiveElementModel model) {
 		try {
-			List<Map<String, Object>> list = _service
-					.queryElementProduct(model);
+			List<Map<String, Object>> list = _service.queryElementProduct(model);
 
 			JSONArray array = new JSONArray();
 
@@ -148,6 +147,14 @@ public class PerspectiveQuery extends BaseController {
 				json.put("summary", child.get("summary").toString());
 				json.put("venderName", child.get("venderName").toString());
 				json.put("dimension", child.get("dimension").toString());
+				
+				if(child.get("longImgSn")!=null){
+					Long longImgSn = Long.parseLong(child.get("longImgSn").toString());
+					String longImgUrl = client.getFile(longImgSn, FileAttributeEnum.VISIT_ADDR);
+					json.put("longImgUrl", longImgUrl);
+				}else{
+					json.put("longImgUrl", "");
+				}
 				
 				if (child.get("elementProductSn") != null) {
 					Long mapid = Long.parseLong(child.get("mapid").toString());
