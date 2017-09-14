@@ -10,4 +10,5 @@ import com.focus3d.pano.common.service.CommonService;
  */
 public interface PanoProjectService<T> extends CommonService<T> {
 
+	
 }

@@ -308,7 +308,7 @@ where project_sn = #PROJECT_SN#
 		INNER JOIN pano_project project
 		ON project.sn = houseStyle.project_sn
 	WHERE project.SN=#project_sn#
-
+	AND project.publish=1
  </select>
  <!-- 根据style_sn查询lable集合 -->
  <select id="selectLableByStyle_sn" parameterClass="long"

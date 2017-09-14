@@ -1,5 +1,7 @@
 package com.focus3d.pano.project.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +24,10 @@ public class PanoProjectServiceImpl extends CommonServiceImpl<PanoProjectModel> 
 	public CommonDao<PanoProjectModel> getDao() {
 		return projectDao;
 	}
+	@Override
+	public List<PanoProjectModel> list() {
+		return projectDao.list();
+	}
 
+	
 }
