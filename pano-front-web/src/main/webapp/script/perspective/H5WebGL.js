@@ -759,6 +759,7 @@ function ExchangeProduct(element){
 }
 
 function ProdunctInfoFill(productInfo){
+	
 	//productInfo.longImgUrl = "http://file.joy-homeplus.com/pano/fs/M57/F1qqBjnKbi4bb3ba02b0-418-281.png";
     $("#name").text(productInfo.name);
     $("#venderName").text("品牌: "+productInfo.venderName);
