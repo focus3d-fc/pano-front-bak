@@ -25,6 +25,7 @@ $(function(){
 	
 	$("#closeProductDetail").click(function(){
 		$("#moreProd").hide();
+		closeHotspotWin();
 	});
 	resizeSlider();
 	
@@ -76,6 +77,7 @@ function showProductDetail(index){
 	//mySwiper.appendSlide("<div class='swiper-slide'><img id='fullImgUrl' src='" + leftImgUrl + "'/></div>");
 	//mySwiper.appendSlide("<div class='swiper-slide'><img id='fullImgUrl' src='" + downImgUrl + "'/></div>");
 	//mySwiper.startAutoplay();
+	
 }
 
 function resizeSlider(){
@@ -102,7 +104,7 @@ function resizeSlider(){
 	$(".prod_hotspot").css("position", "absolute");
 	$(".prod_hotspot").height(opoWinH * 0.9);
 	$(".prod_hotspot").width(opoWinW * 0.8);
-	$(".prod_hotspot").css("left", 20);
+	$(".prod_hotspot").css("left", 32);
 	$(".prod_hotspot").css("top", 20);
 }
 

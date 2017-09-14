@@ -167,11 +167,20 @@ p {
 				/* Fix of Webkit flickering */
 				z-index:1;
 			}
+			.lr_link{
+			    font-family: "Airl";
+			    font-weight: bold;
+			    font-size: .5rem;
+			    color: #fff;
+			    margin: .1rem;
+			    position: relative;
+			    top: 0.6rem;
+			}
 		</style>
 		<div id="moreProd" style="display: none;">
-			<div id="arrow_left" class="fl prod_lr" style="margin-right:.24rem;"><a href="#">&lt;</a></div>
+			<div id="arrow_left" class="fl prod_lr" style="margin-right:.24rem;"><a class="lr_link" href="#">&lt;</a></div>
 			<div class="prod_hotspot">
-					<p id="closeProductDetail" style="float:right;position:relative;top:-.2rem;right:-.5rem;"> 
+					<p id="closeProductDetail" style="float:right;position:relative;top:-.1rem;right:-.2rem;"> 
 						<img style="width:.4rem;height:.4rem;" src="/images/member/gb.png">
 					</p>
 				    <p>产品：<span id="nameP"></span></p>
@@ -189,7 +198,7 @@ p {
 				    <p style="text-align: right;width: 100%;"><a id="moreDetail" style="color: white;position: relative;
     right: -.3rem;bottom:-.2rem;">更多选择 &gt;</a></p>
 			</div>
-			<div id="arrow_right" class="fr prod_lr"><a href="#">&gt</a></div>
+			<div id="arrow_right" class="fr prod_lr"><a class="lr_link" href="#">&gt</a></div>
 		</div>
 		<!-- 这里styleId是动态数据，模拟从h5首页点击风格打开一个默认的全景 -->
         <input type="hidden" id="styleId" value="$!{style_id}"/>

@@ -66,44 +66,6 @@ $(function(){
 	
 });
 
-//显示热点
-/*
-function showHotspot(data){
-	for(var i = 0; i < 20; i ++){
-		editorKrpano().call("removehotspot(hotspot_" + i + ")");
-		editorKrpano().call("removeplugin(tooltip_hotspot_" + i + ")");
-	}
-	for(var i in data){
-		var name = data[i].name;
-		var ath = data[i].ath;
-		var atv = data[i].atv;
-		var styleId = data[i].styleId;
-		var type = data[i].type;
-		var targetId = data[i].targetId;
-		var targetName = data[i].targetName;
-		var extend = data[i].extend;
-		var imgType = data[i].imgType;
-		editorKrpano().call("addhotspot(" + name + ")");
-		editorKrpano().call("set(hotspot[" + name + "].ath," + ath + ")");
-		editorKrpano().call("set(hotspot[" + name + "].atv," + atv + ")");
-		editorKrpano().call("set(hotspot[" + name + "].htType," + type + ")");
-		editorKrpano().call("hotspot[" + name + "].loadstyle(" + styleId + ")");
-		if(type === "1"){
-			editorKrpano().call("set(hotspot[" + name + "].linkedscene," + targetId + ")");
-		}
-		if(type === "2"){
-			editorKrpano().call("set(hotspot[" + name + "].openwin," + targetId + ")");
-			editorKrpano().call("set(hotspot[" + name + "].extendf1," + extend + ")");
-		}
-		if(imgType === "4"){
-			editorKrpano().call("add_hotspot_headtitle_4(" + name + "," + targetName + ")");
-		} else {
-			editorKrpano().call("add_hotspot_headtitle(" + name + "," + targetName + ")");
-		}
-		editorKrpano().call("lookat(" + ath + "," + atv + ")");
-	}
-}
-*/
 //点击户型按钮
 function getHouse(){
 	$("#hx-swiper-wrapper").children().remove();
@@ -338,7 +300,8 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    		showProductDetail(0);
 	    		$("#arrow_left").attr("index", 0);
 	    		$("#arrow_right").attr("index", index > 2 ? 1 : 0);
-
+	    		//hide hotspots
+	    		setHotspotsVisible(false);
 	    	}
 	    },
 	    error:function(xhr,textStatus){
@@ -346,11 +309,19 @@ function openHotspotWin(packageSn, packageTypeSn){
 	    }
 	});
 }
+
+function setHotspotsVisible(visible){
+	for(var i = 0; i < 50; i ++){
+		var hotspotName = "hotspot_" + i;
+		editorKrpano().call("set(hotspot[" + hotspotName + "].visible," + visible + ")");
+	}
+}
 /**
  * 关闭全景产品热点回调方法
  */
 function closeHotspotWin(){
 	//$("#moreProd").hide();
+	setHotspotsVisible(true);
 }
 
 function panoLoadComplete(){
